@@ -1,17 +1,10 @@
-import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
-	return (
-		<main className="flex min-h-screen flex-col items-center justify-between p-24">
-			<div>
-				<h1 className="text-sky-800 text-3xl font-bold">Next.js Template</h1>
-				<ul>
-					<li>prettier</li>
-					<li>eslint</li>
-					<li>typescript</li>
-					<li>pnpm</li>
-				</ul>
-			</div>
-		</main>
-	);
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <h1>This is the main page</h1>
+      <Link href="/library" className="bg-red-500 p-4">Go to library</Link>
+    </main>
+  );
 }
