@@ -11,7 +11,7 @@ export default function GameSearchBar() {
   const [searchTerm, setSearchTerm] = useState("");
   return (
     <Form.Root className="w-[260px]" onSubmit={handleSubmit}>
-      <Form.Field name="search" className="mb-5 grid">
+      <Form.Field name="q" className="mb-5 grid">
         <div className="flex items-baseline justify-between">
           <Form.Label className="text-lg text-white">Search</Form.Label>
           <Form.Message className="text-red-500" match="valueMissing">

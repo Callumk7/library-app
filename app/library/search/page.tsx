@@ -1,7 +1,7 @@
 import GameSearchBar from "@/components/game-search";
 import LibraryView from "@/components/library/library-view";
 
-async function getSearchResults(search: string) {
+async function getSearchResults(q: string) {
   const res = await fetch(process.env.IGDB_URL!, {
     method: "POST",
     headers: {
@@ -9,7 +9,7 @@ async function getSearchResults(search: string) {
       Authorization: `Bearer ${process.env.IGDB_BEARER_TOKEN!}`,
       "content-type": "text/plain",
     },
-    body: `search "${search}"; fields name, cover.url, genres.*; limit 20;`,
+    body: `search "${q}"; fields name, cover.url, genres.*; limit 20;`,
     cache: "no-store",
   });
   return res.json();
@@ -18,9 +18,9 @@ async function getSearchResults(search: string) {
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: { search: string };
+  searchParams: { q: string };
 }) {
-  const data = await getSearchResults(searchParams.search);
+  const data = await getSearchResults(searchParams.q);
   const content = await Promise.all(data);
 
   return (

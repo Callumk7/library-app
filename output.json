@@ -1,0 +1,410 @@
+[
+  {
+    "id": 26855,
+    "cover": {
+      "id": 274638,
+      "url": "//images.igdb.com/igdb/image/upload/t_thumb/co5vwu.jpg"
+    },
+    "genres": [
+      {
+        "id": 8,
+        "created_at": 1297555200,
+        "name": "Platform",
+        "slug": "platform",
+        "updated_at": 1323216000,
+        "url": "https://www.igdb.com/genres/platform",
+        "checksum": "697fc5a4-b96f-a803-288a-498bd5dd1de1"
+      },
+      {
+        "id": 31,
+        "created_at": 1323561600,
+        "name": "Adventure",
+        "slug": "adventure",
+        "updated_at": 1323561600,
+        "url": "https://www.igdb.com/genres/adventure",
+        "checksum": "a6d85192-8d11-bad3-cc5c-dd89e2f94a47"
+      },
+      {
+        "id": 32,
+        "created_at": 1341360000,
+        "name": "Indie",
+        "slug": "indie",
+        "updated_at": 1341360000,
+        "url": "https://www.igdb.com/genres/indie",
+        "checksum": "2522259f-2454-ec02-5dc0-84373e0508ed"
+      }
+    ],
+    "name": "Dead Cells"
+  },
+  {
+    "id": 142877,
+    "cover": {
+      "id": 125974,
+      "url": "//images.igdb.com/igdb/image/upload/t_thumb/co2p7a.jpg"
+    },
+    "genres": [
+      {
+        "id": 8,
+        "created_at": 1297555200,
+        "name": "Platform",
+        "slug": "platform",
+        "updated_at": 1323216000,
+        "url": "https://www.igdb.com/genres/platform",
+        "checksum": "697fc5a4-b96f-a803-288a-498bd5dd1de1"
+      },
+      {
+        "id": 32,
+        "created_at": 1341360000,
+        "name": "Indie",
+        "slug": "indie",
+        "updated_at": 1341360000,
+        "url": "https://www.igdb.com/genres/indie",
+        "checksum": "2522259f-2454-ec02-5dc0-84373e0508ed"
+      }
+    ],
+    "name": "Dead Cells: Fatal Falls"
+  },
+  {
+    "id": 186533,
+    "cover": {
+      "id": 201837,
+      "url": "//images.igdb.com/igdb/image/upload/t_thumb/co4bql.jpg"
+    },
+    "genres": [
+      {
+        "id": 31,
+        "created_at": 1323561600,
+        "name": "Adventure",
+        "slug": "adventure",
+        "updated_at": 1323561600,
+        "url": "https://www.igdb.com/genres/adventure",
+        "checksum": "a6d85192-8d11-bad3-cc5c-dd89e2f94a47"
+      },
+      {
+        "id": 32,
+        "created_at": 1341360000,
+        "name": "Indie",
+        "slug": "indie",
+        "updated_at": 1341360000,
+        "url": "https://www.igdb.com/genres/indie",
+        "checksum": "2522259f-2454-ec02-5dc0-84373e0508ed"
+      }
+    ],
+    "name": "Dead Cells: Road to the Sea"
+  },
+  {
+    "id": 127256,
+    "cover": {
+      "id": 91859,
+      "url": "//images.igdb.com/igdb/image/upload/t_thumb/co1yvn.jpg"
+    },
+    "genres": [
+      {
+        "id": 8,
+        "created_at": 1297555200,
+        "name": "Platform",
+        "slug": "platform",
+        "updated_at": 1323216000,
+        "url": "https://www.igdb.com/genres/platform",
+        "checksum": "697fc5a4-b96f-a803-288a-498bd5dd1de1"
+      },
+      {
+        "id": 32,
+        "created_at": 1341360000,
+        "name": "Indie",
+        "slug": "indie",
+        "updated_at": 1341360000,
+        "url": "https://www.igdb.com/genres/indie",
+        "checksum": "2522259f-2454-ec02-5dc0-84373e0508ed"
+      }
+    ],
+    "name": "Dead Cells: The Bad Seed"
+  },
+  {
+    "id": 154957,
+    "cover": {
+      "id": 157816,
+      "url": "//images.igdb.com/igdb/image/upload/t_thumb/co3drs.jpg"
+    },
+    "genres": [
+      {
+        "id": 8,
+        "created_at": 1297555200,
+        "name": "Platform",
+        "slug": "platform",
+        "updated_at": 1323216000,
+        "url": "https://www.igdb.com/genres/platform",
+        "checksum": "697fc5a4-b96f-a803-288a-498bd5dd1de1"
+      },
+      {
+        "id": 32,
+        "created_at": 1341360000,
+        "name": "Indie",
+        "slug": "indie",
+        "updated_at": 1341360000,
+        "url": "https://www.igdb.com/genres/indie",
+        "checksum": "2522259f-2454-ec02-5dc0-84373e0508ed"
+      }
+    ],
+    "name": "Dead Cells: The Fatal Seed Bundle"
+  },
+  {
+    "id": 183128,
+    "cover": {
+      "id": 199306,
+      "url": "//images.igdb.com/igdb/image/upload/t_thumb/co49sa.jpg"
+    },
+    "genres": [
+      {
+        "id": 8,
+        "created_at": 1297555200,
+        "name": "Platform",
+        "slug": "platform",
+        "updated_at": 1323216000,
+        "url": "https://www.igdb.com/genres/platform",
+        "checksum": "697fc5a4-b96f-a803-288a-498bd5dd1de1"
+      },
+      {
+        "id": 31,
+        "created_at": 1323561600,
+        "name": "Adventure",
+        "slug": "adventure",
+        "updated_at": 1323561600,
+        "url": "https://www.igdb.com/genres/adventure",
+        "checksum": "a6d85192-8d11-bad3-cc5c-dd89e2f94a47"
+      },
+      {
+        "id": 32,
+        "created_at": 1341360000,
+        "name": "Indie",
+        "slug": "indie",
+        "updated_at": 1341360000,
+        "url": "https://www.igdb.com/genres/indie",
+        "checksum": "2522259f-2454-ec02-5dc0-84373e0508ed"
+      }
+    ],
+    "name": "Dead Cells: The Queen \u0026 the Sea"
+  },
+  {
+    "id": 221962,
+    "cover": {
+      "id": 268624,
+      "url": "//images.igdb.com/igdb/image/upload/t_thumb/co5r9s.jpg"
+    },
+    "genres": [
+      {
+        "id": 31,
+        "created_at": 1323561600,
+        "name": "Adventure",
+        "slug": "adventure",
+        "updated_at": 1323561600,
+        "url": "https://www.igdb.com/genres/adventure",
+        "checksum": "a6d85192-8d11-bad3-cc5c-dd89e2f94a47"
+      }
+    ],
+    "name": "Dead Cells: Everyone is Here!"
+  },
+  {
+    "id": 116141,
+    "cover": {
+      "id": 125981,
+      "url": "//images.igdb.com/igdb/image/upload/t_thumb/co2p7h.jpg"
+    },
+    "genres": [
+      {
+        "id": 31,
+        "created_at": 1323561600,
+        "name": "Adventure",
+        "slug": "adventure",
+        "updated_at": 1323561600,
+        "url": "https://www.igdb.com/genres/adventure",
+        "checksum": "a6d85192-8d11-bad3-cc5c-dd89e2f94a47"
+      },
+      {
+        "id": 32,
+        "created_at": 1341360000,
+        "name": "Indie",
+        "slug": "indie",
+        "updated_at": 1341360000,
+        "url": "https://www.igdb.com/genres/indie",
+        "checksum": "2522259f-2454-ec02-5dc0-84373e0508ed"
+      }
+    ],
+    "name": "Dead Cells: Rise of the Giant"
+  },
+  {
+    "id": 136322,
+    "cover": {
+      "id": 209394,
+      "url": "//images.igdb.com/igdb/image/upload/t_thumb/co4hki.jpg"
+    },
+    "genres": [
+      {
+        "id": 8,
+        "created_at": 1297555200,
+        "name": "Platform",
+        "slug": "platform",
+        "updated_at": 1323216000,
+        "url": "https://www.igdb.com/genres/platform",
+        "checksum": "697fc5a4-b96f-a803-288a-498bd5dd1de1"
+      }
+    ],
+    "name": "Dead Cells: Prisoner\u0027s Edition"
+  },
+  {
+    "id": 228520,
+    "cover": {
+      "id": 273820,
+      "url": "//images.igdb.com/igdb/image/upload/t_thumb/co5va4.jpg"
+    },
+    "genres": [
+      {
+        "id": 8,
+        "created_at": 1297555200,
+        "name": "Platform",
+        "slug": "platform",
+        "updated_at": 1323216000,
+        "url": "https://www.igdb.com/genres/platform",
+        "checksum": "697fc5a4-b96f-a803-288a-498bd5dd1de1"
+      },
+      {
+        "id": 31,
+        "created_at": 1323561600,
+        "name": "Adventure",
+        "slug": "adventure",
+        "updated_at": 1323561600,
+        "url": "https://www.igdb.com/genres/adventure",
+        "checksum": "a6d85192-8d11-bad3-cc5c-dd89e2f94a47"
+      },
+      {
+        "id": 32,
+        "created_at": 1341360000,
+        "name": "Indie",
+        "slug": "indie",
+        "updated_at": 1341360000,
+        "url": "https://www.igdb.com/genres/indie",
+        "checksum": "2522259f-2454-ec02-5dc0-84373e0508ed"
+      }
+    ],
+    "name": "Dead Cells: Return to Castlevania"
+  },
+  {
+    "id": 238272,
+    "cover": {
+      "id": 288484,
+      "url": "//images.igdb.com/igdb/image/upload/t_thumb/co66lg.jpg"
+    },
+    "genres": [
+      {
+        "id": 8,
+        "created_at": 1297555200,
+        "name": "Platform",
+        "slug": "platform",
+        "updated_at": 1323216000,
+        "url": "https://www.igdb.com/genres/platform",
+        "checksum": "697fc5a4-b96f-a803-288a-498bd5dd1de1"
+      },
+      {
+        "id": 31,
+        "created_at": 1323561600,
+        "name": "Adventure",
+        "slug": "adventure",
+        "updated_at": 1323561600,
+        "url": "https://www.igdb.com/genres/adventure",
+        "checksum": "a6d85192-8d11-bad3-cc5c-dd89e2f94a47"
+      },
+      {
+        "id": 32,
+        "created_at": 1341360000,
+        "name": "Indie",
+        "slug": "indie",
+        "updated_at": 1341360000,
+        "url": "https://www.igdb.com/genres/indie",
+        "checksum": "2522259f-2454-ec02-5dc0-84373e0508ed"
+      }
+    ],
+    "name": "Dead Cells: Medley of Pain Bundle"
+  },
+  {
+    "id": 225338,
+    "cover": {
+      "id": 268618,
+      "url": "//images.igdb.com/igdb/image/upload/t_thumb/co5r9m.jpg"
+    },
+    "name": "Dead Cells: Everyone is Here Vol.2"
+  },
+  {
+    "id": 122268,
+    "cover": {
+      "id": 209401,
+      "url": "//images.igdb.com/igdb/image/upload/t_thumb/co4hkp.jpg"
+    },
+    "genres": [
+      {
+        "id": 8,
+        "created_at": 1297555200,
+        "name": "Platform",
+        "slug": "platform",
+        "updated_at": 1323216000,
+        "url": "https://www.igdb.com/genres/platform",
+        "checksum": "697fc5a4-b96f-a803-288a-498bd5dd1de1"
+      },
+      {
+        "id": 31,
+        "created_at": 1323561600,
+        "name": "Adventure",
+        "slug": "adventure",
+        "updated_at": 1323561600,
+        "url": "https://www.igdb.com/genres/adventure",
+        "checksum": "a6d85192-8d11-bad3-cc5c-dd89e2f94a47"
+      },
+      {
+        "id": 32,
+        "created_at": 1341360000,
+        "name": "Indie",
+        "slug": "indie",
+        "updated_at": 1341360000,
+        "url": "https://www.igdb.com/genres/indie",
+        "checksum": "2522259f-2454-ec02-5dc0-84373e0508ed"
+      }
+    ],
+    "name": "Dead Cells: Action Game of the Year"
+  },
+  {
+    "id": 238273,
+    "cover": {
+      "id": 288485,
+      "url": "//images.igdb.com/igdb/image/upload/t_thumb/co66lh.jpg"
+    },
+    "genres": [
+      {
+        "id": 8,
+        "created_at": 1297555200,
+        "name": "Platform",
+        "slug": "platform",
+        "updated_at": 1323216000,
+        "url": "https://www.igdb.com/genres/platform",
+        "checksum": "697fc5a4-b96f-a803-288a-498bd5dd1de1"
+      },
+      {
+        "id": 31,
+        "created_at": 1323561600,
+        "name": "Adventure",
+        "slug": "adventure",
+        "updated_at": 1323561600,
+        "url": "https://www.igdb.com/genres/adventure",
+        "checksum": "a6d85192-8d11-bad3-cc5c-dd89e2f94a47"
+      },
+      {
+        "id": 32,
+        "created_at": 1341360000,
+        "name": "Indie",
+        "slug": "indie",
+        "updated_at": 1341360000,
+        "url": "https://www.igdb.com/genres/indie",
+        "checksum": "2522259f-2454-ec02-5dc0-84373e0508ed"
+      }
+    ],
+    "name": "Dead Cells: Return to Castlevania Bundle"
+  }
+]
