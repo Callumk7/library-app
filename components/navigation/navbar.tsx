@@ -1,15 +1,36 @@
-"use client";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import LogoutButton from "./login-button";
+import Link from "next/link";
+import { cookies } from "next/headers";
+import Searchbar from "./searchbar";
 
-import { supabase } from "@/supabase/client";
+export default async function Navbar() {
+  const supabase = createServerComponentClient({ cookies });
 
-export default async function NavBar() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   return (
-    <div className="relative left-0 top-0 h-32 w-full bg-lime-200">
-      {user ? <p>{user.email}</p> : <p>not signed in</p>}
-    </div>
+    <nav className="flex h-16 w-full justify-center border-b border-b-foreground/10">
+      <div className="flex w-full max-w-4xl items-center justify-between p-3 text-sm text-foreground">
+        <Searchbar />
+        <div>
+          {user ? (
+            <div className="flex items-center gap-4">
+              Hey, {user.email}!
+              <LogoutButton />
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="rounded-md bg-btn-background px-4 py-2 no-underline hover:bg-btn-background-hover"
+            >
+              Login
+            </Link>
+          )}
+        </div>
+      </div>
+    </nav>
   );
 }

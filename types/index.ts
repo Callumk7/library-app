@@ -11,14 +11,16 @@ const gameWithGenreAndCover = Prisma.validator<Prisma.GameArgs>()({
 
 type GameWithGenreAndCover = Prisma.GameGetPayload<typeof gameWithGenreAndCover>;
 
+type GameUpload = Prisma.GameCreateInput;
+
 export { Cover, Game, Genre, User, UserGameCollection };
-export type { GameWithGenreAndCover };
+export type { GameUpload, GameWithGenreAndCover };
 
 // IGDB database types
 type IGDBGame = {
 	id: number;
 	url: string;
-	genres: {
+	genres?: {
 		id: number;
 		created_at: number;
 		name: string;
@@ -30,8 +32,9 @@ type IGDBGame = {
 	name: string;
 	cover?: {
 		id: number;
-		url: string;
+		image_id: string;
 	};
+	storyline?: string;
 };
 
 export type { IGDBGame };

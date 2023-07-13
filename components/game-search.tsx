@@ -4,8 +4,8 @@ import * as Form from "@radix-ui/react-form";
 import { useState } from "react";
 
 export default function GameSearchBar() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("submit pressed");
+  const handleSubmit = () => {
+    console.log("search submitted");
   };
 
   const [searchTerm, setSearchTerm] = useState("");
