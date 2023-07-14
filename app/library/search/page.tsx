@@ -61,7 +61,7 @@ export default async function SearchPage({
     }
 
     console.timeLog("SearchPage", "Time taken to prepare uploads");
-    createManyGames(uploads);
+    await createManyGames(uploads);
     console.timeLog("SearchPage", "Time taken to call createManyGames");
     console.timeEnd("SearchPage");
     console.timeEnd("startSearchPage");
