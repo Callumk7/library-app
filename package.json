@@ -29,6 +29,7 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
+    "@clerk/clerk-sdk-node": "^4.10.15",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
