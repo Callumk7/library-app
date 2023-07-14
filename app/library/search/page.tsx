@@ -13,14 +13,17 @@ async function getSearchResults(q: string): Promise<IGDBGame[]> {
       Authorization: `Bearer ${process.env.IGDB_BEARER_TOKEN!}`,
       "content-type": "text/plain",
     },
-    body: `search "${q}"; fields name, cover.image_id, genres.*, storyline; limit 20;`,
+    body:
+      `search "${q}"; fields name, cover.image_id, genres.*, storyline; limit 20;`,
     cache: "no-store",
   });
   console.timeEnd("getSearchResults");
   return res.json();
 }
 
-async function createManyGames(uploads) {
+async function createManyGames(
+  uploads: { externalId: number; title: string }[],
+) {
   console.time("createManyGames");
   const uploadGames = await prisma.game.createMany({
     data: uploads,
