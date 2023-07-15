@@ -1,8 +1,18 @@
+"use client";
 
 import Image from "next/image";
 import { LibraryItemProps } from "./library-view";
 
 export function LibraryItem({ item }: LibraryItemProps) {
+
+  const handleSave = async () => {
+    //handle save
+    const request = await fetch(`/api/library/${item.id}`, {
+      method: "POST"
+    })
+  }
+
+  // image size fetched from IGDB
   const size = "720p";
 
   return (
@@ -21,6 +31,9 @@ export function LibraryItem({ item }: LibraryItemProps) {
           <p className="text-sm opacity-70">{item.genres[0].name}</p>
         )}
       </div>
+      <button className="absolute bottom-4 right-4 py-2 px-4 rounded-md w-fit no-underline bg-btn-background hover:bg-btn-background-hover" onClick={handleSave}>
+        save
+      </button>
     </div>
   );
 }
