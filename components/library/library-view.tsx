@@ -1,5 +1,5 @@
 import { IGDBGame } from "@/types";
-import { LibraryItem } from "./LibraryItem";
+import { LibraryItem } from "./library-item";
 
 interface LibraryViewProps {
   content: IGDBGame[];
