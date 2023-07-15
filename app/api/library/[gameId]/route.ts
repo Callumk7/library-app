@@ -13,7 +13,7 @@ export async function POST(
 	if (!userId) {
 		return NextResponse.error();
 	}
-	const user = await prisma.user.findFirst({
+	const userPromise = prisma.user.findFirst({
 		where: {
 			clerkId: userId,
 		},
@@ -22,7 +22,7 @@ export async function POST(
 		},
 	});
 
-	const game = await prisma.game.findFirst({
+	const gamePromise = prisma.game.findFirst({
 		where: {
 			externalId: Number(gameId),
 		},
@@ -31,6 +31,8 @@ export async function POST(
 		},
 	});
 
+	const [user, game] = await Promise.all([userPromise, gamePromise]);
+
 	if (!user || !game) {
 		return NextResponse.error();
 	}
@@ -38,10 +40,12 @@ export async function POST(
 	const upsertUserCollection = await prisma.userGameCollection.create({
 		data: {
 			userId: user.id,
-			gameId: game.id
+			gameId: game.id,
 		},
 	});
-	
-	console.log(`added collection ${upsertUserCollection.gameId}, ${upsertUserCollection.userId}`)
+
+	console.log(
+		`added collection ${upsertUserCollection.gameId}, ${upsertUserCollection.userId}`
+	);
 	return NextResponse.json({ upsertUserCollection });
 }
