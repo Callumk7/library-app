@@ -1,5 +1,7 @@
-import LibraryView from "@/components/library/library-view";
+import { LibraryView } from "@/components/library/library-view";
+import prisma from "@/lib/prisma/client";
 import { IGDBGame } from "@/types";
+import { auth } from "@clerk/nextjs";
 
 async function getGames() {
   const res = await fetch(process.env.IGDB_URL!, {
@@ -16,12 +18,25 @@ async function getGames() {
 }
 
 export default async function GamesPage() {
-  const data = await getGames();
-  const content: IGDBGame[] = await Promise.all(data);
+  const { userId } = auth();
+  // const user = await prisma.user.findFirst({
+  //   where: {
+  //     clerkId: userId!,
+  //   },
+  //   select: {
+  //     id: true,
+  //   },
+  // });
+  // const userCollection = await prisma.userGameCollection.findMany({
+  //   where: {
+  //     userId: user!.id,
+  //   },
+  //   include: {
+  //     game: true,
+  //   },
+  // });
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <LibraryView content={content} />
-    </main>
+    <main className="flex min-h-screen flex-col items-center justify-between p-24"></main>
   );
 }
