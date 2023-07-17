@@ -29,14 +29,14 @@ model Game {
 }
 
 model UserGameCollection {
-  userId    Int
+  clerkId   String
   gameId    Int
   createdAt DateTime @default(now())
   deleted   Boolean  @default(false)
-  game      Game     @relation(fields: [gameId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  game      Game     @relation(fields: [gameId], references: [externalId])
+  user      User     @relation(fields: [clerkId], references: [clerkId])
 
-  @@id([userId, gameId])
+  @@id([clerkId, gameId])
 }
 
 model Cover {
