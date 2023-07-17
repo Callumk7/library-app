@@ -9,12 +9,19 @@ const gameWithGenreAndCover = Prisma.validator<Prisma.GameArgs>()({
 	},
 });
 
+const gameWithCover = Prisma.validator<Prisma.GameArgs>()({
+	include: {
+		cover: true,
+	},
+});
+
 type GameWithGenreAndCover = Prisma.GameGetPayload<typeof gameWithGenreAndCover>;
+type GameWithCover = Prisma.GameGetPayload<typeof gameWithCover>;
 
 type GameUpload = Prisma.GameCreateInput;
 
 export { Cover, Game, Genre, User, UserGameCollection };
-export type { GameUpload, GameWithGenreAndCover };
+export type { GameUpload, GameWithGenreAndCover, GameWithCover };
 
 // IGDB database types
 type IGDBGame = {
