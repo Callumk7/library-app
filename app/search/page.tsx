@@ -1,5 +1,4 @@
-import GameSearchBar from "@/components/game-search";
-import { LibraryView } from "@/components/library/library-view";
+import { SearchResults } from "@/components/search/search-results";
 import { IGDBGame } from "@/types";
 
 async function getSearchResults(q: string): Promise<IGDBGame[]> {
@@ -21,14 +20,14 @@ export default async function SearchPage({
   searchParams: { q: string };
 }) {
   const data = await getSearchResults(searchParams.q);
-  const content = await Promise.all(data);
+  const results = await Promise.all(data);
 
-  if (content.length === 0) {
+  if (results.length === 0) {
     return <h1 className="text-xl text-white">No results found</h1>;
   } else {
     return (
-      <div className="animate-in">
-        <LibraryView content={content} />
+      <div className="animate-in mx-auto w-4/5">
+        <SearchResults results={results} />
       </div>
     );
   }

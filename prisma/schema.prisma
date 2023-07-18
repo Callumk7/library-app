@@ -29,12 +29,15 @@ model Game {
 }
 
 model UserGameCollection {
-  clerkId   String
-  gameId    Int
-  createdAt DateTime @default(now())
-  deleted   Boolean  @default(false)
-  game      Game     @relation(fields: [gameId], references: [externalId])
-  user      User     @relation(fields: [clerkId], references: [clerkId])
+  clerkId      String
+  gameId       Int
+  createdAt    DateTime @default(now())
+  deleted      Boolean  @default(false)
+  game         Game     @relation(fields: [gameId], references: [externalId])
+  user         User     @relation(fields: [clerkId], references: [clerkId])
+  played       Boolean  @default(false)
+  playerRating Int?
+  starred      Boolean  @default(false)
 
   @@id([clerkId, gameId])
 }

@@ -8,7 +8,7 @@ export const metadata = {
   description: "Keep track of what you are playing.",
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider appearance={{ baseTheme: dark }}>
       <html lang="en">
