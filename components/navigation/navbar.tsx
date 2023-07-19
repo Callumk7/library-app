@@ -8,7 +8,7 @@ export default async function Navbar() {
       <div className="flex w-full max-w-4xl items-center justify-between p-3 text-sm text-foreground">
         <div className="flex flex-row items-center space-x-6">
           <Searchbar />
-          <Link href="/collection" prefetch={false}>My Collection</Link>
+          <Link href={`/collection`}>My Collection</Link>
         </div>
         <SignedIn>
           <UserButton afterSignOutUrl="/" />

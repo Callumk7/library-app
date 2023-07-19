@@ -10,6 +10,7 @@
 	],
 	"rules": {
 		"react/react-in-jsx-scope": "off",
-		"@typescript-eslint/consistent-type-definitions": "error"
+		"@typescript-eslint/consistent-type-definitions": "error",
+		"no-unused-vars": "off"
 	}
 }

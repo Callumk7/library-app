@@ -1,7 +1,9 @@
 import { ButtonHTMLAttributes, forwardRef } from "react";
 import clsx from "clsx";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: boolean;
+}
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   props,
@@ -13,7 +15,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       ref={ref}
       className={clsx(
         className,
-        "w-fit rounded-md bg-btn-background px-4 py-2 no-underline hover:bg-btn-background-hover"
+        "test-xs w-fit rounded-md bg-btn-background px-4 py-2 no-underline hover:bg-btn-background-hover"
       )}
       {...otherProps}
     ></button>

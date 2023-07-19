@@ -1,4 +1,4 @@
-import { CollectionView } from "@/components/library/collection-view";
+import { CollectionView } from "@/components/collection/collection-view";
 import prisma from "@/lib/prisma/client";
 import { auth } from "@clerk/nextjs";
 
