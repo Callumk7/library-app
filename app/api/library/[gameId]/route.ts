@@ -1,10 +1,10 @@
-import prisma from "@/lib/prisma/client";
+import { prisma } from "@/lib/prisma/client";
 import { IGDBGame } from "@/types";
 import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest, { params }: { params: { gameId: number } }) {
-	const gameId = params.gameId;
+	const gameId = Number(params.gameId);
 	const { userId } = auth();
 	console.log(`POST request with id: ${gameId} from user${userId}`);
 
@@ -16,24 +16,9 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 	}
 
 	if (item.cover) {
-		// const createGame = await prisma.game.create({
-		// 	data: {
-		// 		externalId: Number(gameId),
-		// 		title: item.name,
-		// 		cover: {
-		// 			create: {
-		// 				imageId: item.cover.image_id,
-		// 			},
-		// 		},
-		// 	},
-		// 	include: {
-		// 		cover: true,
-		// 	},
-		// });
-
 		const upsertGame = await prisma.game.upsert({
 			where: {
-				externalId: Number(gameId),
+				externalId: gameId,
 			},
 			update: {
 				cover: {
@@ -43,7 +28,7 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 				},
 			},
 			create: {
-				externalId: Number(gameId),
+				externalId: gameId,
 				title: item.name,
 				cover: {
 					create: {
@@ -57,14 +42,14 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 	const upsertUserCollection = await prisma.userGameCollection.upsert({
 		where: {
 			clerkId_gameId: {
-				gameId: Number(gameId),
+				gameId: gameId,
 				clerkId: userId,
 			},
 		},
 		update: {},
 		create: {
 			clerkId: userId,
-			gameId: Number(gameId),
+			gameId: gameId,
 		},
 	});
 
@@ -75,7 +60,7 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 }
 
 export async function DELETE(_req: Request, { params }: { params: { gameId: number } }) {
-	const gameId = params.gameId;
+	const gameId = Number(params.gameId);
 	const { userId } = auth();
 	console.log(`DELETE request with id: ${gameId} from user${userId}`);
 
@@ -85,11 +70,41 @@ export async function DELETE(_req: Request, { params }: { params: { gameId: numb
 	const deleteCollectionItem = await prisma.userGameCollection.delete({
 		where: {
 			clerkId_gameId: {
-				gameId: Number(gameId),
+				gameId: gameId,
 				clerkId: userId,
 			},
 		},
 	});
 
 	return NextResponse.json(deleteCollectionItem);
+}
+
+// CURRENTLY JUST FOR LIKE SWAPPING
+export async function PATCH(
+	req: NextRequest,
+	{ params }: { params: { gameId: number } }
+) {
+	const { userId } = auth();
+	const gameId = Number(params.gameId);
+	const body = await req.json();
+
+	if (!userId) {
+		return NextResponse.error();
+	}
+
+	if ("played" in body) {
+		console.log(`PATCH REQUEST: ${userId}`);
+		const likedGame = await prisma.userGameCollection.update({
+			where: {
+				clerkId_gameId: {
+					clerkId: userId,
+					gameId: gameId,
+				},
+			},
+			data: {
+				played: body.played,
+			},
+		});
+		return NextResponse.json(likedGame);
+	}
 }

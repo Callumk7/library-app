@@ -1,3 +1,3 @@
-import { GameWithCover } from "@/types";
+import { GameWithCoverAndCollection } from "@/types";
 import { atom } from "jotai";
-export const collectionAtom = atom<GameWithCover[]>([]);
+export const collectionAtom = atom<GameWithCoverAndCollection[]>([]);

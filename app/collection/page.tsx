@@ -1,5 +1,5 @@
 import { CollectionView } from "@/components/collection/collection-view";
-import prisma from "@/lib/prisma/client";
+import { prisma } from "@/lib/prisma/client";
 import { auth } from "@clerk/nextjs";
 
 export const revalidate = 1;
@@ -24,6 +24,11 @@ async function getGames(userId: string) {
     },
     include: {
       cover: true,
+      UserGameCollection: {
+        where: {
+          clerkId: userId,
+        },
+      },
     },
   });
   return games;

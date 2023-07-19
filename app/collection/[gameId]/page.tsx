@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import prisma from "@/lib/prisma/client";
+import { prisma } from "@/lib/prisma/client";
 import Image from "next/image";
 
 export default async function GamePage({ params }: { params: { gameId: string } }) {
