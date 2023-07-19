@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma/client";
+import { prisma } from "@/lib/prisma/client";
 import type { WebhookEvent } from "@clerk/clerk-sdk-node";
 import { NextRequest, NextResponse } from "next/server";
 
