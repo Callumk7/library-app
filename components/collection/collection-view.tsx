@@ -1,6 +1,6 @@
 "use client";
 
-import { GameWithCover } from "@/types";
+import { GameWithCoverAndCollection } from "@/types";
 import CollectionItem from "./collection-item";
 
 import { collectionAtom } from "./store";
@@ -8,7 +8,7 @@ import { useAtom } from "jotai";
 import { useEffect } from "react";
 
 interface CollectionViewProps {
-  content: GameWithCover[];
+  content: GameWithCoverAndCollection[];
 }
 export function CollectionView({ content }: CollectionViewProps) {
   const [collection, setCollection] = useAtom(collectionAtom);

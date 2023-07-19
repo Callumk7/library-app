@@ -1,16 +1,31 @@
-import { GameWithCover } from "@/types";
+import { GameWithCoverAndCollection } from "@/types";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import Link from "next/link";
 
+import { PlayIcon } from "../ui/icons/PlayIcon";
+import { useState } from "react";
+
 interface CollectionItemProps {
-  item: GameWithCover;
+  item: GameWithCoverAndCollection;
   handleRemove: (itemId: number) => void;
 }
 
 export default function CollectionItem({ item, handleRemove }: CollectionItemProps) {
-  const handleClick = () => {
+  const [played, setPlayed] = useState(item.UserGameCollection[0].played);
+
+  const handleRemoveClicked = () => {
     handleRemove(item.externalId);
+  };
+
+  const handlePlayedToggled = async () => {
+    setPlayed(!played);
+    const res = await fetch(`/api/library/${item.externalId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ played: !played }),
+    });
+    const json = await res.json();
+    console.log(json);
   };
 
   const size = "720p";
@@ -28,9 +43,20 @@ export default function CollectionItem({ item, handleRemove }: CollectionItemPro
       <div className="p-6">
         <h1 className="mb-2 min-h-[40px]  font-bold lg:min-h-[60px]">{item.title}</h1>
       </div>
-      <Button onClick={handleClick} className="absolute bottom-4 right-4">
+      <Button onClick={handleRemoveClicked} className="absolute bottom-4 right-4">
         Remove
       </Button>
+      {played ? (
+        <PlayIcon
+          handleClick={handlePlayedToggled}
+          className="absolute bottom-4 left-4 text-white"
+        />
+      ) : (
+        <PlayIcon
+          handleClick={handlePlayedToggled}
+          className="absolute bottom-4 left-4 text-red-500"
+        />
+      )}
     </div>
   );
 }
