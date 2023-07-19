@@ -1,11 +1,16 @@
 {
 	"extends": [
+		"eslint:recommended",
 		"next/core-web-vitals",
 		"plugin:react/recommended",
 		"plugin:react-hooks/recommended",
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/stylistic",
 		"prettier"
 	],
 	"rules": {
-		"react/react-in-jsx-scope": "off"
+		"react/react-in-jsx-scope": "off",
+		"@typescript-eslint/consistent-type-definitions": "error",
+		"no-unused-vars": "off"
 	}
 }
