@@ -22,8 +22,11 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 			},
 			update: {
 				cover: {
-					create: {
-						imageId: item.cover.image_id,
+					upsert: {
+						create: {
+							imageId: item.cover.image_id,
+						},
+						update: {}
 					},
 				},
 			},
