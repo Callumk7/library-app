@@ -10,12 +10,16 @@ export interface SearchResultProps {
 export function SearchResult({ game }: SearchResultProps) {
   // HANDLERS
   const handleSave = async () => {
-    const request = await fetch(`/api/library/${game.id}`, {
+    // fetch request to the server
+    const postRequest = await fetch(`/api/library/${game.id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(game),
+    });
+    const revalidate = await fetch(`/api/revalidate`, {
+      method: "GET",
     });
   };
 
@@ -23,7 +27,7 @@ export function SearchResult({ game }: SearchResultProps) {
   const size = "cover_big";
 
   return (
-    <div className="relative flex flex-row overflow-hidden rounded-lg border w-full text-foreground hover:border-foreground">
+    <div className="relative flex w-full flex-row overflow-hidden rounded-lg border text-foreground hover:border-foreground">
       <Image
         src={`https://images.igdb.com/igdb/image/upload/t_${size}/${game.cover?.image_id}.jpg`}
         alt="cover image"

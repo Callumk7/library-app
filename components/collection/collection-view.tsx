@@ -3,13 +3,19 @@
 import { GameWithCoverAndCollection } from "@/types";
 import CollectionItem from "./collection-item";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface CollectionViewProps {
   content: GameWithCoverAndCollection[];
 }
 export function CollectionView({ content }: CollectionViewProps) {
   const [collection, setCollection] = useState(content);
+  const router = useRouter();
+
+  useEffect(() => {
+    router.refresh();
+  });
 
   const handleRemove = async (itemId: number) => {
     const newCollection = collection.filter((game) => game.externalId !== itemId);
