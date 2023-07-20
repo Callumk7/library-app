@@ -2,7 +2,7 @@ import { CollectionView } from "@/components/collection/collection-view";
 import { prisma } from "@/lib/prisma/client";
 import { auth } from "@clerk/nextjs";
 
-export const revalidate = 0;
+export const revalidate = 1;
 
 async function getGames(userId: string) {
   const userCollection = await prisma.userGameCollection.findMany({
