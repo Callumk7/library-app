@@ -1,4 +1,4 @@
-import { CollectionView } from "@/components/collection/collection-view";
+import { CollectionView } from "@/components/collection/view/collection-view";
 import { prisma } from "@/lib/prisma/client";
 import { auth } from "@clerk/nextjs";
 
@@ -42,7 +42,7 @@ export default async function CollectionPage() {
   const games = await getGames(userId);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center space-y-10 justify-between p-24">
       <CollectionView content={games} />
     </main>
   );
