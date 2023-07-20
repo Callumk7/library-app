@@ -3,15 +3,13 @@
 import { GameWithCoverAndCollection } from "@/types";
 import CollectionItem from "./collection-item";
 
-import { collectionAtom } from "./store";
-import { useAtom } from "jotai";
-import { useEffect } from "react";
+import { useState } from "react";
 
 interface CollectionViewProps {
   content: GameWithCoverAndCollection[];
 }
 export function CollectionView({ content }: CollectionViewProps) {
-  const [collection, setCollection] = useAtom(collectionAtom);
+  const [collection, setCollection] = useState(content);
 
   const handleRemove = async (itemId: number) => {
     const newCollection = collection.filter((game) => game.externalId !== itemId);
@@ -25,10 +23,6 @@ export function CollectionView({ content }: CollectionViewProps) {
 
     console.log(req.status);
   };
-
-  useEffect(() => {
-    setCollection(content);
-  }, [content, setCollection]);
 
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
