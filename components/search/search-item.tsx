@@ -2,6 +2,7 @@
 
 import { IGDBGame } from "@/types";
 import Image from "next/image";
+import { Button } from "../ui/button";
 
 export interface SearchResultProps {
   game: IGDBGame;
@@ -10,7 +11,6 @@ export interface SearchResultProps {
 export function SearchResult({ game }: SearchResultProps) {
   // HANDLERS
   const handleSave = async () => {
-    // fetch request to the server
     const postRequest = await fetch(`/api/library/${game.id}`, {
       method: "POST",
       headers: {
@@ -18,6 +18,7 @@ export function SearchResult({ game }: SearchResultProps) {
       },
       body: JSON.stringify(game),
     });
+    // no idea if this actually does anything useful, but its here
     const revalidate = await fetch(`/api/revalidate`, {
       method: "GET",
     });
@@ -36,12 +37,12 @@ export function SearchResult({ game }: SearchResultProps) {
       />
       <h1 className="mb-2 min-h-[40px]  font-bold lg:min-h-[60px]">{game.name}</h1>
       {game.genres && <p className="text-sm opacity-70">{game.genres[0].name}</p>}
-      <button
+      <Button
         className="absolute bottom-4 right-4 w-fit rounded-md bg-btn-background px-4 py-2 no-underline hover:bg-btn-background-hover"
         onClick={handleSave}
       >
         save
-      </button>
+      </Button>
     </div>
   );
 }
