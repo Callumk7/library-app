@@ -26,21 +26,38 @@ const gameWithCoverAndCollection = Prisma.validator<Prisma.GameArgs>()({
 	},
 });
 
+const collectionWithGames = Prisma.validator<Prisma.UserGameCollectionArgs>()({
+	include: {
+		game: {
+			include: {
+				cover: true,
+			},
+		},
+	},
+});
+
 type GameWithGenreAndCover = Prisma.GameGetPayload<typeof gameWithGenreAndCover>;
 type GameWithCover = Prisma.GameGetPayload<typeof gameWithCover>;
 type GameWithCoverAndCollection = Prisma.GameGetPayload<
 	typeof gameWithCoverAndCollection
 >;
+type CollectionWithGames = Prisma.UserGameCollectionGetPayload<
+	typeof collectionWithGames
+>;
 
 type GameUpload = Prisma.GameCreateInput;
 
-export { Cover, Game, Genre, User, UserGameCollection };
+export type { Cover, Game, Genre, User, UserGameCollection };
 export type {
 	GameUpload,
 	GameWithGenreAndCover,
 	GameWithCover,
 	GameWithCoverAndCollection,
+	CollectionWithGames,
 };
+
+type SortOption = "nameAsc" | "nameDesc" | "releaseDate" | "score";
+export type { SortOption };
 
 // IGDB database types
 type IGDBGame = {

@@ -18,7 +18,7 @@ export default function Searchbar() {
       <input
         type="text"
         name="q"
-        className="rounded-md border bg-inherit px-4 py-2"
+        className="rounded-md border bg-inherit px-4 py-2 focus:border-foreground"
         value={searchTerm}
         placeholder="search for a game"
         onChange={(e) => setSearchTerm(e.target.value)}

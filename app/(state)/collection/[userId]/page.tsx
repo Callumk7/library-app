@@ -4,11 +4,12 @@ import { auth } from "@clerk/nextjs";
 import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-export default async function CollectionPage() {
+export default async function CollectionPage({ params }: { params: { userId: string } }) {
   const { userId } = auth();
-  if (!userId) {
-    return <h1>User not found</h1>;
+  if (userId !== params.userId) {
+    return <h1>NOT YOU, GET OUT</h1>;
   }
   const res = await fetch(`http://localhost:3000/api/collection/`, {
     method: "GET",

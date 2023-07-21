@@ -2,8 +2,8 @@ import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-	const path = "/collection";
+	console.log("revalidate called");
+	const path = "/(state)/collection";
 	revalidatePath(path);
-	console.log("/collection revalidated");
 	return NextResponse.json({ revalidated: true, now: Date.now() });
 }
