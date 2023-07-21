@@ -22,9 +22,7 @@ export default async function CollectionPage({ params }: { params: { userId: str
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between space-y-10 p-24">
-      <Suspense>
         <CollectionView collection={data} />
-      </Suspense>
     </main>
   );
 }
