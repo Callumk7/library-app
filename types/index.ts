@@ -34,7 +34,7 @@ type GameWithCoverAndCollection = Prisma.GameGetPayload<
 
 type GameUpload = Prisma.GameCreateInput;
 
-export { Cover, Game, Genre, User, UserGameCollection };
+export type { Cover, Game, Genre, User, UserGameCollection };
 export type {
 	GameUpload,
 	GameWithGenreAndCover,
