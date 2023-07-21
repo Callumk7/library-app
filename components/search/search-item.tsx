@@ -3,20 +3,23 @@
 import { IGDBGame } from "@/types";
 import Image from "next/image";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 export interface SearchResultProps {
   game: IGDBGame;
 }
 
 export function SearchResult({ game }: SearchResultProps) {
+  const router = useRouter();
   // HANDLERS
   const handleSave = async () => {
+    router.refresh();
     // no idea if this actually does anything useful, but its here
     const revalidate = await fetch(`/api/revalidate`, {
       method: "GET",
     });
     const data = await revalidate.json();
-    console.log(data)
+    console.log(data);
     const postRequest = await fetch(`/api/library/${game.id}`, {
       method: "POST",
       headers: {
@@ -24,7 +27,6 @@ export function SearchResult({ game }: SearchResultProps) {
       },
       body: JSON.stringify(game),
     });
-
   };
 
   // image size fetched from IGDB
