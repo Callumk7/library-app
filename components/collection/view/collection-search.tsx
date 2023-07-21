@@ -11,7 +11,7 @@ export default function CollectionSearch({
     <input
       type="text"
       name="search"
-      className="place-self-start rounded-md border bg-inherit px-4 py-2 focus:border-foreground"
+      className="rounded-md border bg-inherit px-4 py-2 focus:border-foreground"
       value={searchTerm}
       placeholder="search for a game"
       onChange={handleSearchTermChanged}
