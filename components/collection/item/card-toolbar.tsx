@@ -8,13 +8,13 @@ import clsx from "clsx";
 interface CardToolbarProps {
   played: boolean;
   handleRemoveClicked: () => void;
-  handlePlayToggled: () => void;
+  handlePlayedToggled: () => void;
 }
 
 export function CardToolbar({
   played,
   handleRemoveClicked,
-  handlePlayToggled,
+  handlePlayedToggled,
 }: CardToolbarProps) {
   let style: string;
   if (played) {
@@ -27,7 +27,7 @@ export function CardToolbar({
       <div className="flex flex-row items-center justify-between">
         <PlayIcon
           className={clsx(style, "h-6 w-6")}
-          handleClick={handlePlayToggled}
+          handleClick={handlePlayedToggled}
         ></PlayIcon>
         <Dropdown.Root>
           <Dropdown.Trigger asChild>

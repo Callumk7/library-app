@@ -1,74 +1,47 @@
 "use client";
 
-import { GameWithCoverAndCollection } from "@/types";
+import { CollectionWithGames, SortOption } from "@/types";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import CollectionItem from "../item/collection-item";
 import CollectionSearch from "./collection-search";
 import { Button } from "@/components/ui/button";
+import CollectionEntry from "../item/collection-entry";
+import { applySorting } from "./sorting-util";
+import { useRouter } from "next/navigation";
 
-interface CollectionViewProps {
-  content: GameWithCoverAndCollection[];
-}
+const DEFAULT_SORT_OPTION: SortOption = "nameAsc";
 
-export function CollectionView({ content }: CollectionViewProps) {
-  const [collection, setCollection] = useState(content);
-  const [filteredCollection, setFilteredCollection] = useState(content);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  // sorting options
-  type SortOption = "nameAsc" | "nameDesc" | "releaseDate" | "score";
-  const [sortOption, setSortOption] = useState<SortOption>("nameAsc");
-
-  // this is silly..
-  // seems to sort a problem with the production build not
-  // updating from the server, due to configuration issues
+export function CollectionView({ collection }: { collection: CollectionWithGames[] }) {
   const router = useRouter();
-  useEffect(() => {
-    router.refresh();
+  const [collectionState, setCollectionState] =
+    useState<CollectionWithGames[]>(collection);
+
+  const [sortedCollection, setSortedCollection] = useState<CollectionWithGames[]>(() => {
+    const sortedCollection = applySorting(collectionState, DEFAULT_SORT_OPTION);
+    return sortedCollection;
   });
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [sortOption, setSortOption] = useState<SortOption>("nameAsc");
+
   useEffect(() => {
-    const newFilteredCollection = collection.filter((game) => {
-      if (searchTerm === "") {
-        return game;
-      } else if (game.title.toLowerCase().includes(searchTerm.toLowerCase())) {
-        return game;
-      }
-    });
-    setFilteredCollection(newFilteredCollection);
-  }, [collection, searchTerm]);
+    const filteredCollection = collectionState.filter(
+      (entry) =>
+        searchTerm === "" ||
+        entry.game.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    const sortedCollection = applySorting(filteredCollection, sortOption);
+    setSortedCollection(sortedCollection);
+  }, [collectionState, searchTerm, sortOption]);
 
   const handleSearchTermChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
-  useEffect(() => {
-    switch (sortOption) {
-      case "nameAsc":
-        setFilteredCollection(
-          filteredCollection.sort((a, b) =>
-            a.title.toUpperCase() < b.title.toUpperCase() ? -1 : 1
-          )
-        );
-        break;
-
-      case "nameDesc":
-        setFilteredCollection(
-          filteredCollection.sort((a, b) =>
-            a.title.toUpperCase() > b.title.toUpperCase() ? -1 : 1
-          )
-        );
-        break;
-      default:
-        break;
-    }
-  }, [sortOption, filteredCollection, collection]);
-
-  const handleRemove = async (itemId: number) => {
-    const newCollection = collection.filter((game) => game.externalId !== itemId);
-    setCollection(newCollection);
-    const req = await fetch(`/api/library/${itemId}`, {
+  const handleRemoveEntry = async (gameId: number) => {
+    const newCollection = collectionState.filter((entry) => entry.gameId !== gameId);
+    setCollectionState(newCollection);
+    const req = await fetch(`/api/library/${gameId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -77,6 +50,41 @@ export function CollectionView({ content }: CollectionViewProps) {
 
     console.log(req.status);
   };
+
+  const handlePlayedToggledEntry = async (gameId: number) => {
+    setCollectionState((prevState) => {
+      const updatedCollection = prevState.map((entry) => {
+        if (entry.gameId === gameId) {
+          return { ...entry, played: !entry.played };
+        }
+        return entry;
+      });
+
+      const sortedCollection = applySorting(updatedCollection, sortOption);
+      setSortedCollection(sortedCollection);
+
+      return sortedCollection; // Return the sorted collection as the new state
+    });
+    const prevState = collectionState.find((entry) => entry.gameId === gameId)?.played;
+    try {
+      const res = await fetch(`/api/library/${gameId}`, {
+        method: "PATCH",
+        body: JSON.stringify({ played: !prevState }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const json = await res.json();
+      console.log(json);
+    } catch (error) {
+      console.log("FUCK!!!");
+    }
+  };
+
+  const handleRefresh = () => {
+    console.log("tried to refresh")
+    router.refresh();
+  }
 
   return (
     <>
@@ -95,10 +103,16 @@ export function CollectionView({ content }: CollectionViewProps) {
         >
           {sortOption === "nameAsc" ? "asc" : "desc"}
         </Button>
+        <Button variant={"outline"} onClick={handleRefresh}>Refresh</Button>
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
-        {filteredCollection.map((item, index) => (
-          <CollectionItem key={index} item={item} handleRemove={handleRemove} />
+        {sortedCollection.map((entry, index) => (
+          <CollectionEntry
+            key={index}
+            entry={entry}
+            handleRemoveEntry={handleRemoveEntry}
+            handlePlayedToggledEntry={handlePlayedToggledEntry}
+          />
         ))}
       </div>
     </>

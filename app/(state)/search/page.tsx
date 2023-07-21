@@ -1,5 +1,6 @@
 import { SearchResults } from "@/components/search/search-results";
 import { IGDBGame } from "@/types";
+import { revalidateTag } from "next/cache";
 
 async function getSearchResults(q: string): Promise<IGDBGame[]> {
   const res = await fetch(process.env.IGDB_URL!, {
@@ -14,11 +15,14 @@ async function getSearchResults(q: string): Promise<IGDBGame[]> {
   return res.json();
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function SearchPage({
   searchParams,
 }: {
   searchParams: { q: string };
 }) {
+  revalidateTag("collection");
   const data = await getSearchResults(searchParams.q);
   const results = await Promise.all(data);
 
