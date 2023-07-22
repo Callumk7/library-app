@@ -1,4 +1,4 @@
 export default function Loading() {
   // You can add any UI inside Loading, including a Skeleton.
-  return <div>Go fuck yourself</div>;
+  return <div>Getting Collection....</div>;
 }
