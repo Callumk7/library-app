@@ -11,6 +11,7 @@ async function getSearchResults(q: string): Promise<IGDBGame[]> {
       "content-type": "text/plain",
     },
     body: `search "${q}"; fields name, cover.image_id, genres.*; limit 20;`,
+    cache: "force-cache",
   });
   return res.json();
 }
@@ -22,16 +23,14 @@ export default async function SearchPage({
 }: {
   searchParams: { q: string };
 }) {
-  revalidateTag("collection");
   const data = await getSearchResults(searchParams.q);
-  const results = await Promise.all(data);
 
-  if (results.length === 0) {
+  if (data.length === 0) {
     return <h1 className="text-xl text-white">No results found</h1>;
   } else {
     return (
       <div className="animate-in mx-auto w-4/5">
-        <SearchResults results={results} />
+        <SearchResults results={data} />
       </div>
     );
   }

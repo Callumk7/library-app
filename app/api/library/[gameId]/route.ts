@@ -15,51 +15,60 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 		return NextResponse.error();
 	}
 
-	if (item.cover) {
-		const upsertGame = await prisma.game.upsert({
-			where: {
-				externalId: gameId,
-			},
-			update: {
-				cover: {
-					upsert: {
-						create: {
-							imageId: item.cover.image_id,
-						},
-						update: {}
-					},
-				},
-			},
-			create: {
-				externalId: gameId,
-				title: item.name,
-				cover: {
+	if (!item.cover) {
+		return NextResponse.error();
+	}
+
+	const upsertGame = await prisma.game.upsert({
+		where: {
+			externalId: gameId,
+		},
+		update: {
+			cover: {
+				upsert: {
 					create: {
 						imageId: item.cover.image_id,
 					},
+					update: {},
 				},
 			},
-		});
-	}
-
-	const upsertUserCollection = await prisma.userGameCollection.upsert({
-		where: {
-			clerkId_gameId: {
-				gameId: gameId,
-				clerkId: userId,
+			UserGameCollection: {
+				connectOrCreate: {
+					where: {
+						clerkId_gameId: {
+							clerkId: userId,
+							gameId: gameId,
+						},
+					},
+					create: {
+						clerkId: userId,
+					},
+				},
 			},
 		},
-		update: {},
 		create: {
-			clerkId: userId,
-			gameId: gameId,
+			externalId: gameId,
+			title: item.name,
+			cover: {
+				create: {
+					imageId: item.cover.image_id,
+				},
+			},
+			UserGameCollection: {
+				create: {
+					clerkId: userId,
+				},
+			},
+		},
+		select: {
+			UserGameCollection: true,
 		},
 	});
 
 	console.log(
-		`added collection ${upsertUserCollection.gameId}, ${upsertUserCollection.clerkId}`
+		`added collection ${upsertGame.UserGameCollection[0].clerkId}, ${upsertGame.UserGameCollection[0].gameId}`
 	);
-	return NextResponse.json({ upsertUserCollection });
+	return NextResponse.json({ upsertGame });
 }
 
 export async function DELETE(_req: Request, { params }: { params: { gameId: number } }) {

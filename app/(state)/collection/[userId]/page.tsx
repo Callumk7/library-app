@@ -11,7 +11,7 @@ export default async function CollectionPage({ params }: { params: { userId: str
   if (userId !== params.userId) {
     return <h1>NOT YOU, GET OUT</h1>;
   }
-  const res = await fetch(`https://library-app-green.vercel.app/api/collection/`, {
+  const res = await fetch(`${process.env.APP_URL}/api/collection/`, {
     method: "GET",
     headers: {
       user: userId,
