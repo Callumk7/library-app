@@ -78,6 +78,28 @@ type IGDBGame = {
 		image_id: string;
 	};
 	storyline?: string;
+	screenshots?: {
+		id: number;
+		image_id: string;
+	}[];
+	artworks?: {
+		id: number;
+		image_id: string;
+	};
 };
 
-export type { IGDBGame };
+type IGDBImage =
+	| "cover_small"
+	| "screenshot_med"
+	| "cover_big"
+	| "logo_med"
+	| "screenshot_big"
+	| "screenshot_huge"
+	| "thumb"
+	| "micro"
+	| "720p"
+	| "micro"
+	| "720p"
+	| "1080p";
+
+export type { IGDBGame, IGDBImage };
