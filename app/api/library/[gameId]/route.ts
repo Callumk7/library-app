@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma/client";
+import { Prisma } from "@prisma/client";
 import { IGDBGame } from "@/types";
 import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server";
@@ -12,10 +13,6 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 	console.log(`item details recovered for game ${item.name}`);
 
 	if (!userId) {
-		return NextResponse.error();
-	}
-
-	if (!item.cover) {
 		return NextResponse.error();
 	}
 
@@ -63,6 +60,15 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 		select: {
 			UserGameCollection: true,
 		},
+	});
+
+	// process artwork
+	fetch(`${process.env.APP_URL}/collection/artwork`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(item),
 	});
 
 	console.log(
