@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { CardToolbar } from "./card-toolbar";
+import { Suspense } from "react";
 
 interface CollectionItemProps {
   entry: CollectionWithGames;
@@ -27,13 +28,15 @@ export default function CollectionEntry({
 
   return (
     <div className="relative flex flex-col overflow-hidden rounded-lg border text-foreground hover:border-foreground">
-      <Link href={`/collection/games/${entry.gameId}`}>
-        <Image
-          src={`https://images.igdb.com/igdb/image/upload/t_${size}/${entry.game.cover?.imageId}.jpg`}
-          alt="cover image"
-          width={720}
-          height={1280}
-        />
+      <Link href={`/games/${entry.gameId}`}>
+        <Suspense>
+          <Image
+            src={`https://images.igdb.com/igdb/image/upload/t_${size}/${entry.game.cover?.imageId}.jpg`}
+            alt="cover image"
+            width={720}
+            height={1280}
+          />
+        </Suspense>
       </Link>
       <div className="p-6">
         <h1 className="mb-2 min-h-[40px]  font-bold lg:min-h-[60px]">
