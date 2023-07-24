@@ -1,9 +1,9 @@
 "use client";
 
 import * as ToastPrimitives from "@radix-ui/react-toast";
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
+import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
 
 const ToastProvider = ToastPrimitives.Provider;
 
@@ -14,7 +14,7 @@ const ToastViewport = forwardRef<
   <ToastPrimitives.Viewport
     ref={ref}
     className={clsx(
-      "fixed bottom-0 right-0 z-50 flex w-96 max-w-full flex-col gap-3 p-7",
+      "fixed bottom-0 right-0 z-50 flex w-full flex-col-reverse gap-3 p-7 md:max-w-md",
       className
     )}
     {...props}
@@ -24,12 +24,12 @@ ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 // TODO: #6 Complete
 const toastVariants = cva(
-  "bg-background border border-foreground/20 rounded-md px-2 py-1 data-[state=open]:animate-slideIn data-[state=closed]:animate-hide",
+  "relative flex w-full items-center justify-between space-x-4 overflow-hidden border-foreground/20 rounded-md px-4 py-2 shadow-lg data-[state=open]:animate-slideIn data-[state=closed]:animate-hide",
   {
     variants: {
       variant: {
         default: "border bg-background",
-        destructive: "bg-destructive",
+        destructive: "bg-destructive text-light",
       },
     },
   }
@@ -68,7 +68,7 @@ const ToastClose = forwardRef<
   <ToastPrimitives.Close
     ref={ref}
     className={clsx(
-      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
+      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2",
       className
     )}
     toast-close=""
@@ -108,4 +108,12 @@ const ToastDescription = forwardRef<
 ));
 ToastDescription.displayName = ToastPrimitives.Description.displayName;
 
-export { ToastProvider, ToastViewport, Toast, ToastClose, ToastAction, ToastDescription, ToastTitle };
+export {
+  Toast,
+  ToastAction,
+  ToastClose,
+  ToastDescription,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
+};

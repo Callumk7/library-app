@@ -3,25 +3,15 @@
 import { IGDBGame, IGDBImage } from "@/types";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
-import { Toast } from "../ui/Toast";
 import { useState } from "react";
 import { SearchToast } from "./search-toast";
 
 export function SearchResult({ game, included }: { game: IGDBGame; included?: boolean }) {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
+
   // HANDLERS
   const handleSave = async () => {
-    // router.refresh();
-    fetch("/api/revalidate");
-    // no idea if this actually does anything useful, but its here
-    const revalidate = await fetch(`/api/revalidate`, {
-      method: "GET",
-    });
-    const data = await revalidate.json();
-    console.log(data);
-    const postRequest = await fetch(`/api/library/${game.id}`, {
+    const postRequest = await fetch(`/api/collection/games/${game.id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

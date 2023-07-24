@@ -6,12 +6,14 @@ interface SearchToastProps {
   open: boolean;
   setOpen: () => void;
 }
-export const SearchToast = ({title, content, open, setOpen}: SearchToastProps) => {
+export const SearchToast = ({ title, content, open, setOpen }: SearchToastProps) => {
   return (
-    <Toast open={open} onOpenChange={setOpen}>
+    <Toast open={open} onOpenChange={setOpen} variant={"default"}>
       {title && <ToastTitle>{title}</ToastTitle>}
       <ToastDescription>{content}</ToastDescription>
-      <ToastClose aria-label="Close"></ToastClose>
+      <ToastClose aria-label="Close">
+        CLOSE
+      </ToastClose>
     </Toast>
-  )
-}
+  );
+};
