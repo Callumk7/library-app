@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Toast } from "../ui/Toast";
 import { useState } from "react";
+import { SearchToast } from "./search-toast";
 
 export function SearchResult({ game, included }: { game: IGDBGame; included?: boolean }) {
   const [open, setOpen] = useState(false);
@@ -57,14 +58,12 @@ export function SearchResult({ game, included }: { game: IGDBGame; included?: bo
       >
         save
       </Button>
-      <Toast
-        title={"new toast"}
-        content={"saved to collection"}
+      <SearchToast
+        title={`${game.name} added`}
+        content="find it in your collection"
         open={open}
-        onOpenChange={setOpen}
-      >
-        <Button variant={"destructive"}>undo</Button>
-      </Toast>
+        setOpen={setOpen}
+      />
     </div>
   );
 }
