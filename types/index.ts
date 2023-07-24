@@ -63,29 +63,31 @@ export type { SortOption };
 type IGDBGame = {
 	id: number;
 	url: string;
-	genres?: {
-		id: number;
-		created_at: number;
-		name: string;
-		slug: string;
-		updated_at: number;
-		url: string;
-		checksum: string;
-	}[];
+	genres:
+		| {
+				id: number;
+				name: string;
+		  }[]
+		| undefined;
 	name: string;
-	cover?: {
+	cover: {
 		id: number;
 		image_id: string;
 	};
-	storyline?: string;
-	screenshots?: {
+	storyline: string | undefined;
+	screenshots:
+		| {
+				id: number;
+				image_id: string;
+		  }[]
+		| undefined;
+	artworks: {
 		id: number;
 		image_id: string;
 	}[];
-	artworks?: {
-		id: number;
-		image_id: string;
-	};
+	aggregated_rating: number | undefined;
+	aggregated_rating_count: number | undefined;
+	involved_companies?: number[] | undefined;
 };
 
 type IGDBImage =
