@@ -51,10 +51,11 @@ export function CollectionView({ collection }: { collection: CollectionWithGames
     setSearchTerm(e.target.value);
   };
 
+  // HANDLERS
   const handleRemoveEntry = async (gameId: number) => {
     const newCollection = collectionState.filter((entry) => entry.gameId !== gameId);
     setCollectionState(newCollection);
-    const req = await fetch(`/api/library/${gameId}`, {
+    const req = await fetch(`/api/collection/games/${gameId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -64,7 +65,6 @@ export function CollectionView({ collection }: { collection: CollectionWithGames
     console.log(req.status);
   };
 
-  // use function with prevState as arg
   const handlePlayedToggledEntry = async (gameId: number) => {
     setCollectionState((prevState) => {
       const updatedCollection = prevState.map((entry) => {
@@ -81,7 +81,7 @@ export function CollectionView({ collection }: { collection: CollectionWithGames
     });
     const prevState = collectionState.find((entry) => entry.gameId === gameId)?.played;
     try {
-      const res = await fetch(`/api/library/${gameId}`, {
+      const res = await fetch(`/api/collection/games/${gameId}`, {
         method: "PATCH",
         body: JSON.stringify({ played: !prevState }),
         headers: {

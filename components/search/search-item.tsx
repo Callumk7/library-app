@@ -9,7 +9,6 @@ import { SearchToast } from "./search-toast";
 export function SearchResult({ game, included }: { game: IGDBGame; included?: boolean }) {
   const [open, setOpen] = useState(false);
 
-  // HANDLERS
   const handleSave = async () => {
     const postRequest = await fetch(`/api/collection/games/${game.id}`, {
       method: "POST",
@@ -27,9 +26,7 @@ export function SearchResult({ game, included }: { game: IGDBGame; included?: bo
   return (
     <div className="relative flex w-full flex-col overflow-hidden rounded-lg border text-foreground hover:border-foreground">
       <Image
-        src={`https://images.igdb.com/igdb/image/upload/t_${size}/${
-          game.artworks![0].image_id
-        }.jpg`}
+        src={`https://images.igdb.com/igdb/image/upload/t_${size}/${game.artworks[0].image_id}.jpg`}
         alt="cover image"
         width={569}
         height={320}
@@ -50,10 +47,10 @@ export function SearchResult({ game, included }: { game: IGDBGame; included?: bo
       </Button>
       <SearchToast
         title={`${game.name} added`}
-        content="find it in your collection"
+        content="Find it in your collection, go now?"
         open={open}
         setOpen={setOpen}
-      />
+      ></SearchToast>
     </div>
   );
 }

@@ -24,7 +24,7 @@ ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 // TODO: #6 Complete
 const toastVariants = cva(
-  "relative flex w-full items-center justify-between space-x-4 overflow-hidden border-foreground/20 rounded-md px-4 py-2 shadow-lg data-[state=open]:animate-slideIn data-[state=closed]:animate-hide",
+  "relative flex flex-col w-full items-start space-y-4 overflow-hidden border-foreground/20 rounded-md px-4 py-2 shadow-lg data-[state=open]:animate-slideIn data-[state=closed]:animate-hide",
   {
     variants: {
       variant: {
@@ -68,19 +68,12 @@ const ToastClose = forwardRef<
   <ToastPrimitives.Close
     ref={ref}
     className={clsx(
-      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2",
+      "absolute right-1 top-1 rounded-md p-1 text-foreground/50 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2",
       className
     )}
     toast-close=""
     {...props}
-  >
-    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path
-        fill="currentColor"
-        d="M6.4 19L5 17.6l5.6-5.6L5 6.4L6.4 5l5.6 5.6L17.6 5L19 6.4L13.4 12l5.6 5.6l-1.4 1.4l-5.6-5.6L6.4 19Z"
-      />
-    </svg>
-  </ToastPrimitives.Close>
+  ></ToastPrimitives.Close>
 ));
 ToastClose.displayName = ToastPrimitives.Close.displayName;
 
