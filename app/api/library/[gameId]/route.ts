@@ -57,7 +57,7 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 				},
 			},
 			releaseDate: item.first_release_date,
-		},
+	 	},
 		select: {
 			users: true,
 		},

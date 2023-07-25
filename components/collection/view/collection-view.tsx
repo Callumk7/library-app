@@ -6,12 +6,10 @@ import CollectionSearch from "./collection-search";
 import { Button } from "@/components/ui/button";
 import CollectionEntry from "../item/collection-entry";
 import { applySorting } from "./sorting-util";
-import { useRouter } from "next/navigation";
 
 const DEFAULT_SORT_OPTION: SortOption = "nameAsc";
 
 export function CollectionView({ collection }: { collection: CollectionWithGames[] }) {
-  const router = useRouter();
   const [collectionState, setCollectionState] =
     useState<CollectionWithGames[]>(collection);
 
