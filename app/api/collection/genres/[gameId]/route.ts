@@ -54,5 +54,5 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 		console.log("No genres found");
 	}
 
-	return NextResponse;
+	return new NextResponse("genres added!");
 }

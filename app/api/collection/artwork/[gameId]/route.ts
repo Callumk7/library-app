@@ -43,5 +43,5 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 		await Promise.all(artworkPromises);
 	}
 
-	return NextResponse;
+	return new NextResponse("artwork and screenshots added!");
 }

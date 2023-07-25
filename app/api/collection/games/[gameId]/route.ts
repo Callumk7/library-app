@@ -117,11 +117,16 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 		});
 	}
 
+
+	console.log(
+		`added collection ${upsertGame.users[0].clerkId}, ${upsertGame.users[0].gameId}`
+	);
+	
 	// Handoff artwork and genre tasks to worker endpoints. This does not block
 	// the end user, but error handling could become messy.
 
 	// process artwork async
-	const artworkHandoffPromise = fetch(`${process.env.APP_URL}/api/worker`, {
+	const artworkHandoffPromise = fetch(`${process.env.APP_URL}/api/worker/${upsertGame.id}`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
@@ -131,24 +136,23 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 	});
 
 	// process genres async
-	const genreHandoffPromise = fetch(`${process.env.APP_URL}/api/worker`, {
+	const genreHandoffPromise = fetch(`${process.env.APP_URL}/api/worker/${gameId}`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
-			handoffType: "genre"
+			handoffType: "genres",
 		},
 		body: JSON.stringify(item),
 	});
 
-	const [artworkHandoffRes, genreHandoffRes]  = await Promise.all([artworkHandoffPromise, genreHandoffPromise])
-	const artworkText = await artworkHandoffRes.text();
-	const genreText = await genreHandoffRes.text();
-	console.log(artworkText);
-	console.log(genreText);
-
-	console.log(
-		`added collection ${upsertGame.users[0].clerkId}, ${upsertGame.users[0].gameId}`
-	);
+	// const [artworkHandoffRes, genreHandoffRes] = await Promise.all([
+	// 	artworkHandoffPromise,
+	// 	genreHandoffPromise,
+	// ]);
+	// const artworkText = await artworkHandoffRes.text();
+	// const genreText = await genreHandoffRes.text();
+	// console.log(artworkText);
+	// console.log(genreText);
 	return NextResponse.json({ upsertGame });
 }
 
