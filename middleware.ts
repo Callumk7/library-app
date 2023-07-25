@@ -6,6 +6,7 @@ export default authMiddleware({
 		"/",
 		"/api/users",
 		"/api/collection",
+		"/api/collection/(.*)",
 		"/api/collection/genres/(.*)",
 		"/api/collection/artwork/(.*)",
 	],
