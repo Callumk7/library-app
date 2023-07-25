@@ -28,7 +28,7 @@ model Game {
   screenshots           Screenshot[]
   users                 UserGameCollection[]
   genres                GenresOnGames[]
-  aggregatedRating      Int?
+  aggregatedRating      Float?
   aggregatedRatingCount Int?
   storyline             String?
   releaseDate           Int?
