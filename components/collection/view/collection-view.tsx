@@ -6,42 +6,56 @@ import CollectionSearch from "./collection-search";
 import { Button } from "@/components/ui/button";
 import CollectionEntry from "../item/collection-entry";
 import { applySorting } from "./sorting-util";
-import { useRouter } from "next/navigation";
 
 const DEFAULT_SORT_OPTION: SortOption = "nameAsc";
 
 export function CollectionView({ collection }: { collection: CollectionWithGames[] }) {
-  const router = useRouter();
   const [collectionState, setCollectionState] =
     useState<CollectionWithGames[]>(collection);
 
+  // use a function to set initial state for the sorted collection. This fixes
+  // a flicker/glitch when the page loaded, and then default sorting was applied
+  // after the fact.
   const [sortedCollection, setSortedCollection] = useState<CollectionWithGames[]>(() => {
     const sortedCollection = applySorting(collectionState, DEFAULT_SORT_OPTION);
     return sortedCollection;
   });
 
-  const [searchTerm, setSearchTerm] = useState("");
-
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortOption, setSortOption] = useState<SortOption>("nameAsc");
 
+  const [isPlayedFilterActive, setIsPlayedFilterActive] = useState<boolean>(false);
+
+  // search, and isPlayed filtering is applied first, then remaining list
+  // is sorted and returned based on sort option
+  //
+  // I SHOULD REDO THIS => STUTTER
+  // I can change this to a handler, its not working as I like right now
   useEffect(() => {
-    const filteredCollection = collectionState.filter(
+    const searchedCollection = collectionState.filter(
       (entry) =>
         searchTerm === "" ||
         entry.game.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    let filteredCollection;
+    if (isPlayedFilterActive) {
+      filteredCollection = searchedCollection.filter((entry) => entry.played === true);
+    } else {
+      filteredCollection = searchedCollection;
+    }
     const sortedCollection = applySorting(filteredCollection, sortOption);
     setSortedCollection(sortedCollection);
-  }, [collectionState, searchTerm, sortOption]);
+  }, [collectionState, searchTerm, sortOption, isPlayedFilterActive]);
 
   const handleSearchTermChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
+  // HANDLERS
   const handleRemoveEntry = async (gameId: number) => {
     const newCollection = collectionState.filter((entry) => entry.gameId !== gameId);
     setCollectionState(newCollection);
-    const req = await fetch(`/api/library/${gameId}`, {
+    const req = await fetch(`/api/collection/games/${gameId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -67,7 +81,7 @@ export function CollectionView({ collection }: { collection: CollectionWithGames
     });
     const prevState = collectionState.find((entry) => entry.gameId === gameId)?.played;
     try {
-      const res = await fetch(`/api/library/${gameId}`, {
+      const res = await fetch(`/api/collection/games/${gameId}`, {
         method: "PATCH",
         body: JSON.stringify({ played: !prevState }),
         headers: {
@@ -80,11 +94,6 @@ export function CollectionView({ collection }: { collection: CollectionWithGames
       console.log("FUCK!!!");
     }
   };
-
-  const handleRefresh = () => {
-    console.log("tried to refresh")
-    router.refresh();
-  }
 
   return (
     <>
@@ -103,7 +112,12 @@ export function CollectionView({ collection }: { collection: CollectionWithGames
         >
           {sortOption === "nameAsc" ? "asc" : "desc"}
         </Button>
-        <Button variant={"outline"} onClick={handleRefresh}>Refresh</Button>
+        <Button
+          variant={isPlayedFilterActive ? "default" : "outline"}
+          onClick={() => setIsPlayedFilterActive(!isPlayedFilterActive)}
+        >
+          played
+        </Button>
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {sortedCollection.map((entry, index) => (

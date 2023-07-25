@@ -16,25 +16,6 @@ async function getGames(userId: string) {
 	});
 
 	return userCollection;
-
-	// const gameIdArray = userCollection.map((user) => user.gameId);
-	//
-	// const games = await prisma.game.findMany({
-	// 	where: {
-	// 		externalId: {
-	// 			in: gameIdArray,
-	// 		},
-	// 	},
-	// 	include: {
-	// 		cover: true,
-	// 		UserGameCollection: {
-	// 			where: {
-	// 				clerkId: userId,
-	// 			},
-	// 		},
-	// 	},
-	// });
-	// return games;
 }
 
 export async function GET(req: NextRequest) {

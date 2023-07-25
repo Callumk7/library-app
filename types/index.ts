@@ -2,13 +2,6 @@
 import { Prisma } from "@prisma/client";
 import type { Cover, Game, Genre, User, UserGameCollection } from "@prisma/client";
 
-const gameWithGenreAndCover = Prisma.validator<Prisma.GameArgs>()({
-	include: {
-		genre: true,
-		cover: true,
-	},
-});
-
 const gameWithCover = Prisma.validator<Prisma.GameArgs>()({
 	include: {
 		cover: true,
@@ -18,7 +11,7 @@ const gameWithCover = Prisma.validator<Prisma.GameArgs>()({
 const gameWithCoverAndCollection = Prisma.validator<Prisma.GameArgs>()({
 	include: {
 		cover: true,
-		UserGameCollection: {
+		users: {
 			where: {
 				clerkId: "user",
 			},
@@ -36,7 +29,6 @@ const collectionWithGames = Prisma.validator<Prisma.UserGameCollectionArgs>()({
 	},
 });
 
-type GameWithGenreAndCover = Prisma.GameGetPayload<typeof gameWithGenreAndCover>;
 type GameWithCover = Prisma.GameGetPayload<typeof gameWithCover>;
 type GameWithCoverAndCollection = Prisma.GameGetPayload<
 	typeof gameWithCoverAndCollection
@@ -50,7 +42,6 @@ type GameUpload = Prisma.GameCreateInput;
 export type { Cover, Game, Genre, User, UserGameCollection };
 export type {
 	GameUpload,
-	GameWithGenreAndCover,
 	GameWithCover,
 	GameWithCoverAndCollection,
 	CollectionWithGames,
@@ -63,21 +54,46 @@ export type { SortOption };
 type IGDBGame = {
 	id: number;
 	url: string;
-	genres?: {
-		id: number;
-		created_at: number;
-		name: string;
-		slug: string;
-		updated_at: number;
-		url: string;
-		checksum: string;
-	}[];
+	genres:
+		| {
+				id: number;
+				name: string;
+		  }[]
+		| undefined;
 	name: string;
-	cover?: {
+	cover: {
 		id: number;
 		image_id: string;
 	};
-	storyline?: string;
+	storyline: string | undefined;
+	screenshots:
+		| {
+				id: number;
+				image_id: string;
+		  }[]
+		| undefined;
+	artworks: {
+		id: number;
+		image_id: string;
+	}[];
+	aggregated_rating: number | undefined;
+	aggregated_rating_count: number | undefined;
+	involved_companies?: number[] | undefined;
+	first_release_date: number;
 };
 
-export type { IGDBGame };
+type IGDBImage =
+	| "cover_small"
+	| "screenshot_med"
+	| "cover_big"
+	| "logo_med"
+	| "screenshot_big"
+	| "screenshot_huge"
+	| "thumb"
+	| "micro"
+	| "720p"
+	| "micro"
+	| "720p"
+	| "1080p";
+
+export type { IGDBGame, IGDBImage };

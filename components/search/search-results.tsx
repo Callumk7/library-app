@@ -3,14 +3,19 @@ import { SearchResult } from "./search-item";
 
 interface SearchResultsProps {
   results: IGDBGame[];
+  collectionIds: number[];
 }
 
-export function SearchResults({ results }: SearchResultsProps) {
+export function SearchResults({ results, collectionIds }: SearchResultsProps) {
   return (
-    <div className="grid w-full grid-cols-1 gap-y-4">
-      {results.map((game, index) => (
-        <SearchResult key={index} game={game} />
-      ))}
+    <div className="grid w-full grid-cols-3 gap-4 ">
+      {results.map((game, index) => {
+        if (collectionIds.includes(game.id)) {
+          return <SearchResult key={index} game={game} included />;
+        } else {
+          return <SearchResult key={index} game={game} />;
+        }
+      })}
     </div>
   );
 }

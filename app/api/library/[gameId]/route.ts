@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma/client";
+import { Prisma } from "@prisma/client";
 import { IGDBGame } from "@/types";
 import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,51 +16,66 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 		return NextResponse.error();
 	}
 
-	if (item.cover) {
-		const upsertGame = await prisma.game.upsert({
-			where: {
-				externalId: gameId,
-			},
-			update: {
-				cover: {
-					upsert: {
-						create: {
-							imageId: item.cover.image_id,
-						},
-						update: {}
-					},
-				},
-			},
-			create: {
-				externalId: gameId,
-				title: item.name,
-				cover: {
+	const upsertGame = await prisma.game.upsert({
+		where: {
+			externalId: gameId,
+		},
+		update: {
+			cover: {
+				upsert: {
 					create: {
 						imageId: item.cover.image_id,
 					},
+					update: {},
 				},
 			},
-		});
-	}
-
-	const upsertUserCollection = await prisma.userGameCollection.upsert({
-		where: {
-			clerkId_gameId: {
-				gameId: gameId,
-				clerkId: userId,
+			users: {
+				connectOrCreate: {
+					where: {
+						clerkId_gameId: {
+							clerkId: userId,
+							gameId: gameId,
+						},
+					},
+					create: {
+						clerkId: userId,
+					},
+				},
 			},
 		},
-		update: {},
 		create: {
-			clerkId: userId,
-			gameId: gameId,
+			externalId: gameId,
+			title: item.name,
+			cover: {
+				create: {
+					imageId: item.cover.image_id,
+				},
+			},
+			users: {
+				create: {
+					clerkId: userId,
+				},
+			},
+			releaseDate: item.first_release_date,
+	 	},
+		select: {
+			users: true,
 		},
 	});
 
+	// process artwork
+	fetch(`${process.env.APP_URL}/collection/artwork`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(item),
+	});
+
 	console.log(
-		`added collection ${upsertUserCollection.gameId}, ${upsertUserCollection.clerkId}`
+		`added collection ${upsertGame.users[0].clerkId}, ${upsertGame.users[0].gameId}`
 	);
-	return NextResponse.json({ upsertUserCollection });
+	return NextResponse.json({ upsertGame });
 }
 
 export async function DELETE(_req: Request, { params }: { params: { gameId: number } }) {

@@ -1,10 +1,37 @@
-import Link from "next/link";
+import { prisma } from "@/lib/prisma/client";
+import { IGDBImage } from "@/types";
+import Image from "next/image";
 
-export default function Home() {
+async function getRecentGames() {
+  const getGames = await prisma.game.findMany({
+    take: 5,
+    include: {
+      cover: true,
+    },
+  });
+  return getGames;
+}
+
+const size: IGDBImage = "cover_big";
+
+export default async function Home() {
+  const recentGames = await getRecentGames();
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1>This is the main page</h1>
-      <Link href="/library" className="bg-red-500 p-4">Go to library</Link>
+    <main className="mx-auto w-4/5">
+      <h1 className="text-2xl font-bold">Recent Games</h1>
+      <div className="flex flex-row justify-center space-x-1">
+        {recentGames.map((game, index) => (
+          <Image
+            key={index}
+            alt={game.title}
+            src={`https://images.igdb.com/igdb/image/upload/t_${size}/${
+              game.cover!.imageId
+            }.jpg`}
+            width={264}
+            height={374}
+          ></Image>
+        ))}
+      </div>
     </main>
   );
 }
