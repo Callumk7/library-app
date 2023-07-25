@@ -1,6 +1,48 @@
-import { NextRequest } from "next/server";
+import { prisma } from "@/lib/prisma/client";
+import { IGDBGame } from "@/types";
+import { NextRequest, NextResponse } from "next/server";
+import { title } from "process";
 
+// this route will process game artwork and genres asyncronously from the main request
 export async function POST(req: NextRequest, { params }: { params: { gameId: number } }) {
 	console.log("processing artwork...");
 	const gameId = Number(params.gameId);
+
+	const item: IGDBGame = await req.json();
+
+	const artworkPromises = item.artworks.map(async (artwork) => {
+		const upsertArtwork = await prisma.artwork.upsert({
+			where: {
+				imageId: artwork.image_id,
+			},
+			update: {},
+			create: {
+				gameId,
+				imageId: artwork.image_id,
+			},
+		});
+		console.log(`artwork ${upsertArtwork.id} created`);
+	});
+
+	if (item.screenshots) {
+		const screenshotPromises = item.screenshots.map(async (screenshot) => {
+			const upsertScreenshot = await prisma.screenshot.upsert({
+				where: {
+					imageId: screenshot.image_id,
+				},
+				update: {},
+				create: {
+					gameId,
+					imageId: screenshot.image_id,
+				},
+			});
+			console.log(`screenshot ${upsertScreenshot.id} created`);
+		});
+
+		await Promise.all([...artworkPromises, ...screenshotPromises]);
+	} else {
+		await Promise.all(artworkPromises);
+	}
+
+	return NextResponse;
 }

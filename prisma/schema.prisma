@@ -8,29 +8,30 @@ datasource db {
 }
 
 model User {
-  id                 Int                  @id @default(autoincrement())
-  clerkId            String               @unique
-  username           String               @unique
-  email              String               @unique
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @default(now()) @updatedAt
-  UserGameCollection UserGameCollection[]
+  id        Int                  @id @default(autoincrement())
+  clerkId   String               @unique
+  username  String               @unique
+  email     String               @unique
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @default(now()) @updatedAt
+  games     UserGameCollection[]
 }
 
 model Game {
-  id                 Int                  @id @default(autoincrement())
-  externalId         Int                  @unique
-  title              String
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  cover              Cover?
-  artworks          Artwork[]
-  screenshots       Screenshot[]
-  UserGameCollection UserGameCollection[]
-  genres              Genre[]
-  aggregatedRating  Int?
+  id                    Int                  @id @default(autoincrement())
+  externalId            Int                  @unique
+  title                 String
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  cover                 Cover?
+  artworks              Artwork[]
+  screenshots           Screenshot[]
+  users                 UserGameCollection[]
+  genres                GenresOnGames[]
+  aggregatedRating      Int?
   aggregatedRatingCount Int?
-  storyline String?
+  storyline             String?
+  releaseDate           DateTime
 }
 
 model UserGameCollection {
@@ -47,37 +48,48 @@ model UserGameCollection {
   @@id([clerkId, gameId])
 }
 
+model Genre {
+  id         Int             @id @default(autoincrement())
+  externalId Int             @unique
+  name       String
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  games      GenresOnGames[]
+}
+
+model GenresOnGames {
+  gameId    Int
+  genreId   Int
+  createdAt DateTime @default(now())
+  game      Game     @relation(fields: [gameId], references: [externalId])
+  genre     Genre    @relation(fields: [genreId], references: [id])
+
+  @@id([gameId, genreId])
+}
+
 model Cover {
   id        Int      @id @default(autoincrement())
-  imageId   String
+  imageId   String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   gameId    Int      @unique
   game      Game     @relation(fields: [gameId], references: [id])
 }
 
-model Genre {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  game      Game[]
-}
-
 model Artwork {
   id        Int      @id @default(autoincrement())
-  imageId   String
+  imageId   String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  gameId    Int      @unique
+  gameId    Int
   game      Game     @relation(fields: [gameId], references: [id])
 }
 
 model Screenshot {
   id        Int      @id @default(autoincrement())
-  imageId   String
+  imageId   String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  gameId    Int      @unique
+  gameId    Int
   game      Game     @relation(fields: [gameId], references: [id])
 }

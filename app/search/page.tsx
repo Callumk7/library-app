@@ -11,7 +11,7 @@ async function getSearchResults(q: string): Promise<IGDBGame[]> {
       Authorization: `Bearer ${process.env.IGDB_BEARER_TOKEN!}`,
       "content-type": "text/plain",
     },
-    body: `search "${q}"; fields name, artworks.image_id, screenshots.image_id, aggregated_rating, aggregated_rating_count, cover.image_id, storyline, genres.name; limit 40; where artworks != null;`,
+    body: `search "${q}"; fields name, artworks.image_id, screenshots.image_id, aggregated_rating, aggregated_rating_count, cover.image_id, storyline, first_release_date, genres.name; limit 40; where artworks != null;`,
     cache: "force-cache",
   });
   console.log("IGDB fetch completed");
@@ -68,7 +68,7 @@ export default async function SearchPage({
   } else {
     return (
       <div className="animate-in mx-auto w-10/12">
-          <SearchResults results={data} collectionIds={ids} />
+        <SearchResults results={data} collectionIds={ids} />
       </div>
     );
   }

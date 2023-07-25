@@ -2,7 +2,13 @@ import { authMiddleware } from "@clerk/nextjs";
 
 // This protects all routes, including api routes
 export default authMiddleware({
-	publicRoutes: ["/", "/api/users", "/api/collection", "/collection/api"],
+	publicRoutes: [
+		"/",
+		"/api/users",
+		"/api/collection",
+		"/api/collection/genres/(.*)",
+		"/api/collection/artwork/(.*)",
+	],
 });
 
 export const config = {

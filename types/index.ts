@@ -2,12 +2,6 @@
 import { Prisma } from "@prisma/client";
 import type { Cover, Game, Genre, User, UserGameCollection } from "@prisma/client";
 
-const gameWithGenreAndCover = Prisma.validator<Prisma.GameArgs>()({
-	include: {
-		genre: true,
-		cover: true,
-	},
-});
 
 const gameWithCover = Prisma.validator<Prisma.GameArgs>()({
 	include: {
@@ -18,7 +12,7 @@ const gameWithCover = Prisma.validator<Prisma.GameArgs>()({
 const gameWithCoverAndCollection = Prisma.validator<Prisma.GameArgs>()({
 	include: {
 		cover: true,
-		UserGameCollection: {
+		users: {
 			where: {
 				clerkId: "user",
 			},
@@ -36,7 +30,6 @@ const collectionWithGames = Prisma.validator<Prisma.UserGameCollectionArgs>()({
 	},
 });
 
-type GameWithGenreAndCover = Prisma.GameGetPayload<typeof gameWithGenreAndCover>;
 type GameWithCover = Prisma.GameGetPayload<typeof gameWithCover>;
 type GameWithCoverAndCollection = Prisma.GameGetPayload<
 	typeof gameWithCoverAndCollection
@@ -50,7 +43,6 @@ type GameUpload = Prisma.GameCreateInput;
 export type { Cover, Game, Genre, User, UserGameCollection };
 export type {
 	GameUpload,
-	GameWithGenreAndCover,
 	GameWithCover,
 	GameWithCoverAndCollection,
 	CollectionWithGames,
@@ -88,6 +80,7 @@ type IGDBGame = {
 	aggregated_rating: number | undefined;
 	aggregated_rating_count: number | undefined;
 	involved_companies?: number[] | undefined;
+	first_release_date: Date;
 };
 
 type IGDBImage =

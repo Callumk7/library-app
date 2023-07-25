@@ -29,7 +29,7 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 					update: {},
 				},
 			},
-			UserGameCollection: {
+			users: {
 				connectOrCreate: {
 					where: {
 						clerkId_gameId: {
@@ -51,14 +51,15 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 					imageId: item.cover.image_id,
 				},
 			},
-			UserGameCollection: {
+			users: {
 				create: {
 					clerkId: userId,
 				},
 			},
+			releaseDate: item.first_release_date,
 		},
 		select: {
-			UserGameCollection: true,
+			users: true,
 		},
 	});
 
@@ -72,7 +73,7 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 	});
 
 	console.log(
-		`added collection ${upsertGame.UserGameCollection[0].clerkId}, ${upsertGame.UserGameCollection[0].gameId}`
+		`added collection ${upsertGame.users[0].clerkId}, ${upsertGame.users[0].gameId}`
 	);
 	return NextResponse.json({ upsertGame });
 }

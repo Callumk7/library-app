@@ -32,7 +32,7 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 					update: {},
 				},
 			},
-			UserGameCollection: {
+			users: {
 				connectOrCreate: {
 					where: {
 						clerkId_gameId: {
@@ -54,19 +54,50 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 					imageId: item.cover.image_id,
 				},
 			},
-			UserGameCollection: {
+			users: {
 				create: {
 					clerkId: userId,
 				},
 			},
+			releaseDate: item.first_release_date,
 		},
 		select: {
-			UserGameCollection: true,
+			users: true,
+			id: true,
 		},
 	});
 
+	if (item.storyline) {
+		const updateGame = await prisma.game.update({
+			where: {
+				id: upsertGame.id
+			},
+			data: {
+				storyline: item.storyline,
+			}
+		})
+	}
+
+	// process artwork async
+	fetch(`${process.env.APP_URL}/api/collection/artwork/${upsertGame.id}`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(item),
+	});
+
+	// process genres async
+	fetch(`${process.env.APP_URL}/api/collection/genres/${upsertGame.id}`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(item),
+	});
+
 	console.log(
-		`added collection ${upsertGame.UserGameCollection[0].clerkId}, ${upsertGame.UserGameCollection[0].gameId}`
+		`added collection ${upsertGame.users[0].clerkId}, ${upsertGame.users[0].gameId}`
 	);
 	return NextResponse.json({ upsertGame });
 }
