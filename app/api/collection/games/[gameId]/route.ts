@@ -121,22 +121,30 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 	// the end user, but error handling could become messy.
 
 	// process artwork async
-	fetch(`${process.env.APP_URL}/api/collection/artwork/${upsertGame.id}`, {
+	const artworkHandoffPromise = fetch(`${process.env.APP_URL}/api/worker`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
+			handoffType: "artwork",
 		},
 		body: JSON.stringify(item),
 	});
 
 	// process genres async
-	fetch(`${process.env.APP_URL}/api/collection/genres/${upsertGame.id}`, {
+	const genreHandoffPromise = fetch(`${process.env.APP_URL}/api/worker`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
+			handoffType: "genre"
 		},
 		body: JSON.stringify(item),
 	});
+
+	const [artworkHandoffRes, genreHandoffRes]  = await Promise.all([artworkHandoffPromise, genreHandoffPromise])
+	const artworkText = await artworkHandoffRes.text();
+	const genreText = await genreHandoffRes.text();
+	console.log(artworkText);
+	console.log(genreText);
 
 	console.log(
 		`added collection ${upsertGame.users[0].clerkId}, ${upsertGame.users[0].gameId}`
