@@ -3,6 +3,7 @@ import { IGDBGame } from "@/types";
 import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 
+// Create new user game collection entry.
 export async function POST(req: NextRequest, { params }: { params: { gameId: number } }) {
 	const gameId = Number(params.gameId);
 	const { userId } = auth();
@@ -12,13 +13,19 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 	console.log(`item details recovered for game ${item.name}`);
 
 	if (!userId) {
-		return NextResponse.error();
+		return new NextResponse(null, {
+			status: 401,
+			statusText: "Not authorised; no user id",
+		});
 	}
 
 	if (!item.cover) {
-		return NextResponse.error();
+		return new NextResponse(null, { status: 404, statusText: "no cover found" });
 	}
 
+	// This prisma method will create or update the correct game entry, and add the user
+	// to the userGameCollection table ( 'user' ). Currently not possible to create a
+	// collection entry, and then upsert a game, which may be more performant
 	const upsertGame = await prisma.game.upsert({
 		where: {
 			externalId: gameId,
@@ -67,16 +74,51 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 		},
 	});
 
-	if (item.storyline) {
-		const updateGame = await prisma.game.update({
+	// Verbose section to handle async updates if there is a
+	// storyline and or aggregated rating available in the request.
+	if (item.storyline && item.aggregated_rating) {
+		await Promise.all([
+			prisma.game.update({
+				where: {
+					id: upsertGame.id,
+				},
+				data: {
+					storyline: item.storyline,
+				},
+			}),
+			prisma.game.update({
+				where: {
+					id: upsertGame.id,
+				},
+				data: {
+					aggregatedRating: item.aggregated_rating,
+					aggregatedRatingCount: item.aggregated_rating_count,
+				},
+			}),
+		]);
+	} else if (item.storyline) {
+		await prisma.game.update({
 			where: {
-				id: upsertGame.id
+				id: upsertGame.id,
 			},
 			data: {
 				storyline: item.storyline,
-			}
-		})
+			},
+		});
+	} else if (item.aggregated_rating) {
+		await prisma.game.update({
+			where: {
+				id: upsertGame.id,
+			},
+			data: {
+				aggregatedRating: item.aggregated_rating,
+				aggregatedRatingCount: item.aggregated_rating_count,
+			},
+		});
 	}
+
+	// Handoff artwork and genre tasks to worker endpoints. This does not block
+	// the end user, but error handling could become messy.
 
 	// process artwork async
 	fetch(`${process.env.APP_URL}/api/collection/artwork/${upsertGame.id}`, {
