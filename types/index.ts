@@ -2,7 +2,6 @@
 import { Prisma } from "@prisma/client";
 import type { Cover, Game, Genre, User, UserGameCollection } from "@prisma/client";
 
-
 const gameWithCover = Prisma.validator<Prisma.GameArgs>()({
 	include: {
 		cover: true,
@@ -80,7 +79,7 @@ type IGDBGame = {
 	aggregated_rating: number | undefined;
 	aggregated_rating_count: number | undefined;
 	involved_companies?: number[] | undefined;
-	first_release_date: Date;
+	first_release_date: number;
 };
 
 type IGDBImage =

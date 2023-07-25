@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma/client";
 import { IGDBGame } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
-import { title } from "process";
 
 // this route will process game artwork and genres asyncronously from the main request
 export async function POST(req: NextRequest, { params }: { params: { gameId: number } }) {
@@ -36,7 +35,7 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 					imageId: screenshot.image_id,
 				},
 			});
-			console.log(`screenshot ${upsertScreenshot.id} created`);
+			console.log(`screenshot ${upsertScreenshot.id} created or updated`);
 		});
 
 		await Promise.all([...artworkPromises, ...screenshotPromises]);

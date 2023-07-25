@@ -31,7 +31,7 @@ model Game {
   aggregatedRating      Int?
   aggregatedRatingCount Int?
   storyline             String?
-  releaseDate           DateTime
+  releaseDate           Int?
 }
 
 model UserGameCollection {
