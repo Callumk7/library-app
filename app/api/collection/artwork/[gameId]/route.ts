@@ -7,6 +7,21 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 	console.log("processing artwork...");
 	const gameId = Number(params.gameId);
 
+	const getGame = await prisma.game.findUnique({
+		where: {
+			externalId: gameId,
+		},
+		select: {
+			id: true,
+		},
+	});
+
+	if (!getGame) {
+		return new Response("error, no game", { status: 402 });
+	}
+
+	const { id } = getGame;
+
 	const item: IGDBGame = await req.json();
 
 	const artworkPromises = item.artworks.map(async (artwork) => {
@@ -16,7 +31,7 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 			},
 			update: {},
 			create: {
-				gameId,
+				gameId: id,
 				imageId: artwork.image_id,
 			},
 		});
@@ -31,7 +46,7 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 				},
 				update: {},
 				create: {
-					gameId,
+					gameId: id,
 					imageId: screenshot.image_id,
 				},
 			});

@@ -36,6 +36,30 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 			});
 			break;
 
+		case "storyline":
+			console.log("processing genres...");
+			console.log("[stoyline handler] TO BUILD!!!!");
+			// res = await fetch(`${process.env.APP_URL}/api/collection/games/${gameId}`, {
+			// 	method: "PATCH",
+			// 	headers: {
+			// 		"Content-Type": "application/json",
+			// 	},
+			// 	body,
+			// });
+			break;
+
+		case "rating":
+			console.log("processing ratings...");
+			console.log("[rating handler] TO BUILD!!!")
+			// res = await fetch(`${process.env.APP_URL}/api/collection/games/${gameId}`, {
+			// 	method: "PATCH",
+			// 	headers: {
+			// 		"Content-Type": "application/json",
+			// 	},
+			// 	body,
+			// });
+			break;
+
 		default:
 			console.log("ops, not a genre or artwork request");
 			return new NextResponse(null, {
@@ -44,5 +68,5 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 			});
 	}
 
-	return new NextResponse("work handled successfully")
+	return new NextResponse("work handled successfully");
 }

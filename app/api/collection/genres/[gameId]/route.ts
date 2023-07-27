@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest, { params }: { params: { gameId: number } }) {
 	console.log("processing genres...");
+	const externalId = params.gameId;
 
 	const item: IGDBGame = await req.json();
 
@@ -18,12 +19,12 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 						connectOrCreate: {
 							where: {
 								gameId_genreId: {
-									gameId: item.id,
+									gameId: externalId,
 									genreId: genre.id,
 								},
 							},
 							create: {
-								gameId: item.id,
+								gameId: externalId,
 							},
 						},
 					},
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 						connectOrCreate: {
 							where: {
 								gameId_genreId: {
-									gameId: item.id,
+									gameId: externalId,
 									genreId: genre.id,
 								},
 							},
