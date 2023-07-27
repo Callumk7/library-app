@@ -9,7 +9,11 @@ import { applySorting } from "./sorting-util";
 
 const DEFAULT_SORT_OPTION: SortOption = "nameAsc";
 
-export function CollectionView({ collection }: { collection: CollectionWithGames[] }) {
+interface CollectionViewArray extends CollectionWithGames {
+  isRemoving: boolean;
+}
+
+export function CollectionView({ collection }: { collection: CollectionViewArray[] }) {
   const [collectionState, setCollectionState] =
     useState<CollectionWithGames[]>(collection);
 

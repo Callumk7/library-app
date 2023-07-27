@@ -10,6 +10,7 @@ export default function Searchbar() {
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    router.refresh();
     router.push(`/search?q=${searchTerm}`);
   };
 
