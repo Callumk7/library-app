@@ -13,7 +13,7 @@ const gameWithCoverAndCollection = Prisma.validator<Prisma.GameArgs>()({
 		cover: true,
 		users: {
 			where: {
-				clerkId: "user",
+				userId: "unique string",
 			},
 		},
 	},
@@ -97,3 +97,13 @@ type IGDBImage =
 	| "1080p";
 
 export type { IGDBGame, IGDBImage };
+
+// Search page types
+interface GameSearchResult extends IGDBGame {
+	toastOpen: boolean;
+	collectionState: CollectionState;
+}
+
+type CollectionState = true | false | "saving";
+
+export type { GameSearchResult, CollectionState };

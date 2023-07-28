@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+// placeholder route
 export async function GET(req: NextRequest) {
 	console.log("GET /api/collection/games...");
 

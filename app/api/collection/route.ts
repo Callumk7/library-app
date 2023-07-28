@@ -4,12 +4,15 @@ import { NextRequest, NextResponse } from "next/server";
 async function getGames(userId: string) {
 	const userCollection = await prisma.userGameCollection.findMany({
 		where: {
-			clerkId: userId!,
+			userId,
 		},
 		include: {
 			game: {
 				include: {
 					cover: true,
+					genres: true,
+					artworks: true,
+					screenshots: true,
 				},
 			},
 		},

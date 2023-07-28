@@ -21,7 +21,7 @@ export default async function CollectionPage({ params }: { params: { userId: str
   const data: CollectionWithGames[] = await res.json();
 
   return (
-    <main className="animate-in flex min-h-screen flex-col items-center justify-between space-y-10 p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between space-y-10 p-24 animate-in">
       <Suspense>
         <CollectionView collection={data} />
       </Suspense>

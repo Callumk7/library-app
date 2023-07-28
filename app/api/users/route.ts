@@ -9,12 +9,12 @@ export async function POST(req: NextRequest) {
 			{
 				const newUser = await prisma.user.create({
 					data: {
-						clerkId: data.data.id,
+						userId: data.data.id,
 						username: data.data.username!,
 						email: data.data.email_addresses[0].email_address,
 					},
 				});
-				console.log(`new user: ${data.data.username}`);
+				console.log(`new user: ${newUser.username}, ${newUser.id}`);
 			}
 			return new NextResponse(`new user: ${data.data.username}`);
 

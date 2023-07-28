@@ -7,9 +7,9 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 	console.log("processing artwork...");
 	const gameId = Number(params.gameId);
 
-	const item: IGDBGame = await req.json();
+	const game: IGDBGame = await req.json();
 
-	const artworkPromises = item.artworks.map(async (artwork) => {
+	const artworkPromises = game.artworks.map(async (artwork) => {
 		const upsertArtwork = await prisma.artwork.upsert({
 			where: {
 				imageId: artwork.image_id,
@@ -23,8 +23,8 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 		console.log(`artwork ${upsertArtwork.id} created`);
 	});
 
-	if (item.screenshots) {
-		const screenshotPromises = item.screenshots.map(async (screenshot) => {
+	if (game.screenshots) {
+		const screenshotPromises = game.screenshots.map(async (screenshot) => {
 			const upsertScreenshot = await prisma.screenshot.upsert({
 				where: {
 					imageId: screenshot.image_id,
@@ -43,5 +43,5 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 		await Promise.all(artworkPromises);
 	}
 
-	return NextResponse;
+	return new NextResponse("artwork and screenshots added!");
 }
