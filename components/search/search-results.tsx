@@ -1,6 +1,6 @@
 "use client";
 
-import { IGDBGame } from "@/types";
+import { GameSearchResult, IGDBGame } from "@/types";
 import { SearchResult } from "./search-item";
 import { useEffect, useState } from "react";
 
@@ -11,42 +11,94 @@ interface SearchResultsProps {
 
 export function SearchResults({ results, collectionIds }: SearchResultsProps) {
   const [collectionState, setCollectionState] = useState<number[]>(collectionIds);
-  const collectionLength = collectionState.length;
+  const [resultsState, setResultsState] = useState<GameSearchResult[]>([]);
+
+  useEffect(() => {
+    const initResultsState: GameSearchResult[] = [];
+    for (const result of results) {
+      if (collectionIds.includes(result.id)) {
+        const statefulResult = {
+          ...result,
+          toastOpen: false,
+          collectionState: true,
+        };
+
+        initResultsState.push(statefulResult);
+      } else {
+        const statefulResult = {
+          ...result,
+          toastOpen: false,
+          collectionState: false,
+        };
+
+        initResultsState.push(statefulResult);
+      }
+    }
+
+    setResultsState(initResultsState);
+  }, [results, collectionIds]);
+
+  const handleSave = async (gameId: number) => {
+    // set state to saving, try the database, update to saved or reset.
+    setResultsState((prevState) => {
+      return prevState.map((result) => {
+        if (result.id === gameId) {
+          return { ...result, collectionState: "saving" };
+        }
+        return result;
+      });
+    });
+    try {
+      const saveGameResponse = await fetch(`/api/collection/games/${gameId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(results.find((game) => game.id === gameId)),
+      });
+      console.log("success: ", saveGameResponse.status);
+      // handle state
+      setResultsState((prevState) => {
+        return prevState.map((result) => {
+          if (result.id === gameId) {
+            return { ...result, collectionState: true };
+          }
+          return result;
+        });
+      });
+    } catch (err) {
+      console.error("Error saving game to collection", err);
+      setResultsState((prevState) => {
+        return prevState.map((result) => {
+          if (result.id === gameId) {
+            return { ...result, collectionState: false };
+          }
+          return result;
+        });
+      });
+    }
+  };
 
   const handleRemove = async (gameId: number) => {
+    // TODO: handle response
     const deleteResponse = await fetch(`/api/collection/games/${gameId}`, {
       method: "DELETE",
     });
-    setCollectionState(collectionState.filter((id) => id != gameId));
+
+    setCollectionState(collectionState.filter((game) => game != gameId));
   };
 
   return (
-    <div className="grid w-full grid-cols-3 gap-4 ">
-      {collectionState.length > 0 && (
-        <div className="relative left-5 top-5 h-fit w-fit rounded-full bg-lime-400 p-4">
-          {collectionLength}
-        </div>
-      )}
-      {results.map((game, index) => {
-        if (collectionState.includes(game.id)) {
-          return (
-            <SearchResult
-              key={index}
-              game={game}
-              handleRemove={handleRemove}
-              included={true}
-            />
-          );
-        } else {
-          return (
-            <SearchResult
-              key={index}
-              game={game}
-              handleRemove={handleRemove}
-              included={false}
-            />
-          );
-        }
+    <div className="grid w-full grid-cols-3 gap-4 md:grid-cols-2">
+      {resultsState.map((game, index) => {
+        return (
+          <SearchResult
+            key={index}
+            game={game}
+            handleSave={handleSave}
+            handleRemove={handleRemove}
+          />
+        );
       })}
     </div>
   );
