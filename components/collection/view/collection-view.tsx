@@ -1,7 +1,7 @@
 "use client";
 
 import { CollectionWithGames, SortOption } from "@/types";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CollectionSearch from "./collection-search";
 import { Button } from "@/components/ui/button";
 import CollectionEntry from "../item/collection-entry";
@@ -9,47 +9,81 @@ import { applySorting } from "./sorting-util";
 
 const DEFAULT_SORT_OPTION: SortOption = "nameAsc";
 
-interface CollectionViewArray extends CollectionWithGames {
-  isRemoving: boolean;
-}
-
-export function CollectionView({ collection }: { collection: CollectionViewArray[] }) {
+export function CollectionView({ collection }: { collection: CollectionWithGames[] }) {
   const [collectionState, setCollectionState] =
     useState<CollectionWithGames[]>(collection);
 
   // use a function to set initial state for the sorted collection. This fixes
   // a flicker/glitch when the page loaded, and then default sorting was applied
   // after the fact.
-  const [sortedCollection, setSortedCollection] = useState<CollectionWithGames[]>(() => {
-    const sortedCollection = applySorting(collectionState, DEFAULT_SORT_OPTION);
-    return sortedCollection;
-  });
+
+  // const [sortedCollection, setSortedCollection] = useState<CollectionWithGames[]>(() => {
+  //   const sortedCollection = applySorting(collectionState, DEFAULT_SORT_OPTION);
+  //   return sortedCollection;
+  // });
+
+  // const [filteredCollection, setFilteredCollection] =
+  //   useState<CollectionWithGames[]>(collectionState);
 
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortOption, setSortOption] = useState<SortOption>("nameAsc");
 
   const [isPlayedFilterActive, setIsPlayedFilterActive] = useState<boolean>(false);
 
-  // search, and isPlayed filtering is applied first, then remaining list
-  // is sorted and returned based on sort option
-  //
-  // I SHOULD REDO THIS => STUTTER
-  // I can change this to a handler, its not working as I like right now
-  useEffect(() => {
-    const searchedCollection = collectionState.filter(
-      (entry) =>
-        searchTerm === "" ||
+  const filteredCollection = useMemo(() => {
+    let output = [...collectionState];
+    if (searchTerm !== "") {
+      output = output.filter((entry) =>
         entry.game.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    let filteredCollection;
-    if (isPlayedFilterActive) {
-      filteredCollection = searchedCollection.filter((entry) => entry.played === true);
-    } else {
-      filteredCollection = searchedCollection;
+      );
     }
-    const sortedCollection = applySorting(filteredCollection, sortOption);
-    setSortedCollection(sortedCollection);
-  }, [collectionState, searchTerm, sortOption, isPlayedFilterActive]);
+    if (isPlayedFilterActive) {
+      output = output.filter((entry) => entry.played);
+    }
+    return output;
+  }, [collectionState, searchTerm, isPlayedFilterActive]);
+
+  const sortedCollection = useMemo(() => {
+    return applySorting(filteredCollection, sortOption);
+  }, [filteredCollection, sortOption]);
+
+  // handling changes to the search term...
+  // useEffect(() => {
+  //   let result = collectionState;
+  //   if (searchTerm !== "") {
+  //     result = result.filter((entry) =>
+  //       entry.game.title.toLowerCase().includes(searchTerm.toLowerCase())
+  //     );
+  //   }
+  //
+  //   if (isPlayedFilterActive) {
+  //     result = result.filter((entry) => entry.played);
+  //   }
+  //
+  //   setFilteredCollection(result);
+  // }, [collectionState, searchTerm, isPlayedFilterActive]);
+
+  // handling changes to the sort order...
+  // useEffect(() => {
+  //   const sorted = applySorting(filteredCollection, sortOption);
+  //   setSortedCollection(sorted);
+  // }, [filteredCollection, sortOption]);
+
+  // useEffect(() => {
+  //   const searchedCollection = collectionState.filter(
+  //     (entry) =>
+  //       searchTerm === "" ||
+  //       entry.game.title.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
+  //   let filteredCollection;
+  //   if (isPlayedFilterActive) {
+  //     filteredCollection = searchedCollection.filter((entry) => entry.played === true);
+  //   } else {
+  //     filteredCollection = searchedCollection;
+  //   }
+  //   const sortedCollection = applySorting(filteredCollection, sortOption);
+  //   setSortedCollection(sortedCollection);
+  // }, [collectionState, searchTerm, sortOption, isPlayedFilterActive]);
 
   const handleSearchTermChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -78,11 +112,9 @@ export function CollectionView({ collection }: { collection: CollectionViewArray
         return entry;
       });
 
-      const sortedCollection = applySorting(updatedCollection, sortOption);
-      setSortedCollection(sortedCollection);
-
-      return sortedCollection; // Return the sorted collection as the new state
+      return updatedCollection;
     });
+
     const prevState = collectionState.find((entry) => entry.gameId === gameId)?.played;
     try {
       const res = await fetch(`/api/collection/games/${gameId}`, {
@@ -124,9 +156,9 @@ export function CollectionView({ collection }: { collection: CollectionViewArray
         </Button>
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
-        {sortedCollection.map((entry, index) => (
+        {sortedCollection.map((entry) => (
           <CollectionEntry
-            key={index}
+            key={entry.gameId}
             entry={entry}
             handleRemoveEntry={handleRemoveEntry}
             handlePlayedToggledEntry={handlePlayedToggledEntry}
