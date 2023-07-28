@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma/client";
 
-export async function getCollectionExternalIds(userId: string | null): Promise<number[]> {
+export async function getCollectionGameIds(userId: string | null): Promise<number[]> {
 	if (!userId) {
 		return [];
 	}
@@ -8,7 +8,7 @@ export async function getCollectionExternalIds(userId: string | null): Promise<n
 	console.log("fetching collection array");
 	const findCollection = await prisma.userGameCollection.findMany({
 		where: {
-			clerkId: userId,
+			userId,
 		},
 		select: {
 			gameId: true,
