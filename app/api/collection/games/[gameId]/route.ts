@@ -10,9 +10,9 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 	const { userId } = auth();
 	console.log(`POST request with id: ${gameId} from user${userId}`);
 
-	const item: IGDBGame = await req.json();
+	const game: IGDBGame = await req.json();
 	console.timeLog("game add route", "item parsed...");
-	console.log(`item details recovered for game ${item.name}`);
+	console.log(`item details recovered for game ${game.name}`);
 
 	if (!userId) {
 		return new NextResponse(null, {
@@ -21,48 +21,55 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 		});
 	}
 
-	if (!item.cover) {
-		return new NextResponse(null, { status: 404, statusText: "no cover found" });
-	}
-
 	console.timeLog("game add route", "upsertCollection start..");
-	const upsertCollection = await prisma.userGameCollection.upsert({
-		where: {
-			clerkId_gameId: {
-				clerkId: userId,
-				gameId: gameId,
-			},
-		},
-		update: {},
-		create: {
-			user: {
-				connect: {
-					clerkId: userId,
-				},
-			},
-			game: {
-				connectOrCreate: {
-					where: {
-						externalId: gameId,
-					},
-					create: {
-						externalId: gameId,
-						title: item.name,
-						cover: {
-							create: {
-								imageId: item.cover.image_id,
-							},
-						},
-						releaseDate: item.first_release_date,
-					},
-				},
-			},
+	const createCollection = await prisma.userGameCollection.create({
+		data: {
+			userId,
+			gameId,
 		},
 		select: {
+			userId: true,
 			gameId: true,
-			clerkId: true,
-		},
+		}
 	});
+
+	// const upsertCollection = await prisma.userGameCollection.upsert({
+	// 	where: {
+	// 		userId_gameId: {
+	// 			userId,
+	// 			gameId,
+	// 		},
+	// 	},
+	// 	update: {},
+	// 	create: {
+	// 		user: {
+	// 			connect: {
+	// 				userId,
+	// 			},
+	// 		},
+	// 		game: {
+	// 			connectOrCreate: {
+	// 				where: {
+	// 					gameId,
+	// 				},
+	// 				create: {
+	// 					gameId,
+	// 					title: game.name,
+	// 					cover: {
+	// 						create: {
+	// 							imageId: game.cover.image_id,
+	// 						},
+	// 					},
+	// 					releaseDate: game.first_release_date,
+	// 				},
+	// 			},
+	// 		},
+	// 	},
+	// 	select: {
+	// 		gameId: true,
+	// 		userId: true,
+	// 	},
+	// });
 	console.timeLog("game add route", "upsertCollection completed");
 
 	// This prisma method will create or update the correct game entry, and add the user
@@ -161,7 +168,7 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 	// }
 
 	console.log(
-		`added collection ${upsertCollection.clerkId}, ${upsertCollection.gameId}`
+		`added collection ${createCollection.userId}, ${createCollection.gameId}`
 	);
 
 	// Handoff artwork and genre tasks to worker endpoints. This does not block
@@ -169,31 +176,30 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 
 	// process storyline and ratings async
 	const promises = [];
-	if(item.storyline){
+	if (game.storyline) {
 		const storylineHandoffPromise = fetch(`${process.env.APP_URL}/api/worker/`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 				handoffType: "storyline",
 			},
-			body: JSON.stringify(item),
+			body: JSON.stringify(game),
 		});
 
 		promises.push(storylineHandoffPromise);
 	}
 
-	if(item.aggregated_rating){
+	if (game.aggregated_rating) {
 		const ratingHandoffPromise = fetch(`${process.env.APP_URL}/api/worker/`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 				handoffType: "rating",
 			},
-			body: JSON.stringify(item),
+			body: JSON.stringify(game),
 		});
 		promises.push(ratingHandoffPromise);
 	}
-
 
 	console.timeLog("game add route", "storyline and/or rating added");
 	// process artwork async
@@ -203,7 +209,7 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 			"Content-Type": "application/json",
 			handoffType: "artwork",
 		},
-		body: JSON.stringify(item),
+		body: JSON.stringify(game),
 	});
 	console.timeLog("game add route", "artwork promises created");
 	promises.push(artworkHandoffPromise);
@@ -215,14 +221,14 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 			"Content-Type": "application/json",
 			handoffType: "genres",
 		},
-		body: JSON.stringify(item),
+		body: JSON.stringify(game),
 	});
-	promises.push(genreHandoffPromise)
+	promises.push(genreHandoffPromise);
 	console.timeLog("game add route", "genre promises created");
 
 	await Promise.all(promises);
 	console.timeEnd("game add route");
-	return NextResponse.json({ upsertCollection });
+	return NextResponse.json({ createCollection });
 }
 
 // CURRENTLY JUST FOR PLAYED TOGGLING
@@ -240,18 +246,18 @@ export async function PATCH(
 
 	if ("played" in body) {
 		console.log(`PATCH REQUEST: ${userId}`);
-		const likedGame = await prisma.userGameCollection.update({
+		const updatePlayedGame = await prisma.userGameCollection.update({
 			where: {
-				clerkId_gameId: {
-					clerkId: userId,
-					gameId: gameId,
+				userId_gameId: {
+					userId,
+					gameId,
 				},
 			},
 			data: {
 				played: body.played,
 			},
 		});
-		return NextResponse.json(likedGame);
+		return NextResponse.json(updatePlayedGame);
 	}
 }
 
@@ -265,9 +271,9 @@ export async function DELETE(_req: Request, { params }: { params: { gameId: numb
 	}
 	const deleteCollectionItem = await prisma.userGameCollection.delete({
 		where: {
-			clerkId_gameId: {
-				gameId: gameId,
-				clerkId: userId,
+			userId_gameId: {
+				userId,
+				gameId,
 			},
 		},
 	});

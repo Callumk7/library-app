@@ -4,12 +4,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest, { params }: { params: { gameId: number } }) {
 	console.log("processing genres...");
-	const externalId = params.gameId;
+	const gameId = Number(params.gameId);
 
-	const item: IGDBGame = await req.json();
+	const game: IGDBGame = await req.json();
 
-	if (item.genres) {
-		const genrePromises = item.genres.map(async (genre) => {
+	if (game.genres) {
+		const genrePromises = game.genres.map(async (genre) => {
 			const upsertGenre = await prisma.genre.upsert({
 				where: {
 					externalId: genre.id,
@@ -19,12 +19,12 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 						connectOrCreate: {
 							where: {
 								gameId_genreId: {
-									gameId: externalId,
+									gameId,
 									genreId: genre.id,
 								},
 							},
 							create: {
-								gameId: externalId,
+								gameId,
 							},
 						},
 					},
@@ -36,12 +36,12 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 						connectOrCreate: {
 							where: {
 								gameId_genreId: {
-									gameId: externalId,
+									gameId,
 									genreId: genre.id,
 								},
 							},
 							create: {
-								gameId: item.id,
+								gameId,
 							},
 						},
 					},

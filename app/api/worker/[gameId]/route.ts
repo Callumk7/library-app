@@ -37,8 +37,9 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 			break;
 
 		case "storyline":
-			console.log("processing genres...");
+			console.log("processing storyline...");
 			console.log("[stoyline handler] TO BUILD!!!!");
+			res = new Response("storyline not processed");
 			// res = await fetch(`${process.env.APP_URL}/api/collection/games/${gameId}`, {
 			// 	method: "PATCH",
 			// 	headers: {
@@ -49,8 +50,9 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 			break;
 
 		case "rating":
+			res = new Response("rating not processed");
 			console.log("processing ratings...");
-			console.log("[rating handler] TO BUILD!!!")
+			console.log("[rating handler] TO BUILD!!!");
 			// res = await fetch(`${process.env.APP_URL}/api/collection/games/${gameId}`, {
 			// 	method: "PATCH",
 			// 	headers: {
@@ -68,5 +70,5 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 			});
 	}
 
-	return new NextResponse("work handled successfully");
+	return res;
 }

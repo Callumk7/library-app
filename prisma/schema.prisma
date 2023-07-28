@@ -9,7 +9,7 @@ datasource db {
 
 model User {
   id        Int                  @id @default(autoincrement())
-  clerkId   String               @unique
+  userId    String               @unique
   username  String               @unique
   email     String               @unique
   createdAt DateTime             @default(now())
@@ -19,7 +19,7 @@ model User {
 
 model Game {
   id                    Int                  @id @default(autoincrement())
-  externalId            Int                  @unique
+  gameId                Int                  @unique
   title                 String
   createdAt             DateTime             @default(now())
   updatedAt             DateTime             @updatedAt
@@ -35,17 +35,17 @@ model Game {
 }
 
 model UserGameCollection {
-  clerkId      String
+  userId       String
   gameId       Int
   createdAt    DateTime @default(now())
   deleted      Boolean  @default(false)
-  game         Game     @relation(fields: [gameId], references: [externalId])
-  user         User     @relation(fields: [clerkId], references: [clerkId])
+  game         Game     @relation(fields: [gameId], references: [gameId])
+  user         User     @relation(fields: [userId], references: [userId])
   played       Boolean  @default(false)
   playerRating Int?
   starred      Boolean  @default(false)
 
-  @@id([clerkId, gameId])
+  @@id([userId, gameId])
 }
 
 model Genre {
@@ -61,7 +61,7 @@ model GenresOnGames {
   gameId    Int
   genreId   Int
   createdAt DateTime @default(now())
-  game      Game     @relation(fields: [gameId], references: [externalId])
+  game      Game     @relation(fields: [gameId], references: [gameId])
   genre     Genre    @relation(fields: [genreId], references: [id])
 
   @@id([gameId, genreId])
@@ -73,7 +73,7 @@ model Cover {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   gameId    Int      @unique
-  game      Game     @relation(fields: [gameId], references: [id])
+  game      Game     @relation(fields: [gameId], references: [gameId])
 }
 
 model Artwork {
@@ -82,7 +82,7 @@ model Artwork {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   gameId    Int
-  game      Game     @relation(fields: [gameId], references: [id])
+  game      Game     @relation(fields: [gameId], references: [gameId])
 }
 
 model Screenshot {
@@ -91,5 +91,5 @@ model Screenshot {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   gameId    Int
-  game      Game     @relation(fields: [gameId], references: [id])
+  game      Game     @relation(fields: [gameId], references: [gameId])
 }
