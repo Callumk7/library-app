@@ -1,10 +1,11 @@
 // create a route that will handle async data handling.
 // This can be artwork, screenshots or genres
 
-import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
+import fetch, { Response } from "node-fetch";
 
-export async function POST(req: NextRequest, { params }: { params: { gameId: number } }) {
+export async function POST(req: Request, { params }: { params: { gameId: number } }) {
 	const gameId = params.gameId;
 	const headersList = headers();
 	const handoffType = headersList.get("handoffType");
