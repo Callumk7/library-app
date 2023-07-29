@@ -69,6 +69,8 @@ async function processSearchResults(results: IGDBGame[]) {
 
 async function GameUploader({ results }: { results: IGDBGame[] }) {
   // upsert results to the database..
-  processSearchResults(results);
-  return <div></div>;
+  processSearchResults(results).then(
+    (results) => console.log("completed process")
+  );
+  return <div></div>
 }

@@ -1,30 +1,22 @@
 "use client";
 
-import { CollectionWithGames, SortOption } from "@/types";
-import { useEffect, useMemo, useState } from "react";
-import CollectionSearch from "./collection-search";
-import { Button } from "@/components/ui/button";
+import { CollectionWithGamesAndGenre, SortOption } from "@/types";
+import { useMemo, useState } from "react";
 import CollectionEntry from "../item/collection-entry";
 import { applySorting } from "./sorting-util";
+import CollectionControlBar from "./collection-control";
 
 const DEFAULT_SORT_OPTION: SortOption = "nameAsc";
 
-export function CollectionView({ collection }: { collection: CollectionWithGames[] }) {
+export function CollectionView({
+  collection,
+  genres,
+}: {
+  collection: CollectionWithGamesAndGenre[];
+  genres: string[];
+}) {
   const [collectionState, setCollectionState] =
-    useState<CollectionWithGames[]>(collection);
-
-  // use a function to set initial state for the sorted collection. This fixes
-  // a flicker/glitch when the page loaded, and then default sorting was applied
-  // after the fact.
-
-  // const [sortedCollection, setSortedCollection] = useState<CollectionWithGames[]>(() => {
-  //   const sortedCollection = applySorting(collectionState, DEFAULT_SORT_OPTION);
-  //   return sortedCollection;
-  // });
-
-  // const [filteredCollection, setFilteredCollection] =
-  //   useState<CollectionWithGames[]>(collectionState);
-
+    useState<CollectionWithGamesAndGenre[]>(collection);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortOption, setSortOption] = useState<SortOption>("nameAsc");
 
@@ -46,45 +38,6 @@ export function CollectionView({ collection }: { collection: CollectionWithGames
   const sortedCollection = useMemo(() => {
     return applySorting(filteredCollection, sortOption);
   }, [filteredCollection, sortOption]);
-
-  // handling changes to the search term...
-  // useEffect(() => {
-  //   let result = collectionState;
-  //   if (searchTerm !== "") {
-  //     result = result.filter((entry) =>
-  //       entry.game.title.toLowerCase().includes(searchTerm.toLowerCase())
-  //     );
-  //   }
-  //
-  //   if (isPlayedFilterActive) {
-  //     result = result.filter((entry) => entry.played);
-  //   }
-  //
-  //   setFilteredCollection(result);
-  // }, [collectionState, searchTerm, isPlayedFilterActive]);
-
-  // handling changes to the sort order...
-  // useEffect(() => {
-  //   const sorted = applySorting(filteredCollection, sortOption);
-  //   setSortedCollection(sorted);
-  // }, [filteredCollection, sortOption]);
-
-  // useEffect(() => {
-  //   const searchedCollection = collectionState.filter(
-  //     (entry) =>
-  //       searchTerm === "" ||
-  //       entry.game.title.toLowerCase().includes(searchTerm.toLowerCase())
-  //   );
-  //   let filteredCollection;
-  //   if (isPlayedFilterActive) {
-  //     filteredCollection = searchedCollection.filter((entry) => entry.played === true);
-  //   } else {
-  //     filteredCollection = searchedCollection;
-  //   }
-  //   const sortedCollection = applySorting(filteredCollection, sortOption);
-  //   setSortedCollection(sortedCollection);
-  // }, [collectionState, searchTerm, sortOption, isPlayedFilterActive]);
-
   const handleSearchTermChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
@@ -101,6 +54,10 @@ export function CollectionView({ collection }: { collection: CollectionWithGames
     });
 
     console.log(req.status);
+  };
+
+  const handlePlayedFilterClicked = () => {
+    setIsPlayedFilterActive(!isPlayedFilterActive);
   };
 
   const handlePlayedToggledEntry = async (gameId: number) => {
@@ -133,28 +90,15 @@ export function CollectionView({ collection }: { collection: CollectionWithGames
 
   return (
     <>
-      <div className="flex flex-row space-x-6">
-        <CollectionSearch
-          handleSearchTermChanged={handleSearchTermChanged}
-          searchTerm={searchTerm}
-        />
-        <Button
-          variant={"outline"}
-          onClick={
-            sortOption === "nameAsc"
-              ? () => setSortOption("nameDesc")
-              : () => setSortOption("nameAsc")
-          }
-        >
-          {sortOption === "nameAsc" ? "asc" : "desc"}
-        </Button>
-        <Button
-          variant={isPlayedFilterActive ? "default" : "outline"}
-          onClick={() => setIsPlayedFilterActive(!isPlayedFilterActive)}
-        >
-          played
-        </Button>
-      </div>
+      <CollectionControlBar
+        genres={genres}
+        handleSearchTermChanged={handleSearchTermChanged}
+        searchTerm={searchTerm}
+        sortOption={sortOption}
+        setSortOption={setSortOption}
+        isPlayedFilterActive={isPlayedFilterActive}
+        handlePlayedFilterClicked={handlePlayedFilterClicked}
+      />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {sortedCollection.map((entry) => (
           <CollectionEntry

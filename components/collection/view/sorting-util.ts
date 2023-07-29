@@ -1,7 +1,7 @@
-import { CollectionWithGames, SortOption } from "@/types";
+import { CollectionWithGamesAndGenre, SortOption } from "@/types";
 
 export const applySorting = (
-	collection: CollectionWithGames[],
+	collection: CollectionWithGamesAndGenre[],
 	sortOption: SortOption
 ) => {
 	const sortedCollection = [...collection];

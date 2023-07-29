@@ -19,11 +19,12 @@ const gameWithCoverAndCollection = Prisma.validator<Prisma.GameArgs>()({
 	},
 });
 
-const collectionWithGames = Prisma.validator<Prisma.UserGameCollectionArgs>()({
+const collectionWithGamesAndGenre = Prisma.validator<Prisma.UserGameCollectionArgs>()({
 	include: {
 		game: {
 			include: {
 				cover: true,
+				genres: true,
 			},
 		},
 	},
@@ -33,8 +34,8 @@ type GameWithCover = Prisma.GameGetPayload<typeof gameWithCover>;
 type GameWithCoverAndCollection = Prisma.GameGetPayload<
 	typeof gameWithCoverAndCollection
 >;
-type CollectionWithGames = Prisma.UserGameCollectionGetPayload<
-	typeof collectionWithGames
+type CollectionWithGamesAndGenre = Prisma.UserGameCollectionGetPayload<
+	typeof collectionWithGamesAndGenre
 >;
 
 type GameUpload = Prisma.GameCreateInput;
@@ -44,7 +45,7 @@ export type {
 	GameUpload,
 	GameWithCover,
 	GameWithCoverAndCollection,
-	CollectionWithGames,
+	CollectionWithGamesAndGenre,
 };
 
 type SortOption = "nameAsc" | "nameDesc" | "releaseDate" | "score";
