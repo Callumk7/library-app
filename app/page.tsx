@@ -1,28 +1,12 @@
 import { prisma } from "@/lib/prisma/client";
 import { IGDBImage } from "@/types";
 import Image from "next/image";
-
-async function getRecentGames() {
-  const getGames = await prisma.userGameCollection.findMany({
-    take: 5,
-    orderBy: {
-      createdAt: "desc",
-    },
-    select: {
-      game: {
-        include: {
-          cover: true,
-        },
-      },
-    },
-  });
-  return getGames;
-}
+import { getRecentGames } from "./collection/(util)/queries";
 
 const size: IGDBImage = "cover_big";
 
 export default async function Home() {
-  const recentGames = await getRecentGames();
+  const recentGames = await getRecentGames(5);
   return (
     <main className="mx-auto w-4/5">
       <h1 className="text-2xl font-bold">Recent Games</h1>
