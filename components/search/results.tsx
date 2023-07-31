@@ -13,6 +13,7 @@ export function SearchResults({ results, collectionIds }: SearchResultsProps) {
   const [collectionState, setCollectionState] = useState<number[]>(collectionIds);
   const [resultsState, setResultsState] = useState<GameSearchResult[]>([]);
 
+  // add collection state (RENAME) and toast controller on component load
   useEffect(() => {
     const initResultsState: GameSearchResult[] = [];
     for (const result of results) {
@@ -66,6 +67,7 @@ export function SearchResults({ results, collectionIds }: SearchResultsProps) {
           return result;
         });
       });
+      return saveGameResponse;
     } catch (err) {
       console.error("Error saving game to collection", err);
       setResultsState((prevState) => {

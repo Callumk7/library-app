@@ -22,7 +22,6 @@ const ToastViewport = forwardRef<
 ));
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
-// TODO: #6 Complete
 const toastVariants = cva(
   "relative flex flex-col w-full items-start space-y-4 overflow-hidden border-foreground/20 rounded-md px-4 py-2 shadow-lg data-[state=open]:animate-slideIn data-[state=closed]:animate-hide",
   {

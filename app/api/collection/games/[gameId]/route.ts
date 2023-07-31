@@ -228,7 +228,7 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 
 	await Promise.all(promises);
 	console.timeEnd("game add route");
-	return NextResponse.json({ createCollection });
+	return new NextResponse("game added successfully", {status: 200})
 }
 
 // CURRENTLY JUST FOR PLAYED TOGGLING

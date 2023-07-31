@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
 
 export default function Searchbar() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,7 +16,7 @@ export default function Searchbar() {
   };
 
   return (
-    <form onSubmit={handleSearch}>
+    <form onSubmit={handleSearch} className="flex flex-row space-x-3 items-center">
       <input
         type="text"
         name="q"
@@ -24,6 +25,9 @@ export default function Searchbar() {
         placeholder="search for a game"
         onChange={(e) => setSearchTerm(e.target.value)}
       />
+      <Button variant={"outline"} size={"sm"}>
+        Search
+      </Button>
     </form>
   );
 }

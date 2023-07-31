@@ -1,27 +1,27 @@
 import { IGDBGame } from "@/types";
-import { SearchResults } from "./search-results";
+import { SearchResults } from "./results";
 import { getSearchResults } from "./util/search-helpers";
 import { getCollectionGameIds } from "@/util/collection";
 import { prisma } from "@/lib/prisma/client";
+import { auth } from "@clerk/nextjs";
 
-export default async function SearchContainer({
-  query,
-  userId,
-}: {
-  query: string;
-  userId: string | null;
-}) {
+export default async function SearchContainer({ query }: { query: string }) {
+  const { userId } = auth();
+
   let results: IGDBGame[] = [];
   let collection: number[] = [];
+
   if (userId) {
     const [data, ids] = await Promise.all([
       getSearchResults(query),
       getCollectionGameIds(userId),
     ]);
+
     results = data;
     collection = ids;
   } else {
     const data = await getSearchResults(query);
+
     results = data;
   }
 
@@ -33,6 +33,7 @@ export default async function SearchContainer({
   );
 }
 
+// TODO: Move this to a dedicated handler function
 async function processSearchResults(results: IGDBGame[]) {
   let processedGameCount = 0;
   if (results) {
@@ -69,6 +70,6 @@ async function processSearchResults(results: IGDBGame[]) {
 
 async function GameUploader({ results }: { results: IGDBGame[] }) {
   // upsert results to the database..
-  processSearchResults(results);
+  processSearchResults(results).then((results) => console.log("completed process"));
   return <div></div>;
 }

@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs";
 import SearchContainer from "@/components/search/container";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const dynamic = "auto";
+// export const revalidate = 0;
 
 export default async function SearchPage({
   searchParams,
@@ -12,6 +12,6 @@ export default async function SearchPage({
   const { userId } = auth();
 
   return (
-      <SearchContainer query={searchParams.q} userId={userId} />
+      <SearchContainer query={searchParams.q} />
   );
 }

@@ -1,9 +1,8 @@
 import Navbar from "@/components/navigation/navbar";
 import "./globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
-import { ToastProvider, ToastViewport } from "@/components/ui/toast";
-import StateManager from "@/components/state/state-manager";
+import { Back } from "@/components/navigation/back";
+import { Providers } from "@/components/providers";
+import { ToastViewport } from "@/components/ui/toast";
 
 export const metadata = {
   title: "playQ",
@@ -12,17 +11,15 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider appearance={{ baseTheme: dark }}>
+    <Providers>
       <html lang="en">
-        <ToastProvider>
-          <body className="flex min-h-screen flex-col items-center bg-background text-foreground">
-            <Navbar />
-            {children}
-            <ToastViewport />
-            <StateManager />
-          </body>
-        </ToastProvider>
+        <body className="flex min-h-screen flex-col items-center bg-background text-foreground">
+          <Navbar />
+          <Back />
+          {children}
+          <ToastViewport />
+        </body>
       </html>
-    </ClerkProvider>
+    </Providers>
   );
 }

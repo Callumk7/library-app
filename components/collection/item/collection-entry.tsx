@@ -1,12 +1,13 @@
-import { CollectionWithGames } from "@/types";
+import { CollectionWithGamesAndGenre } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 
 import { CardToolbar } from "./card-toolbar";
-import { Suspense } from "react";
+import clsx from "clsx";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface CollectionItemProps {
-  entry: CollectionWithGames;
+  entry: CollectionWithGamesAndGenre;
   handleRemoveEntry: (gameId: number) => void;
   handlePlayedToggledEntry: (gameId: number) => void;
 }
@@ -26,25 +27,34 @@ export default function CollectionEntry({
 
   const size = "720p";
 
+  let borderStyle = "";
+  if (entry) {
+    borderStyle = "border-secondary/40 hover:border-secondary";
+  } else {
+    borderStyle = "hover:border-foreground";
+  }
+
   return (
-    <div className="relative flex flex-col overflow-hidden rounded-lg border text-foreground hover:border-foreground">
-      <Link href={`/games/${entry.gameId}`}>
-        <Suspense>
-          <Image
-            src={`https://images.igdb.com/igdb/image/upload/t_${size}/${entry.game.cover?.imageId}.jpg`}
-            alt="cover image"
-            width={720}
-            height={1280}
-          />
-        </Suspense>
+    <div
+      className={clsx(
+        borderStyle,
+        "relative flex max-w-sm flex-col overflow-hidden rounded-lg border text-foreground"
+      )}
+    >
+      <Checkbox className="absolute right-4 top-4 z-40" />
+      <Link
+        className="z-0 transition ease-in-out hover:opacity-30"
+        href={`/games/${entry.gameId}`}
+      >
+        <Image
+          src={`https://images.igdb.com/igdb/image/upload/t_${size}/${entry.game.cover?.imageId}.jpg`}
+          alt="cover image"
+          width={720}
+          height={1280}
+        />
       </Link>
-      <div className="p-6">
-        <h1 className="mb-2 min-h-[40px]  font-bold lg:min-h-[60px]">
-          {entry.game.title}
-        </h1>
-      </div>
       <CardToolbar
-        played={entry.played}
+        isPlayed={entry.played}
         handlePlayedToggled={handlePlayedToggled}
         handleRemoveClicked={handleRemoveClicked}
       ></CardToolbar>
