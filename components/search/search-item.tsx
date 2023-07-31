@@ -1,28 +1,29 @@
 import { GameSearchResult, IGDBImage } from "@/types";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SearchToast } from "./search-toast";
 
 interface SearchResultProps {
   game: GameSearchResult;
-  isToastOpen: boolean;
-  setIsToastOpen: (isToastOpen: boolean) => void;
-  handleSave: (gameId: number) => void;
+  handleSave: (gameId: number) => Promise<Response | undefined>; //TODO: fix
   handleRemove: (gameId: number) => void;
 }
 
-export function SearchResult({
-  game,
-  isToastOpen,
-  setIsToastOpen,
-  handleSave,
-  handleRemove,
-}: SearchResultProps) {
+export function SearchResult({ game, handleSave, handleRemove }: SearchResultProps) {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
 
-  const handleSaveClicked = () => {
-    handleSave(game.id);
+  const handleSaveClicked = async () => {
+    const response = await handleSave(game.id);
+    if (!response) {
+      console.log("handle save.. no response");
+      return;
+    }
+    if (response.status === 200) {
+      console.log("handle saved clicked: ok response recieved");
+      setToastOpen(true);
+    }
   };
 
   const handleRemoveClicked = () => {
@@ -91,8 +92,8 @@ export function SearchResult({
       <SearchToast
         title={`${game.name} added`}
         content="Find it in your collection, go now?"
-        open={isToastOpen}
-        setOpen={setIsToastOpen}
+        toastOpen={toastOpen}
+        setToastOpen={setToastOpen}
       ></SearchToast>
     </div>
   );

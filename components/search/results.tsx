@@ -67,6 +67,7 @@ export function SearchResults({ results, collectionIds }: SearchResultsProps) {
           return result;
         });
       });
+      return saveGameResponse;
     } catch (err) {
       console.error("Error saving game to collection", err);
       setResultsState((prevState) => {

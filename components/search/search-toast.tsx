@@ -1,14 +1,21 @@
+import { Dispatch, SetStateAction, useState } from "react";
 import { Toast, ToastClose, ToastDescription, ToastTitle } from "../ui/toast";
 
 interface SearchToastProps {
   title?: string;
   content: string;
-  open: boolean;
-  setOpen: (open: boolean) => void;
+  toastOpen: boolean;
+  setToastOpen: Dispatch<SetStateAction<boolean>>;
 }
-export const SearchToast = ({ title, content, open, setOpen }: SearchToastProps) => {
+
+export const SearchToast = ({
+  title,
+  content,
+  toastOpen,
+  setToastOpen,
+}: SearchToastProps) => {
   return (
-    <Toast open={open} onOpenChange={setOpen} variant={"default"}>
+    <Toast open={toastOpen} onOpenChange={setToastOpen} variant={"default"}>
       {title && <ToastTitle className="w-full">{title}</ToastTitle>}
       <ToastDescription>{content}</ToastDescription>
       <ToastClose aria-label="Close">
