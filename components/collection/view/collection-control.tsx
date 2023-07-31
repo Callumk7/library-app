@@ -1,3 +1,4 @@
+import { Checkbox } from "@/components/ui/checkbox";
 import CollectionSearch from "./collection-search";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,7 +8,9 @@ import {
   DropdownMenuPortal,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown";
+import { DotsIcon } from "@/components/ui/icons/DotsIcon";
 import { SortOption } from "@/types";
+import Link from "next/link";
 
 interface CollectionControlBarProps {
   genres: string[];
@@ -31,6 +34,9 @@ export default function CollectionControlBar({
   return (
     <div>
       <div className="flex flex-row space-x-6">
+        <Button asChild>
+          <Link href="/collection/playlists/">Playlists</Link>
+        </Button>
         <CollectionSearch
           handleSearchTermChanged={handleSearchTermChanged}
           searchTerm={searchTerm}
@@ -53,11 +59,9 @@ export default function CollectionControlBar({
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant={isPlayedFilterActive ? "default" : "outline"}
-              onClick={handlePlayedFilterClicked}
-            >
+            <Button className="flex flex-row gap-3">
               genres
+              <DotsIcon className="ml-auto h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuPortal>
@@ -65,7 +69,10 @@ export default function CollectionControlBar({
               {genres.map((genre) => (
                 <DropdownMenuItem key={genre} asChild>
                   <Button variant={"link"} size={"sm"}>
-                    {genre}
+                    <div className="flex flex-row justify-between w-full px-1">
+                      {genre}
+                      <Checkbox />
+                    </div>
                   </Button>
                 </DropdownMenuItem>
               ))}

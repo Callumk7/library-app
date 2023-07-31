@@ -6,15 +6,22 @@ import { SearchToast } from "./search-toast";
 
 interface SearchResultProps {
   game: GameSearchResult;
+  isToastOpen: boolean;
+  setIsToastOpen: (isToastOpen: boolean) => void;
   handleSave: (gameId: number) => void;
   handleRemove: (gameId: number) => void;
 }
 
-export function SearchResult({ game, handleSave, handleRemove }: SearchResultProps) {
+export function SearchResult({
+  game,
+  isToastOpen,
+  setIsToastOpen,
+  handleSave,
+  handleRemove,
+}: SearchResultProps) {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
-  const [toastOpen, setToastOpen] = useState(false);
 
-  const handleSaveClicked = async () => {
+  const handleSaveClicked = () => {
     handleSave(game.id);
   };
 
@@ -84,8 +91,8 @@ export function SearchResult({ game, handleSave, handleRemove }: SearchResultPro
       <SearchToast
         title={`${game.name} added`}
         content="Find it in your collection, go now?"
-        open={toastOpen}
-        setOpen={setToastOpen}
+        open={isToastOpen}
+        setOpen={setIsToastOpen}
       ></SearchToast>
     </div>
   );

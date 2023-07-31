@@ -99,7 +99,7 @@ export function CollectionView({
         isPlayedFilterActive={isPlayedFilterActive}
         handlePlayedFilterClicked={handlePlayedFilterClicked}
       />
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 mx-auto md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {sortedCollection.map((entry) => (
           <CollectionEntry
             key={entry.gameId}
