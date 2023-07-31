@@ -12,6 +12,6 @@ export default async function SearchPage({
   const { userId } = auth();
 
   return (
-      <SearchContainer query={searchParams.q} userId={userId} />
+      <SearchContainer query={searchParams.q} />
   );
 }

@@ -6,12 +6,8 @@ import { CardToolbar } from "./card-toolbar";
 import clsx from "clsx";
 import { Checkbox } from "@/components/ui/checkbox";
 
-interface CollectionEntry extends CollectionWithGamesAndGenre {
-  isSelected: boolean;
-}
-
 interface CollectionItemProps {
-  entry: CollectionEntry;
+  entry: CollectionWithGamesAndGenre;
   handleRemoveEntry: (gameId: number) => void;
   handlePlayedToggledEntry: (gameId: number) => void;
 }
@@ -29,12 +25,10 @@ export default function CollectionEntry({
     handlePlayedToggledEntry(entry.gameId);
   };
 
-  entry.isSelected = true;
-
   const size = "720p";
 
   let borderStyle = "";
-  if (entry.isSelected) {
+  if (entry) {
     borderStyle = "border-secondary/40 hover:border-secondary";
   } else {
     borderStyle = "hover:border-foreground";
@@ -44,12 +38,12 @@ export default function CollectionEntry({
     <div
       className={clsx(
         borderStyle,
-        "relative flex flex-col overflow-hidden rounded-lg border text-foreground max-w-sm"
+        "relative flex max-w-sm flex-col overflow-hidden rounded-lg border text-foreground"
       )}
     >
       <Checkbox className="absolute right-4 top-4 z-40" />
       <Link
-        className="transition ease-in-out hover:opacity-30 z-0"
+        className="z-0 transition ease-in-out hover:opacity-30"
         href={`/games/${entry.gameId}`}
       >
         <Image
