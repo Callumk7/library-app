@@ -5,6 +5,7 @@ export default authMiddleware({
 	publicRoutes: [
 		"/",
 		"/api/users",
+		"/api/playlists",
 		"/api/worker",
 		"/api/worker/(.*)",
 		"/api/collection",
