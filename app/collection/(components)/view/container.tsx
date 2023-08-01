@@ -2,13 +2,13 @@
 
 import { CollectionWithGamesAndGenre, SortOption } from "@/types";
 import { useMemo, useState } from "react";
-import CollectionEntry from "../item/collection-entry";
 import { applySorting } from "./sorting-util";
-import CollectionControlBar from "./collection-control";
+import CollectionControlBar from "./controls";
+import { CollectionEntry } from "../item/entry";
 
 const DEFAULT_SORT_OPTION: SortOption = "nameAsc";
 
-export function CollectionView({
+export function CollectionContainer({
   collection,
   genres,
 }: {
@@ -18,8 +18,7 @@ export function CollectionView({
   const [collectionState, setCollectionState] =
     useState<CollectionWithGamesAndGenre[]>(collection);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [sortOption, setSortOption] = useState<SortOption>("nameAsc");
-
+  const [sortOption, setSortOption] = useState<SortOption>(DEFAULT_SORT_OPTION);
   const [isPlayedFilterActive, setIsPlayedFilterActive] = useState<boolean>(false);
 
   const filteredCollection = useMemo(() => {
@@ -76,15 +75,14 @@ export function CollectionView({
     try {
       const res = await fetch(`/api/collection/games/${gameId}`, {
         method: "PATCH",
-        body: JSON.stringify({ played: !prevState }),
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ played: !prevState }),
       });
-      const json = await res.json();
-      console.log(json);
-    } catch (error) {
-      console.log("FUCK!!!");
+      console.log(res.status);
+    } catch (err) {
+      console.error("error updating server", err);
     }
   };
 
@@ -99,7 +97,7 @@ export function CollectionView({
         isPlayedFilterActive={isPlayedFilterActive}
         handlePlayedFilterClicked={handlePlayedFilterClicked}
       />
-      <div className="grid grid-cols-1 gap-4 mx-auto md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {sortedCollection.map((entry) => (
           <CollectionEntry
             key={entry.gameId}

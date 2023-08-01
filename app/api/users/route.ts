@@ -3,7 +3,7 @@ import type { WebhookEvent } from "@clerk/clerk-sdk-node";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-	const data: WebhookEvent = await req.json();
+	const data = (await req.json()) as WebhookEvent;
 	switch (data.type) {
 		case "user.created":
 			{

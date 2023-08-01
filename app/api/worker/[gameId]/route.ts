@@ -16,13 +16,16 @@ export async function POST(req: Request, { params }: { params: { gameId: number 
 	switch (handoffType) {
 		case "artwork":
 			console.log("processing artwork...");
-			res = await fetch(`${process.env.APP_URL}/api/collection/artwork/${gameId}`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body,
-			});
+			res = await fetch(
+				`${process.env.APP_URL}/api/collection/artwork?gameId=${gameId}`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body,
+				}
+			);
 			break;
 
 		case "genres":

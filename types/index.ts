@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { Prisma } from "@prisma/client";
 import type { Cover, Game, Genre, User, UserGameCollection } from "@prisma/client";
+import { z } from "zod";
 
 const gameWithCover = Prisma.validator<Prisma.GameArgs>()({
 	include: {
@@ -51,38 +52,75 @@ export type {
 type SortOption = "nameAsc" | "nameDesc" | "releaseDate" | "score";
 export type { SortOption };
 
-// IGDB database types
-type IGDBGame = {
-	id: number;
-	url: string;
-	genres:
-		| {
-				id: number;
-				name: string;
-		  }[]
-		| undefined;
-	name: string;
-	cover: {
-		id: number;
-		image_id: string;
-	};
-	storyline: string | undefined;
-	screenshots:
-		| {
-				id: number;
-				image_id: string;
-		  }[]
-		| undefined;
-	artworks: {
-		id: number;
-		image_id: string;
-	}[];
-	aggregated_rating: number | undefined;
-	aggregated_rating_count: number | undefined;
-	involved_companies?: number[] | undefined;
-	first_release_date: number;
-};
+// zod validation, primarily for data returned from IGDB.
+const genreType = z.object({
+	id: z.number(),
+	name: z.string(),
+});
 
+const coverType = z.object({
+	id: z.number(),
+	image_id: z.string(),
+});
+
+const screenshotType = z.object({
+	id: z.number(),
+	image_id: z.string(),
+});
+
+const artworkType = z.object({
+	id: z.number(),
+	image_id: z.string(),
+});
+
+const IGDBGameSchema = z.object({
+	id: z.number(),
+	genres: z.array(genreType).optional(), // Will accept array of genres or undefined
+	name: z.string(),
+	cover: coverType,
+	storyline: z.string().optional(), // Will accept string or undefined
+	screenshots: z.array(screenshotType).optional(), // Will accept array of screenshot or undefined
+	artworks: z.array(artworkType),
+	aggregated_rating: z.number().optional(), // Will accept number or undefined
+	aggregated_rating_count: z.number().optional(), // Will accept number or undefined
+	involved_companies: z.array(z.number()).optional(), // Will accept array of numbers or undefined
+	first_release_date: z.number(),
+});
+
+type IGDBGame = z.infer<typeof IGDBGameSchema>;
+
+// IGDB database types
+// type IGDBGame = {
+// 	id: number;
+// 	url: string;
+// 	genres:
+// 		| {
+// 				id: number;
+// 				name: string;
+// 		  }[]
+// 		| undefined;
+// 	name: string;
+// 	cover: {
+// 		id: number;
+// 		image_id: string;
+// 	};
+// 	storyline: string | undefined;
+// 	screenshots:
+// 		| {
+// 				id: number;
+// 				image_id: string;
+// 		  }[]
+// 		| undefined;
+// 	artworks: {
+// 		id: number;
+// 		image_id: string;
+// 	}[];
+// 	aggregated_rating: number | undefined;
+// 	aggregated_rating_count: number | undefined;
+// 	involved_companies?: number[] | undefined;
+// 	first_release_date: number;
+// };
+//
 type IGDBImage =
 	| "cover_small"
 	| "screenshot_med"
@@ -93,10 +131,9 @@ type IGDBImage =
 	| "thumb"
 	| "micro"
 	| "720p"
-	| "micro"
-	| "720p"
 	| "1080p";
 
+export {IGDBGameSchema};
 export type { IGDBGame, IGDBImage };
 
 // Search page types

@@ -1,5 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import CollectionSearch from "./collection-search";
+import CollectionSearch from "./search";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

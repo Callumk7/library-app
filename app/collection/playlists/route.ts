@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
-export async function GET() {
+export function GET() {
 	const { userId } = auth();
 	redirect(`/collection/playlists/${userId}`);
 }

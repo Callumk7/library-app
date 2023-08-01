@@ -1,6 +1,6 @@
-import { CollectionView } from "@/components/collection/view/collection-view";
 import { auth } from "@clerk/nextjs";
 import { getCollection, getUserGenres } from "../(util)/queries";
+import { CollectionContainer } from "../(components)/view/container";
 
 // export const dynamic = "force-dynamic";
 // export const revalidate = 0;
@@ -21,7 +21,7 @@ export default async function CollectionPage({ params }: { params: { userId: str
   console.timeEnd("collection page load");
   return (
     <main className="flex min-h-screen flex-col items-center space-y-10 p-24 animate-in">
-      <CollectionView collection={collection} genres={genres} />
+      <CollectionContainer collection={collection} genres={genres} />
     </main>
   );
 }

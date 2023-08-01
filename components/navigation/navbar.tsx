@@ -3,7 +3,7 @@ import Searchbar from "./searchbar";
 import { UserButton, SignedIn, SignedOut, SignInButton, auth } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 
-export default async function Navbar() {
+export default function Navbar() {
   const { userId } = auth();
   return (
     <nav className="flex h-16 w-full justify-center border-b border-b-foreground/10">

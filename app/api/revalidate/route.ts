@@ -1,8 +1,8 @@
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest, res: NextResponse) {
-	const path = "/collection";
+export function GET(req: NextRequest) {
+	const path = req.nextUrl.searchParams.get("path") || "/";
 	revalidatePath(path);
-	return NextResponse.json({ revalidated: true, now: Date.now() });
+	return NextResponse.json({ path: path, revalidated: true, now: Date.now() });
 }

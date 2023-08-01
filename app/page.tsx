@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/prisma/client";
 import { IGDBImage } from "@/types";
 import Image from "next/image";
 import { getRecentGames } from "./collection/(util)/queries";
