@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
 	console.log("new post request to playlists..");
-	const data = await req.json();
+	const data = (await req.json()) as { name: string };
 	const { userId } = auth();
 
 	console.log(data);

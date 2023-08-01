@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma/client";
-import { IGDBGame } from "@/types";
+import { IGDBGameSchema } from "@/types";
 import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,10 +10,6 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 	const { userId } = auth();
 	console.log(`POST request with id: ${gameId} from user${userId}`);
 
-	const game: IGDBGame = await req.json();
-	console.timeLog("game add route", "item parsed...");
-	console.log(`item details recovered for game ${game.name}`);
-
 	if (!userId) {
 		return new NextResponse(null, {
 			status: 401,
@@ -21,155 +17,34 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 		});
 	}
 
-	console.timeLog("game add route", "upsertCollection start..");
-	const createCollection = await prisma.userGameCollection.create({
-		data: {
-			userId,
-			gameId,
-		},
-		select: {
-			userId: true,
-			gameId: true,
-		}
-	});
+	let game;
+	try {
+		const gameJson: unknown = await req.json();
+		game = IGDBGameSchema.parse(gameJson); // zod validation
+		console.timeLog("game add route", "item parsed...");
+		console.log(`item details recovered for game ${game.name}`);
 
-	// const upsertCollection = await prisma.userGameCollection.upsert({
-	// 	where: {
-	// 		userId_gameId: {
-	// 			userId,
-	// 			gameId,
-	// 		},
-	// 	},
-	// 	update: {},
-	// 	create: {
-	// 		user: {
-	// 			connect: {
-	// 				userId,
-	// 			},
-	// 		},
-	// 		game: {
-	// 			connectOrCreate: {
-	// 				where: {
-	// 					gameId,
-	// 				},
-	// 				create: {
-	// 					gameId,
-	// 					title: game.name,
-	// 					cover: {
-	// 						create: {
-	// 							imageId: game.cover.image_id,
-	// 						},
-	// 					},
-	// 					releaseDate: game.first_release_date,
-	// 				},
-	// 			},
-	// 		},
-	// 	},
-	// 	select: {
-	// 		gameId: true,
-	// 		userId: true,
-	// 	},
-	// });
-	console.timeLog("game add route", "upsertCollection completed");
+		console.timeLog("game add route", "upsertCollection start..");
+		const createCollection = await prisma.userGameCollection.create({
+			data: {
+				userId,
+				gameId,
+			},
+			select: {
+				userId: true,
+				gameId: true,
+			},
+		});
 
-	// This prisma method will create or update the correct game entry, and add the user
-	// to the userGameCollection table ( 'user' ). Currently not possible to create a
-	// collection entry, and then upsert a game, which may be more performant
-	// const upsertGame = await prisma.game.upsert({
-	// 	where: {
-	// 		externalId: gameId,
-	// 	},
-	// 	update: {
-	// 		cover: {
-	// 			upsert: {
-	// 				create: {
-	// 					imageId: item.cover.image_id,
-	// 				},
-	// 				update: {},
-	// 			},
-	// 		},
-	// 		users: {
-	// 			connectOrCreate: {
-	// 				where: {
-	// 					clerkId_gameId: {
-	// 						clerkId: userId,
-	// 						gameId: gameId,
-	// 					},
-	// 				},
-	// 				create: {
-	// 					clerkId: userId,
-	// 				},
-	// 			},
-	// 		},
-	// 	},
-	// 	create: {
-	// 		externalId: gameId,
-	// 		title: item.name,
-	// 		cover: {
-	// 			create: {
-	// 				imageId: item.cover.image_id,
-	// 			},
-	// 		},
-	// 		users: {
-	// 			create: {
-	// 				clerkId: userId,
-	// 			},
-	// 		},
-	// 		releaseDate: item.first_release_date,
-	// 	},
-	// 	select: {
-	// 		users: true,
-	// 		id: true,
-	// 	},
-	// });
-	// console.timeLog("game add route", "upsert game completed");
+		console.timeLog("game add route", "upsertCollection completed");
 
-	// Verbose section to handle async updates if there is a
-	// storyline and or aggregated rating available in the request.
-	// if (item.storyline && item.aggregated_rating) {
-	// 	await Promise.all([
-	// 		prisma.game.update({
-	// 			where: {
-	// 				externalId: upsertCollection.gameId,
-	// 			},
-	// 			data: {
-	// 				storyline: item.storyline,
-	// 			},
-	// 		}),
-	// 		prisma.game.update({
-	// 			where: {
-	// 				externalId: upsertCollection.gameId,
-	// 			},
-	// 			data: {
-	// 				aggregatedRating: item.aggregated_rating,
-	// 				aggregatedRatingCount: item.aggregated_rating_count,
-	// 			},
-	// 		}),
-	// 	]);
-	// } else if (item.storyline) {
-	// 	await prisma.game.update({
-	// 		where: {
-	// 			externalId: upsertCollection.gameId,
-	// 		},
-	// 		data: {
-	// 			storyline: item.storyline,
-	// 		},
-	// 	});
-	// } else if (item.aggregated_rating) {
-	// 	await prisma.game.update({
-	// 		where: {
-	// 			externalId: upsertCollection.gameId,
-	// 		},
-	// 		data: {
-	// 			aggregatedRating: item.aggregated_rating,
-	// 			aggregatedRatingCount: item.aggregated_rating_count,
-	// 		},
-	// 	});
-	// }
-
-	console.log(
-		`added collection ${createCollection.userId}, ${createCollection.gameId}`
-	);
+		console.log(
+			`added collection ${createCollection.userId}, ${createCollection.gameId}`
+		);
+	} catch (err) {
+		console.error("error when processing game collection creation", err);
+		throw err;
+	}
 
 	// Handoff artwork and genre tasks to worker endpoints. This does not block
 	// the end user, but error handling could become messy.
@@ -228,7 +103,7 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 
 	await Promise.all(promises);
 	console.timeEnd("game add route");
-	return new NextResponse("game added successfully", {status: 200})
+	return new NextResponse("game added successfully", { status: 200 });
 }
 
 // CURRENTLY JUST FOR PLAYED TOGGLING
@@ -238,13 +113,14 @@ export async function PATCH(
 ) {
 	const { userId } = auth();
 	const gameId = Number(params.gameId);
-	const body = await req.json();
 
 	if (!userId) {
 		return NextResponse.error();
 	}
 
-	if ("played" in body) {
+	const gameJson = await req.json();
+
+	if ("played" in gameJson) {
 		console.log(`PATCH REQUEST: ${userId}`);
 		const updatePlayedGame = await prisma.userGameCollection.update({
 			where: {
@@ -254,7 +130,7 @@ export async function PATCH(
 				},
 			},
 			data: {
-				played: body.played,
+				played: gameJson.played,
 			},
 		});
 		return NextResponse.json(updatePlayedGame);
