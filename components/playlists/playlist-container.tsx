@@ -13,7 +13,7 @@ async function createPlaylist(name: string) {
     },
     body: JSON.stringify(body),
   });
-  const json = await newPlaylist.json();
+  const json: unknown = await newPlaylist.json();
   console.log(json);
 }
 

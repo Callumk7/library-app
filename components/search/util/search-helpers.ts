@@ -1,7 +1,4 @@
-import { prisma } from "@/lib/prisma/client";
-import { IGDBGame } from "@/types";
-
-export async function getSearchResults(q: string): Promise<IGDBGame[]> {
+export async function getSearchResults(q: string): Promise<unknown> {
 	const res = await fetch(process.env.IGDB_URL!, {
 		method: "POST",
 		headers: {
@@ -13,5 +10,7 @@ export async function getSearchResults(q: string): Promise<IGDBGame[]> {
 		cache: "force-cache",
 	});
 	console.log("IGDB fetch completed");
+
+	// this is unknown, as we do not know shape of return
 	return res.json();
 }

@@ -1,4 +1,4 @@
-import { IGDBGame } from "@/types";
+import { IGDBGame, IGDBGameSchema } from "@/types";
 import { SearchResults } from "./results";
 import { getSearchResults } from "./util/search-helpers";
 import { getCollectionGameIds } from "@/util/collection";
@@ -8,26 +8,39 @@ import { auth } from "@clerk/nextjs";
 export default async function SearchContainer({ query }: { query: string }) {
   const { userId } = auth();
 
-  let results: IGDBGame[] = [];
-  let collection: number[] = [];
+  const results: IGDBGame[] = [];
+  let collectionIds: number[] = [];
 
   if (userId) {
-    const [data, ids] = await Promise.all([
+    const [searchResultsJson, getIds] = await Promise.all([
       getSearchResults(query),
       getCollectionGameIds(userId),
     ]);
 
-    results = data;
-    collection = ids;
-  } else {
-    const data = await getSearchResults(query);
+    collectionIds = getIds;
+    try {
+      for (const result of searchResultsJson as unknown[]) {
+        results.push(IGDBGameSchema.parse(result));
+      }
+    } catch (err) {
+      console.error("an error occurred", err);
+    }
 
-    results = data;
+  } else {
+    const searchResultsJson = await getSearchResults(query);
+    try {
+      for (const result of searchResultsJson as unknown[]) {
+        results.push(IGDBGameSchema.parse(result));
+      }
+    } catch (err) {
+      console.error("an error occurred", err);
+    }
+
   }
 
   return (
     <div className="">
-      <SearchResults results={results} collectionIds={collection} />
+      <SearchResults results={results} collectionIds={collectionIds} />
       <GameUploader results={results} />
     </div>
   );
@@ -68,8 +81,11 @@ async function processSearchResults(results: IGDBGame[]) {
   return null;
 }
 
-async function GameUploader({ results }: { results: IGDBGame[] }) {
+function GameUploader({ results }: { results: IGDBGame[] }) {
   // upsert results to the database..
-  processSearchResults(results).then((results) => console.log("completed process"));
+  processSearchResults(results).then(
+    (results) => console.log("completed process"),
+    (reason) => console.error(reason)
+  );
   return <div></div>;
 }

@@ -1,7 +1,12 @@
-import { auth } from "@clerk/nextjs";
+import { SignIn, auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
-export async function GET() {
+export function GET() {
 	const { userId } = auth();
-	redirect(`/collection/${userId}`);
+
+	if (!userId) {
+		redirect("/sign-in");
+	} else {
+		redirect(`/collection/${userId}`);
+	}
 }

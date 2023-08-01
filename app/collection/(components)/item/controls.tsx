@@ -9,8 +9,8 @@ import * as Dropdown from "@radix-ui/react-dropdown-menu";
 
 interface CardToolbarProps {
   isPlayed: boolean;
-  handleRemoveClicked: () => void;
-  handlePlayedToggled: () => void;
+  handleRemoveClicked: () => Promise<void>;
+  handlePlayedToggled: () => Promise<void>;
 }
 
 export function CardToolbar({
@@ -18,14 +18,22 @@ export function CardToolbar({
   handleRemoveClicked,
   handlePlayedToggled,
 }: CardToolbarProps) {
+  const handlePlayedClicked = async () => {
+    await handlePlayedToggled();
+  };
+
+  const handleRemoveClickedSync = () => {
+    handleRemoveClicked().catch((reason) => console.error(reason));
+  };
+
   return (
     <div className="m-2 rounded-md border px-2 py-2">
-      <div className="justify-between flex flex-row items-center">
+      <div className="flex flex-row items-center justify-between">
         <HoverCard>
           <HoverCardTrigger asChild>
             <Button
               variant={isPlayed ? "default" : "outline"}
-              onClick={handlePlayedToggled}
+              onClick={handlePlayedClicked}
             >
               {isPlayed ? "played" : "not played"}
             </Button>
@@ -34,7 +42,7 @@ export function CardToolbar({
         </HoverCard>
         <HoverCard>
           <HoverCardTrigger>
-            <Button variant={"linkMono"} size={"icon"} onClick={handleRemoveClicked}>
+            <Button variant={"linkMono"} size={"icon"} onClick={handleRemoveClickedSync}>
               <DeleteIcon />
             </Button>
           </HoverCardTrigger>

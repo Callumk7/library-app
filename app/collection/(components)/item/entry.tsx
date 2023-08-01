@@ -2,27 +2,27 @@ import { CollectionWithGamesAndGenre } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 
-import { CardToolbar } from "./card-toolbar";
+import { CardToolbar } from "./controls";
 import clsx from "clsx";
 import { Checkbox } from "@/components/ui/checkbox";
 
 interface CollectionItemProps {
   entry: CollectionWithGamesAndGenre;
-  handleRemoveEntry: (gameId: number) => void;
-  handlePlayedToggledEntry: (gameId: number) => void;
+  handleRemoveEntry: (gameId: number) => Promise<void>;
+  handlePlayedToggledEntry: (gameId: number) => Promise<void>;
 }
 
-export default function CollectionEntry({
+export function CollectionEntry({
   entry,
   handleRemoveEntry,
   handlePlayedToggledEntry,
 }: CollectionItemProps) {
-  const handleRemoveClicked = () => {
-    handleRemoveEntry(entry.gameId);
+  const handleRemoveClicked = async () => {
+    await handleRemoveEntry(entry.gameId);
   };
 
-  const handlePlayedToggled = () => {
-    handlePlayedToggledEntry(entry.gameId);
+  const handlePlayedToggled = async () => {
+    await handlePlayedToggledEntry(entry.gameId);
   };
 
   const size = "720p";
