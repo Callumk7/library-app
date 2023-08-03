@@ -1,11 +1,11 @@
 import { IGDBGame, IGDBGameSchema } from "@/types";
 import { SearchResults } from "./results";
-import { getSearchResults } from "./util/search-helpers";
 import { getCollectionGameIds } from "@/util/collection";
 import { prisma } from "@/lib/prisma/client";
 import { auth } from "@clerk/nextjs";
+import { getSearchResults } from "../(util)/queries";
 
-export default async function SearchContainer({ query }: { query: string }) {
+export async function SearchContainer({ query }: { query: string }) {
   const { userId } = auth();
 
   const results: IGDBGame[] = [];
@@ -25,7 +25,6 @@ export default async function SearchContainer({ query }: { query: string }) {
     } catch (err) {
       console.error("an error occurred", err);
     }
-
   } else {
     const searchResultsJson = await getSearchResults(query);
     try {
@@ -35,13 +34,21 @@ export default async function SearchContainer({ query }: { query: string }) {
     } catch (err) {
       console.error("an error occurred", err);
     }
-
   }
+
+  // handle this response
+  const response = await fetch("http://localhost:3100/games", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(results),
+  });
+  console.log(response.status);
 
   return (
     <div className="">
       <SearchResults results={results} collectionIds={collectionIds} />
-      <GameUploader results={results} />
     </div>
   );
 }
@@ -79,13 +86,4 @@ async function processSearchResults(results: IGDBGame[]) {
     return processedGames;
   }
   return null;
-}
-
-function GameUploader({ results }: { results: IGDBGame[] }) {
-  // upsert results to the database..
-  processSearchResults(results).then(
-    (results) => console.log("completed process"),
-    (reason) => console.error(reason)
-  );
-  return <div></div>;
 }

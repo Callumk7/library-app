@@ -1,4 +1,4 @@
-import SearchContainer from "@/components/search/container";
+import { SearchContainer } from "./(components)/container";
 
 export const dynamic = "auto";
 // export const revalidate = 0;

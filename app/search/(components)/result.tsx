@@ -1,8 +1,8 @@
 import { GameSearchResult, IGDBImage } from "@/types";
 import Image from "next/image";
-import { Button } from "../ui/button";
-import { useEffect, useState } from "react";
-import { SearchToast } from "./search-toast";
+import { useState } from "react";
+import { SearchToast } from "./toast";
+import { Button } from "@/components/ui/button";
 
 interface SearchResultProps {
   game: GameSearchResult;

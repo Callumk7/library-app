@@ -1,4 +1,5 @@
 {
+	"plugins": ["eslint-plugin-react", "eslint-plugin-react-hooks", "@typescript-eslint"],
 	"extends": [
 		"eslint:recommended",
 		"next/core-web-vitals",
@@ -18,6 +19,7 @@
 		"@typescript-eslint/no-unsafe-assignment": "off",
 		"@typescript-eslint/no-unsafe-member-access": "off"
 	},
+	"parser": "@typescript-eslint/parser",
 	"overrides": [
 		{
 			"files": ["*.ts", "*.tsx"],

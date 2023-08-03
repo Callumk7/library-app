@@ -1,7 +1,7 @@
 "use client";
 
 import { GameSearchResult, IGDBGame } from "@/types";
-import { SearchResult } from "./search-item";
+import { SearchResult } from "./result";
 import { useEffect, useState } from "react";
 
 interface SearchResultsProps {
