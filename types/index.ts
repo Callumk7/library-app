@@ -145,3 +145,33 @@ interface GameSearchResult extends IGDBGame {
 type CollectionState = true | false | "saving";
 
 export type { GameSearchResult, CollectionState };
+
+export type Artwork = {
+	type: "screenshot" | "artwork";
+	image_id: string;
+};
+
+type Rating = {
+	aggregated_rating: number;
+	aggregated_rating_count: number;
+};
+
+type PayloadBodyProps = {
+	genres?: {
+		id: number;
+		name: string;
+	}[];
+	artwork?: Artwork[];
+	storyline?: string;
+	rating?: Rating;
+};
+
+type Job = {
+	id: number;
+	type: "genre" | "artwork" | "storyline" | "rating";
+	payload: {
+		gameId: number;
+	} & PayloadBodyProps;
+};
+
+export type { Job };
