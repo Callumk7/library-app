@@ -2,8 +2,6 @@ import { prisma } from "@/lib/prisma/client";
 import { Job } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
-export const runtime = 'edge'
-
 export async function POST(req: NextRequest) {
 	console.log("games route hit!");
 
