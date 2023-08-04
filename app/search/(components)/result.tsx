@@ -1,38 +1,34 @@
 import { GameSearchResult, IGDBImage } from "@/types";
 import Image from "next/image";
-import { Button } from "../ui/button";
-import { useEffect, useState } from "react";
-import { SearchToast } from "./search-toast";
+import { useState } from "react";
+import { SearchToast } from "./toast";
+import { Button } from "@/components/ui/button";
 
 interface SearchResultProps {
   game: GameSearchResult;
-  handleSave: (gameId: number) => Promise<Response | undefined>; //TODO: fix
-  handleRemove: (gameId: number) => void;
+  handleSave: (gameId: number) => Promise<void>;
+  handleRemove: (gameId: number) => Promise<void>;
 }
 
 export function SearchResult({ game, handleSave, handleRemove }: SearchResultProps) {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
-  const [toastOpen, setToastOpen] = useState(false);
+  const [saveToastOpen, setSaveToastOpen] = useState(false);
+  const [removeToastOpen, setRemoveToastOpen] = useState(false);
 
   const handleSaveClicked = async () => {
-    const response = await handleSave(game.id);
-    if (!response) {
-      console.log("handle save.. no response");
-      return;
-    }
-    if (response.status === 200) {
-      console.log("handle saved clicked: ok response recieved");
-      setToastOpen(true);
-    }
+    await handleSave(game.id);
+    setSaveToastOpen(true);
   };
 
-  const handleRemoveClicked = () => {
-    handleRemove(game.id);
+  const handleRemoveClicked = async () => {
+    await handleRemove(game.id);
+    setRemoveToastOpen(true);
   };
 
   // image size fetched from IGDB
   const size: IGDBImage = "screenshot_med";
 
+  // TODO: cleanup svg into icon
   return (
     <div className="relative flex w-full flex-col overflow-hidden rounded-lg border text-foreground animate-in hover:border-foreground">
       {isImageLoaded ? null : (
@@ -61,11 +57,8 @@ export function SearchResult({ game, handleSave, handleRemove }: SearchResultPro
       <div className="p-2">
         <h1 className="mb-1 font-bold">{game.name}</h1>
         {game.genres && <p className="text-sm opacity-70">{game.genres[0].name}</p>}
-        {game.collectionState === true && (
-          <p className="text-sm font-semibold text-cyan-100">in your collection</p>
-        )}
       </div>
-      {game.collectionState === false && (
+      {game.isInCollectionOrSaving === false && (
         <Button
           className="absolute bottom-4 right-4"
           variant={"default"}
@@ -74,12 +67,17 @@ export function SearchResult({ game, handleSave, handleRemove }: SearchResultPro
           save
         </Button>
       )}
-      {game.collectionState === "saving" && (
+      {game.isInCollectionOrSaving === "saving" && (
         <Button className="absolute bottom-4 right-4" variant={"ghost"}>
           saving..
         </Button>
       )}
-      {game.collectionState === true && (
+      {game.isInCollectionOrSaving === "removing" && (
+        <Button className="absolute bottom-4 right-4" variant={"ghost"}>
+          removing..
+        </Button>
+      )}
+      {game.isInCollectionOrSaving === true && (
         <Button
           className="absolute bottom-4 right-4"
           variant={"destructive"}
@@ -92,8 +90,8 @@ export function SearchResult({ game, handleSave, handleRemove }: SearchResultPro
       <SearchToast
         title={`${game.name} added`}
         content="Find it in your collection, go now?"
-        toastOpen={toastOpen}
-        setToastOpen={setToastOpen}
+        toastOpen={saveToastOpen}
+        setToastOpen={setSaveToastOpen}
       ></SearchToast>
     </div>
   );

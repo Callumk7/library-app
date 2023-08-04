@@ -1,7 +1,7 @@
 "use client";
 
 import { GameSearchResult, IGDBGame } from "@/types";
-import { SearchResult } from "./search-item";
+import { SearchResult } from "./result";
 import { useEffect, useState } from "react";
 
 interface SearchResultsProps {
@@ -13,23 +13,22 @@ export function SearchResults({ results, collectionIds }: SearchResultsProps) {
   const [collectionState, setCollectionState] = useState<number[]>(collectionIds);
   const [resultsState, setResultsState] = useState<GameSearchResult[]>([]);
 
-  // add collection state (RENAME) and toast controller on component load
   useEffect(() => {
+    // In this effect, we are hydrating results with data the user's collection. each
+    // results is given an isInCollectionOrSaving property.
     const initResultsState: GameSearchResult[] = [];
     for (const result of results) {
       if (collectionIds.includes(result.id)) {
         const statefulResult = {
           ...result,
-          toastOpen: false,
-          collectionState: true,
+          isInCollectionOrSaving: true,
         };
 
         initResultsState.push(statefulResult);
       } else {
         const statefulResult = {
           ...result,
-          toastOpen: false,
-          collectionState: false,
+          isInCollectionOrSaving: false,
         };
 
         initResultsState.push(statefulResult);
@@ -44,37 +43,38 @@ export function SearchResults({ results, collectionIds }: SearchResultsProps) {
     setResultsState((prevState) => {
       return prevState.map((result) => {
         if (result.id === gameId) {
-          return { ...result, collectionState: "saving" };
+          return { ...result, isInCollectionOrSaving: "saving" };
         }
         return result;
       });
     });
+
     try {
-      const saveGameResponse = await fetch(`/api/collection/games/${gameId}`, {
+      const saveGameResponse = await fetch(`/api/collection/games?gameId=${gameId}`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(results.find((game) => game.id === gameId)),
       });
+
       console.log("success: ", saveGameResponse.status);
+
       // handle state
       setResultsState((prevState) => {
         return prevState.map((result) => {
           if (result.id === gameId) {
-            return { ...result, collectionState: true };
+            return { ...result, isInCollectionOrSaving: true };
           }
+
           return result;
         });
       });
-      return saveGameResponse;
     } catch (err) {
       console.error("Error saving game to collection", err);
+
       setResultsState((prevState) => {
         return prevState.map((result) => {
           if (result.id === gameId) {
-            return { ...result, collectionState: false };
+            return { ...result, isInCollectionOrSaving: false };
           }
+
           return result;
         });
       });
@@ -82,10 +82,35 @@ export function SearchResults({ results, collectionIds }: SearchResultsProps) {
   };
 
   const handleRemove = async (gameId: number) => {
-    // TODO: handle response
-    const deleteResponse = await fetch(`/api/collection/games/${gameId}`, {
-      method: "DELETE",
+    setResultsState((prevState) => {
+      return prevState.map((result) => {
+        if (result.id === gameId) {
+          return { ...result, isInCollectionOrSaving: "removing" };
+        }
+        return result;
+      });
     });
+
+    try {
+      // TODO: use search params and /games route instead
+      const deleteResponse = await fetch(`/api/collection/games/${gameId}`, {
+        method: "DELETE",
+      });
+
+      if (deleteResponse.ok) {
+        setResultsState((prevState) => {
+          return prevState.map((result) => {
+            if (result.id === gameId) {
+              return { ...result, isInCollectionOrSaving: false };
+            }
+
+            return result;
+          });
+        });
+      }
+    } catch (err) {
+      console.error("Error removing game from collection", err);
+    }
 
     setCollectionState(collectionState.filter((game) => game != gameId));
   };

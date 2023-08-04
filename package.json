@@ -1,6 +1,7 @@
 {
 	"name": "frontline",
 	"version": "0.1.1",
+	"license": "MIT",
 	"private": false,
 	"scripts": {
 		"dev": "next dev",

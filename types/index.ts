@@ -75,16 +75,16 @@ const artworkType = z.object({
 
 const IGDBGameSchema = z.object({
 	id: z.number(),
-	genres: z.array(genreType).optional(), // Will accept array of genres or undefined
+	genres: z.array(genreType).optional(), 
 	name: z.string(),
 	cover: coverType,
-	storyline: z.string().optional(), // Will accept string or undefined
-	screenshots: z.array(screenshotType).optional(), // Will accept array of screenshot or undefined
+	storyline: z.string().optional(), 
+	screenshots: z.array(screenshotType).optional(), 
 	artworks: z.array(artworkType),
-	aggregated_rating: z.number().optional(), // Will accept number or undefined
-	aggregated_rating_count: z.number().optional(), // Will accept number or undefined
-	involved_companies: z.array(z.number()).optional(), // Will accept array of numbers or undefined
-	first_release_date: z.number(),
+	aggregated_rating: z.number().optional(), 
+	aggregated_rating_count: z.number().optional(), 
+	involved_companies: z.array(z.number()).optional(), 
+	first_release_date: z.number().optional(),
 });
 
 type IGDBGame = z.infer<typeof IGDBGameSchema>;
@@ -138,10 +138,39 @@ export type { IGDBGame, IGDBImage };
 
 // Search page types
 interface GameSearchResult extends IGDBGame {
-	toastOpen: boolean;
-	collectionState: CollectionState;
+	isInCollectionOrSaving: CollectionState;
 }
 
-type CollectionState = true | false | "saving";
+type CollectionState = true | false | "saving" | "removing";
 
 export type { GameSearchResult, CollectionState };
+
+export type Artwork = {
+	type: "screenshot" | "artwork";
+	image_id: string;
+};
+
+type Rating = {
+	aggregated_rating: number;
+	aggregated_rating_count: number;
+};
+
+type PayloadBodyProps = {
+	genres?: {
+		id: number;
+		name: string;
+	}[];
+	artwork?: Artwork[];
+	storyline?: string;
+	rating?: Rating;
+};
+
+type Job = {
+	id: number;
+	type: "genre" | "artwork" | "storyline" | "rating";
+	payload: {
+		gameId: number;
+	} & PayloadBodyProps;
+};
+
+export type { Job };

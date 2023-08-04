@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import { Toast, ToastClose, ToastDescription, ToastTitle } from "../ui/toast";
+import { Toast, ToastClose, ToastDescription, ToastTitle } from "@/components/ui/toast";
+import { Dispatch, SetStateAction } from "react";
 
 interface SearchToastProps {
   title?: string;
