@@ -12,6 +12,8 @@ export async function POST(req: NextRequest) {
 	}
 
 	const job: Job = await req.json();
+	console.log(`new job parsed: ${job.id}`)
+
 	if (!job) {
 		return new NextResponse("No job provided", { status: 401 });
 	}
