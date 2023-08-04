@@ -2,12 +2,7 @@ import { prisma } from "@/lib/prisma/client";
 import { Job } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
+export const runtime = 'edge'
 
 export async function POST(req: NextRequest) {
 	console.log("genres route hit!");

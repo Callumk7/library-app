@@ -2,23 +2,19 @@ import { prisma } from "@/lib/prisma/client";
 import { Job } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+export const runtime = "edge";
 
 // shape of job is known
 export async function POST(req: NextRequest) {
 	console.log("artwork route hit!");
-	
+
 	if (!req.body) {
-		console.log("no body found")
+		console.log("no body found");
 		return new NextResponse("No request body found", { status: 401 });
 	}
 
 	const job: Job = await req.json();
-	console.log(`new job parsed: ${job.id}`)
+	console.log(`new job parsed: ${job.id}`);
 
 	if (!job) {
 		return new NextResponse("No job provided", { status: 401 });
@@ -74,5 +70,5 @@ export async function POST(req: NextRequest) {
 	const results = await Promise.all(promises);
 	const resultsJson = JSON.stringify(results);
 	console.log("all artwork processed");
-	return new NextResponse(resultsJson, {status: 200});
+	return new NextResponse(resultsJson, { status: 200 });
 }
