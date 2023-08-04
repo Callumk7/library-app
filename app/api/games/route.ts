@@ -2,16 +2,22 @@ import { prisma } from "@/lib/prisma/client";
 import { Job } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
+export const config = {
+	api: {
+		bodyParser: false,
+	},
+};
+
 export async function POST(req: NextRequest) {
 	console.log("games route hit!");
 
 	if (!req.body) {
-		console.log("no body found")
+		console.log("no body found");
 		return new NextResponse("No request body found", { status: 401 });
 	}
 
 	const job: Job = await req.json();
-	console.log(`new job parsed: ${job.id}`)
+	console.log(`new job parsed: ${job.id}`);
 
 	if (!job) {
 		return new NextResponse("No job provided", { status: 401 });

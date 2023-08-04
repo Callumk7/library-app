@@ -2,6 +2,13 @@ import { prisma } from "@/lib/prisma/client";
 import { Job } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+
 export async function POST(req: NextRequest) {
 	console.log("genres route hit!");
 
@@ -78,5 +85,6 @@ export async function POST(req: NextRequest) {
 	const results = await Promise.all(promises);
 	const returnJson = JSON.stringify(results);
 
+	console.log("all genres processed")
 	return new NextResponse(returnJson, { status: 200 });
 }

@@ -2,6 +2,12 @@ import { prisma } from "@/lib/prisma/client";
 import { Job } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 // shape of job is known
 export async function POST(req: NextRequest) {
 	console.log("artwork route hit!");
