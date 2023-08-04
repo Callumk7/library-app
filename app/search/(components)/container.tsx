@@ -1,8 +1,7 @@
 import { IGDBGame, IGDBGameSchema } from "@/types";
 import { SearchResults } from "./results";
-import { getCollectionGameIds } from "@/util/collection";
 import { auth } from "@clerk/nextjs";
-import { getSearchResults } from "../(util)/queries";
+import { getCollectionGameIds, getSearchResults } from "../(util)/queries";
 
 export async function SearchContainer({ query }: { query: string }) {
   const { userId } = auth();
