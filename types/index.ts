@@ -138,11 +138,10 @@ export type { IGDBGame, IGDBImage };
 
 // Search page types
 interface GameSearchResult extends IGDBGame {
-	toastOpen: boolean;
-	collectionState: CollectionState;
+	isInCollectionOrSaving: CollectionState;
 }
 
-type CollectionState = true | false | "saving";
+type CollectionState = true | false | "saving" | "removing";
 
 export type { GameSearchResult, CollectionState };
 

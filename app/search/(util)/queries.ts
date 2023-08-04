@@ -1,3 +1,5 @@
+import { prisma } from "@/lib/prisma/client";
+
 export async function getSearchResults(q: string): Promise<unknown> {
 	const res = await fetch(process.env.IGDB_URL!, {
 		method: "POST",
@@ -13,4 +15,26 @@ export async function getSearchResults(q: string): Promise<unknown> {
 
 	// this is unknown, as we do not know shape of return
 	return res.json();
+}
+
+export async function getCollectionGameIds(userId: string | null): Promise<number[]> {
+	if (!userId) {
+		return [];
+	}
+
+	const findCollection = await prisma.userGameCollection.findMany({
+		where: {
+			userId,
+		},
+		select: {
+			gameId: true,
+		},
+	});
+
+	const results = [];
+	for (const result of findCollection) {
+		results.push(result.gameId);
+	}
+	console.log("get collection completed");
+	return results;
 }

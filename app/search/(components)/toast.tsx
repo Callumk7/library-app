@@ -1,4 +1,4 @@
-import { Toast, ToastClose, ToastDescription, ToastTitle } from "@radix-ui/react-toast";
+import { Toast, ToastClose, ToastDescription, ToastTitle } from "@/components/ui/toast";
 import { Dispatch, SetStateAction } from "react";
 
 interface SearchToastProps {
