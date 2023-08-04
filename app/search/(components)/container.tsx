@@ -47,7 +47,7 @@ export async function SearchContainer({ query }: { query: string }) {
   // TODO: env variables for service locations
   // send search results to quest handler for processing, without blocking
   // user from their own work
-  const questHandlerRes = await fetch("http://localhost:3100/games", {
+  const questHandlerRes = await fetch(`${process.env.QUEST_HANDLER_URL}/games`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
