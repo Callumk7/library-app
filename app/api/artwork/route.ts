@@ -5,6 +5,11 @@ import { NextRequest, NextResponse } from "next/server";
 // shape of job is known
 export async function POST(req: NextRequest) {
 	console.log("artwork route hit!");
+	
+	if (!req.body) {
+		console.log("no body found")
+		return new NextResponse("No request body found", { status: 401 });
+	}
 
 	const job: Job = await req.json();
 	if (!job) {

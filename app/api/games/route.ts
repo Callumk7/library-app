@@ -5,6 +5,11 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
 	console.log("games route hit!");
 
+	if (!req.body) {
+		console.log("no body found")
+		return new NextResponse("No request body found", { status: 401 });
+	}
+
 	const job: Job = await req.json();
 
 	if (!job) {
