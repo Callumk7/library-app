@@ -35,37 +35,10 @@ export async function POST(req: NextRequest) {
 			where: {
 				externalId: genre.id,
 			},
-			update: {
-				games: {
-					connectOrCreate: {
-						where: {
-							gameId_genreId: {
-								gameId: job.payload.gameId,
-								genreId: genre.id,
-							},
-						},
-						create: {
-							gameId: job.payload.gameId,
-						},
-					},
-				},
-			},
+			update: {},
 			create: {
 				externalId: genre.id,
 				name: genre.name,
-				games: {
-					connectOrCreate: {
-						where: {
-							gameId_genreId: {
-								gameId: job.payload.gameId,
-								genreId: genre.id,
-							},
-						},
-						create: {
-							gameId: job.payload.gameId,
-						},
-					},
-				},
 			},
 			select: {
 				id: true,
@@ -75,8 +48,32 @@ export async function POST(req: NextRequest) {
 		promises.push(upsertGenrePromise);
 	}
 
-	const results = await Promise.all(promises);
-	const returnJson = JSON.stringify(results);
+	const processedGenres = await Promise.all(promises);
+
+	const processedConnections: { gameId: number; genreId: number }[] = [];
+	processedGenres.forEach(async (genre) => {
+		const upsertGenreConnection = await prisma.genresOnGames.upsert({
+			where: {
+				gameId_genreId: {
+					gameId: job.payload.gameId,
+					genreId: genre.id,
+				},
+			},
+			update: {},
+			create: {
+				genreId: genre.id,
+				gameId: job.payload.gameId,
+			},
+			select: {
+				gameId: true,
+				genreId: true,
+			},
+		});
+		processedConnections.push(upsertGenreConnection);
+		console.log(`processed genre ${upsertGenreConnection.genreId} on game ${upsertGenreConnection.gameId}`)
+	});
+
+	const returnJson = JSON.stringify(processedConnections);
 
 	console.log("all genres processed");
 	return new NextResponse(returnJson, { status: 200 });
