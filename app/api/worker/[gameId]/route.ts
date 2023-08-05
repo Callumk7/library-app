@@ -2,7 +2,7 @@
 // This can be artwork, screenshots or genres
 
 import { headers } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request, { params }: { params: { gameId: number } }) {
 	const gameId = params.gameId;
