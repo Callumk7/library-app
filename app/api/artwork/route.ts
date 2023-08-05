@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
 
 			promises.push(upsertArtworkPromise);
 		}
-		if (art.type === "artwork") {
+		if (art.type === "screenshot") {
 			const upsertScreenshotPromise = prisma.screenshot.upsert({
 				where: {
 					imageId: art.image_id,

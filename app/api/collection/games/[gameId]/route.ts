@@ -52,20 +52,23 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 	// process storyline and ratings async
 	const promises = [];
 	if (game.storyline) {
-		const storylineHandoffPromise = fetch(`${process.env.APP_URL}/api/worker/`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				handoffType: "storyline",
-			},
-			body: JSON.stringify(game),
-		});
+		const storylineHandoffPromise = fetch(
+			`${process.env.FRONTLINE_URL}/api/worker/`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					handoffType: "storyline",
+				},
+				body: JSON.stringify(game),
+			}
+		);
 
 		promises.push(storylineHandoffPromise);
 	}
 
 	if (game.aggregated_rating) {
-		const ratingHandoffPromise = fetch(`${process.env.APP_URL}/api/worker/`, {
+		const ratingHandoffPromise = fetch(`${process.env.FRONTLINE_URL}/api/worker/`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -78,7 +81,7 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 
 	console.timeLog("game add route", "storyline and/or rating added");
 	// process artwork async
-	const artworkHandoffPromise = fetch(`${process.env.APP_URL}/api/worker/`, {
+	const artworkHandoffPromise = fetch(`${process.env.FRONTLINE_URL}/api/worker/`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
@@ -90,7 +93,7 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 	promises.push(artworkHandoffPromise);
 
 	// process genres async
-	const genreHandoffPromise = fetch(`${process.env.APP_URL}/api/worker/`, {
+	const genreHandoffPromise = fetch(`${process.env.FRONTLINE_URL}/api/worker/`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
