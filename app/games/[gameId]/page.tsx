@@ -2,9 +2,20 @@ import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma/client";
 import Image from "next/image";
 import Link from "next/link";
+import { getGameDetails } from "../(util)/igdb";
+import { IGDBGame, IGDBGameSchema } from "@/types";
 
 export default async function GamePage({ params }: { params: { gameId: string } }) {
   const gameId = Number(params.gameId);
+
+  let validExternalData: Partial<IGDBGame> = {}; 
+  try {
+    const externalData = await getGameDetails(gameId);
+    validExternalData = IGDBGameSchema.parse(externalData[0]);
+    console.log(validExternalData);
+  } catch (err) {
+    console.error("error fetching external data:", err);
+  }
 
   const game = await prisma.game.findUnique({
     where: {
@@ -34,8 +45,8 @@ export default async function GamePage({ params }: { params: { gameId: string } 
     },
   });
 
-  console.log(artworks.length)
-  console.log(screenshots.length)
+  console.log(artworks.length);
+  console.log(screenshots.length);
 
   if (!game) {
     return <div>No game found</div>;
