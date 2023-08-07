@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { applySorting } from "./sorting-util";
 import CollectionControlBar from "./controls";
 import { CollectionEntry } from "../item/entry";
+import { GenreFilter } from "./genre-filter";
 
 const DEFAULT_SORT_OPTION: SortOption = "nameAsc";
 
@@ -97,6 +98,7 @@ export function CollectionContainer({
         isPlayedFilterActive={isPlayedFilterActive}
         handlePlayedFilterClicked={handlePlayedFilterClicked}
       />
+      <GenreFilter genres={genres} />
       <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {sortedCollection.map((entry) => (
           <CollectionEntry

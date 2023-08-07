@@ -43,7 +43,7 @@ export function CollectionEntry({
     >
       <Checkbox className="absolute right-4 top-4 z-40" />
       <Link
-        className="z-0 transition ease-in-out hover:opacity-30"
+        className="group relative z-0 transition ease-in-out"
         href={`/games/${entry.gameId}`}
       >
         <Image
@@ -52,6 +52,14 @@ export function CollectionEntry({
           width={720}
           height={1280}
         />
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-80 opacity-0 transition ease-in-out group-hover:opacity-100">
+          <div className="animate-pulse text-center text-4xl text-white">
+            <div>{entry.game.title}</div>
+            {entry.game.genres.map((genre, index) => (
+              <div key={index}>{genre.genreId}</div>
+            ))}
+          </div>
+        </div>
       </Link>
       <CardToolbar
         isPlayed={entry.played}

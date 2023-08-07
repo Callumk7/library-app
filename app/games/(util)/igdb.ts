@@ -9,5 +9,6 @@ export async function getGameDetails(gameId: number): Promise<unknown> {
 		body: `fields name, artworks.image_id, screenshots.image_id, aggregated_rating, aggregated_rating_count, cover.image_id, storyline, first_release_date, genres.name; where id = ${gameId};`
 	});
 
-	return res.json();
+	const resBody: unknown[] = await res.json();
+	return resBody[0];
 }
