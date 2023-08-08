@@ -16,22 +16,26 @@ import { GenreDropdownCheckboxItem } from "./genre-dropdown";
 
 interface CollectionControlBarProps {
   genres: string[];
+  genreFilter: string[];
   handleSearchTermChanged: (e: React.ChangeEvent<HTMLInputElement>) => void;
   searchTerm: string;
   sortOption: SortOption;
   setSortOption: (option: SortOption) => void;
   isPlayedFilterActive: boolean;
   handlePlayedFilterClicked: () => void;
+  handleGenreToggled: (genre: string) => void;
 }
 
 export default function CollectionControlBar({
   genres,
+  genreFilter,
   searchTerm,
   sortOption,
   setSortOption,
   handleSearchTermChanged,
   isPlayedFilterActive,
   handlePlayedFilterClicked,
+  handleGenreToggled,
 }: CollectionControlBarProps) {
   return (
     <div>
@@ -75,7 +79,12 @@ export default function CollectionControlBar({
           <DropdownMenuPortal>
             <DropdownMenuContent className="flex flex-col bg-background">
               {genres.map((genre, index) => (
-                <GenreDropdownCheckboxItem key={index} genre={genre} />
+                <GenreDropdownCheckboxItem
+                  key={index}
+                  genre={genre}
+                  genreFilter={genreFilter}
+                  handleGenreToggled={handleGenreToggled}
+                />
               ))}
             </DropdownMenuContent>
           </DropdownMenuPortal>
