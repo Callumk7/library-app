@@ -39,7 +39,7 @@ export function CollectionEntry({
     <div
       className={clsx(
         borderStyle,
-        "relative flex max-w-sm flex-col overflow-hidden rounded-lg border text-foreground"
+        "relative flex max-w-sm flex-col overflow-hidden rounded-lg border text-foreground justify-between"
       )}
     >
       <Checkbox className="absolute right-4 top-4 z-40" />
@@ -57,12 +57,14 @@ export function CollectionEntry({
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-80 opacity-0 transition ease-in-out group-hover:opacity-100">
           <div className="animate-pulse text-center text-4xl text-white">
             <div>{entry.game.title}</div>
-            {entry.game.genres.map((genre, index) => (
-              <div key={index}>{genre.genreId}</div>
-            ))}
           </div>
         </div>
       </Link>
+        <div className="flex flex-wrap gap-1 m-2">
+          {entry.game.genres.map((genre, index) => (
+            <p className="text-[10px] text-light/70 bg-gray-800 px-2 py-1 inline rounded-md" key={index}>{genre.genre.name}</p>
+          ))}
+        </div>
       <CardToolbar
         isPlayed={entry.played}
         handlePlayedToggled={handlePlayedToggled}
