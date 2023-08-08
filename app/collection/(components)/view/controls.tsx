@@ -1,9 +1,6 @@
-import { Checkbox } from "@/components/ui/checkbox";
-import CollectionSearch from "./search";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuPortal,
@@ -13,17 +10,19 @@ import { DotsIcon } from "@/components/ui/icons/DotsIcon";
 import { SortOption } from "@/types";
 import Link from "next/link";
 import { GenreDropdownCheckboxItem } from "./genre-dropdown";
+import CollectionSearch from "./search";
 
 interface CollectionControlBarProps {
   genres: string[];
   genreFilter: string[];
-  handleSearchTermChanged: (e: React.ChangeEvent<HTMLInputElement>) => void;
   searchTerm: string;
   sortOption: SortOption;
-  setSortOption: (option: SortOption) => void;
   isPlayedFilterActive: boolean;
+  setSortOption: (option: SortOption) => void;
+  handleSearchTermChanged: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handlePlayedFilterClicked: () => void;
   handleGenreToggled: (genre: string) => void;
+  handleToggleAllGenres: () => void;
 }
 
 export default function CollectionControlBar({
@@ -36,7 +35,9 @@ export default function CollectionControlBar({
   isPlayedFilterActive,
   handlePlayedFilterClicked,
   handleGenreToggled,
+  handleToggleAllGenres,
 }: CollectionControlBarProps) {
+
   return (
     <div>
       <div className="flex flex-row space-x-6">
@@ -86,6 +87,11 @@ export default function CollectionControlBar({
                   handleGenreToggled={handleGenreToggled}
                 />
               ))}
+              <DropdownMenuItem asChild>
+                <Button size={"sm"} className="m-4" onClick={handleToggleAllGenres}>
+                  toggle all
+                </Button>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenuPortal>
         </DropdownMenu>

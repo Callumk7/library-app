@@ -110,6 +110,14 @@ export function CollectionContainer({
     );
   };
 
+  const handleToggleAllGenres = () => {
+    if (genres.length > genreFilter.length) {
+      setGenreFilter(genres);
+    } else {
+      setGenreFilter([]);
+    }
+  }
+
   return (
     <>
       <CollectionControlBar
@@ -122,6 +130,7 @@ export function CollectionContainer({
         isPlayedFilterActive={isPlayedFilterActive}
         handlePlayedFilterClicked={handlePlayedFilterClicked}
         handleGenreToggled={handleGenreToggled}
+        handleToggleAllGenres={handleToggleAllGenres}
       />
       <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {sortedCollection.map((entry) => (
