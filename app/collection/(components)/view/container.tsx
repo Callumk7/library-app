@@ -22,6 +22,7 @@ export function CollectionContainer({
   const [sortOption, setSortOption] = useState<SortOption>(DEFAULT_SORT_OPTION);
   const [isPlayedFilterActive, setIsPlayedFilterActive] = useState<boolean>(false);
   const [genreFilter, setGenreFilter] = useState<string[]>(genres);
+  const [isGenreFilterOpen, setIsGenreFilterOpen] = useState<boolean>(false);
 
   const filteredCollection = useMemo(() => {
     let output = [...collectionState];

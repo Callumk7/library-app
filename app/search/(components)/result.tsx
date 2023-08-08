@@ -4,6 +4,7 @@ import { useState } from "react";
 import { SearchToast } from "./toast";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Toast, ToastClose, ToastDescription, ToastTitle } from "@/components/ui/toast";
 
 interface SearchResultProps {
   game: GameSearchResult;
@@ -24,6 +25,11 @@ export function SearchResult({ game, handleSave, handleRemove }: SearchResultPro
     await handleRemove(game.id);
     setRemoveToastOpen(true);
   };
+
+  const handleToastUndoClicked = async () => {
+    setSaveToastOpen(false);
+    await handleRemoveClicked();
+  }
 
   // image size fetched from IGDB
   const size: IGDBImage = "screenshot_med";
@@ -71,12 +77,18 @@ export function SearchResult({ game, handleSave, handleRemove }: SearchResultPro
         </Button>
       )}
 
-      <SearchToast
-        title={`${game.name} added`}
-        content="Find it in your collection, go now?"
-        toastOpen={saveToastOpen}
-        setToastOpen={setSaveToastOpen}
-      ></SearchToast>
+      <Toast open={saveToastOpen} onOpenChange={setSaveToastOpen} variant={"default"}>
+        <ToastClose />
+        <ToastTitle>{`${game.name} saved to your collection`}</ToastTitle>
+        <ToastDescription>
+          <div className="flex flex-row gap-x-3">
+            <Button variant={"outline"} asChild>
+              <Link href={"/collection"}>Collection</Link>
+            </Button>
+            <Button variant={"destructive"} onClick={handleToastUndoClicked}>Undo</Button>
+          </div>
+        </ToastDescription>
+      </Toast>
     </div>
   );
 }
