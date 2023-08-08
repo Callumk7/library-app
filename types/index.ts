@@ -20,14 +20,27 @@ const gameWithCoverAndCollection = Prisma.validator<Prisma.GameArgs>()({
 	},
 });
 
-const collectionWithGamesAndGenre = Prisma.validator<Prisma.UserGameCollectionArgs>()({
+const collectionWithGamesAndGenres = Prisma.validator<Prisma.UserGameCollectionArgs>()({
 	include: {
 		game: {
 			include: {
 				cover: true,
-				genres: true,
+				genres: {
+					include: {
+						genre: true
+					}
+				}
 			},
 		},
+	},
+});
+
+const fullGameDataModel = Prisma.validator<Prisma.GameArgs>()({
+	include: {
+		cover: true,
+		genres: true,
+		artworks: true,
+		screenshots: true,
 	},
 });
 
@@ -35,9 +48,10 @@ type GameWithCover = Prisma.GameGetPayload<typeof gameWithCover>;
 type GameWithCoverAndCollection = Prisma.GameGetPayload<
 	typeof gameWithCoverAndCollection
 >;
-type CollectionWithGamesAndGenre = Prisma.UserGameCollectionGetPayload<
-	typeof collectionWithGamesAndGenre
+type CollectionWithGamesAndGenres = Prisma.UserGameCollectionGetPayload<
+	typeof collectionWithGamesAndGenres
 >;
+type FullGameDataModel = Prisma.GameGetPayload<typeof fullGameDataModel>;
 
 type GameUpload = Prisma.GameCreateInput;
 
@@ -46,10 +60,11 @@ export type {
 	GameUpload,
 	GameWithCover,
 	GameWithCoverAndCollection,
-	CollectionWithGamesAndGenre,
+	CollectionWithGamesAndGenres,
+	FullGameDataModel,
 };
 
-type SortOption = "nameAsc" | "nameDesc" | "releaseDate" | "score";
+type SortOption = "nameAsc" | "nameDesc" | "releaseDate" | "rating";
 export type { SortOption };
 
 // zod validation, primarily for data returned from IGDB.
@@ -75,15 +90,15 @@ const artworkType = z.object({
 
 const IGDBGameSchema = z.object({
 	id: z.number(),
-	genres: z.array(genreType).optional(), 
+	genres: z.array(genreType).optional(),
 	name: z.string(),
 	cover: coverType,
-	storyline: z.string().optional(), 
-	screenshots: z.array(screenshotType).optional(), 
+	storyline: z.string().optional(),
+	screenshots: z.array(screenshotType).optional(),
 	artworks: z.array(artworkType),
-	aggregated_rating: z.number().optional(), 
-	aggregated_rating_count: z.number().optional(), 
-	involved_companies: z.array(z.number()).optional(), 
+	aggregated_rating: z.number().optional(),
+	aggregated_rating_count: z.number().optional(),
+	involved_companies: z.array(z.number()).optional(),
 	first_release_date: z.number().optional(),
 });
 
@@ -133,7 +148,7 @@ type IGDBImage =
 	| "720p"
 	| "1080p";
 
-export {IGDBGameSchema};
+export { IGDBGameSchema };
 export type { IGDBGame, IGDBImage };
 
 // Search page types

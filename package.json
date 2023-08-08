@@ -1,6 +1,6 @@
 {
 	"name": "frontline",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"license": "MIT",
 	"private": false,
 	"scripts": {
@@ -33,6 +33,7 @@
 		"ioredis": "^5.3.2",
 		"next": "13.4.12",
 		"postcss": "8.4.24",
+		"rc-progress": "^3.4.2",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"redis": "^4.6.7",

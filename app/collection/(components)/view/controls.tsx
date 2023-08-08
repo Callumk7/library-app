@@ -1,5 +1,3 @@
-import { Checkbox } from "@/components/ui/checkbox";
-import CollectionSearch from "./search";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,26 +9,35 @@ import {
 import { DotsIcon } from "@/components/ui/icons/DotsIcon";
 import { SortOption } from "@/types";
 import Link from "next/link";
+import { GenreDropdownCheckboxItem } from "./genre-dropdown";
+import CollectionSearch from "./search";
 
 interface CollectionControlBarProps {
   genres: string[];
-  handleSearchTermChanged: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  genreFilter: string[];
   searchTerm: string;
   sortOption: SortOption;
-  setSortOption: (option: SortOption) => void;
   isPlayedFilterActive: boolean;
+  setSortOption: (option: SortOption) => void;
+  handleSearchTermChanged: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handlePlayedFilterClicked: () => void;
+  handleGenreToggled: (genre: string) => void;
+  handleToggleAllGenres: () => void;
 }
 
 export default function CollectionControlBar({
   genres,
+  genreFilter,
   searchTerm,
   sortOption,
   setSortOption,
   handleSearchTermChanged,
   isPlayedFilterActive,
   handlePlayedFilterClicked,
+  handleGenreToggled,
+  handleToggleAllGenres,
 }: CollectionControlBarProps) {
+
   return (
     <div>
       <div className="flex flex-row space-x-6">
@@ -46,10 +53,16 @@ export default function CollectionControlBar({
           onClick={
             sortOption === "nameAsc"
               ? () => setSortOption("nameDesc")
+              : sortOption === "nameDesc"
+              ? () => setSortOption("rating")
               : () => setSortOption("nameAsc")
           }
         >
-          {sortOption === "nameAsc" ? "asc" : "desc"}
+          {sortOption === "nameAsc"
+            ? "asc"
+            : sortOption === "nameDesc"
+            ? "desc"
+            : "rating"}
         </Button>
         <Button
           variant={isPlayedFilterActive ? "default" : "outline"}
@@ -66,16 +79,19 @@ export default function CollectionControlBar({
           </DropdownMenuTrigger>
           <DropdownMenuPortal>
             <DropdownMenuContent className="flex flex-col bg-background">
-              {genres.map((genre) => (
-                <DropdownMenuItem key={genre} asChild>
-                  <Button variant={"link"} size={"sm"}>
-                    <div className="flex flex-row justify-between w-full px-1">
-                      {genre}
-                      <Checkbox />
-                    </div>
-                  </Button>
-                </DropdownMenuItem>
+              {genres.map((genre, index) => (
+                <GenreDropdownCheckboxItem
+                  key={index}
+                  genre={genre}
+                  genreFilter={genreFilter}
+                  handleGenreToggled={handleGenreToggled}
+                />
               ))}
+              <DropdownMenuItem asChild>
+                <Button size={"sm"} className="m-4" onClick={handleToggleAllGenres}>
+                  toggle all
+                </Button>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenuPortal>
         </DropdownMenu>
