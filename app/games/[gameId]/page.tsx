@@ -2,9 +2,20 @@ import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma/client";
 import Image from "next/image";
 import Link from "next/link";
+import { getGameDetails } from "../(util)/igdb";
+import { IGDBGame, IGDBGameSchema, IGDBImage } from "@/types";
 
 export default async function GamePage({ params }: { params: { gameId: string } }) {
   const gameId = Number(params.gameId);
+
+  let validExternalData: Partial<IGDBGame> = {};
+  try {
+    const externalData = await getGameDetails(gameId);
+    validExternalData = IGDBGameSchema.parse(externalData);
+    console.log(validExternalData);
+  } catch (err) {
+    console.error("error fetching external data:", err);
+  }
 
   const game = await prisma.game.findUnique({
     where: {
@@ -34,17 +45,40 @@ export default async function GamePage({ params }: { params: { gameId: string } 
     },
   });
 
-  console.log(artworks.length)
-  console.log(screenshots.length)
+  console.log(artworks.length);
+  console.log(screenshots.length);
 
   if (!game) {
     return <div>No game found</div>;
   }
 
-  const size = "1080p";
+  const size: IGDBImage = "1080p";
+  const thumbSize: IGDBImage = "screenshot_med";
 
   return (
     <div className="mx-auto mt-5 w-4/5">
+      <div className="rounded-md border p-3">
+        <div className="grid grid-cols-3 gap-1">
+          {artworks.map((artwork, index) => (
+            <Image
+              key={index}
+              src={`https://images.igdb.com/igdb/image/upload/t_${thumbSize}/${artwork.imageId}.jpg`}
+              alt={`${game.title} screenshot`}
+              width={320}
+              height={320}
+            ></Image>
+          ))}
+          {screenshots.map((screenshot, index) => (
+            <Image
+              key={index}
+              src={`https://images.igdb.com/igdb/image/upload/t_${thumbSize}/${screenshot.imageId}.jpg`}
+              alt={`${game.title} screenshot`}
+              width={320}
+              height={320}
+            ></Image>
+          ))}
+        </div>
+      </div>
       <div className="grid grid-cols-2 gap-6">
         <div className="">
           <div className="overflow-hidden rounded-md">
@@ -63,7 +97,7 @@ export default async function GamePage({ params }: { params: { gameId: string } 
             <div className="self-start pb-3 text-3xl font-black">
               {game.title.toUpperCase()}
             </div>
-            <div>{game.storyline}</div>
+            <div className="text-sm text-foreground/80">{game.storyline}</div>
           </div>
           <div className="rounded-md border p-3">
             <h2 className="text-xl font-bold">Genres</h2>
@@ -72,28 +106,6 @@ export default async function GamePage({ params }: { params: { gameId: string } 
                 <Link href={"/"}>{genre.genre.name}</Link>
               </Button>
             ))}
-          </div>
-          <div className="rounded-md border p-3">
-            <div className="grid grid-cols-3 gap-1">
-              {artworks.map((artwork, index) => (
-                <Image
-                  key={index}
-                  src={`https://images.igdb.com/igdb/image/upload/t_${size}/${artwork.imageId}.jpg`}
-                  alt={`${game.title} screenshot`}
-                  width={128}
-                  height={128}
-                ></Image>
-              ))}
-              {screenshots.map((screenshot, index) => (
-                <Image
-                  key={index}
-                  src={`https://images.igdb.com/igdb/image/upload/t_${size}/${screenshot.imageId}.jpg`}
-                  alt={`${game.title} screenshot`}
-                  width={128}
-                  height={128}
-                ></Image>
-              ))}
-            </div>
           </div>
         </div>
       </div>

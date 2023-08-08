@@ -4,6 +4,7 @@ import { DotsIcon } from "./icons/DotsIcon";
 import clsx from "clsx";
 import { Checkbox } from "./icons/Checkbox";
 import { Circle } from "./icons/Circle";
+import { Tick } from "./icons/Tick";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
@@ -104,7 +105,7 @@ const DropdownMenuCheckboxItem = forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <Checkbox className="h-4 w-4" />
+        <Tick className="h-4 w-4" />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}
