@@ -22,7 +22,6 @@ interface CollectionControlBarProps {
   handlePlayedFilterClicked: () => void;
   handleGenreToggled: (genre: string) => void;
   handleToggleAllGenres: () => void;
-  playlists: PlaylistWithGames[];
 }
 
 export default function CollectionControlBar({

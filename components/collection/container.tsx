@@ -14,13 +14,14 @@ import CollectionControlBar from "./collection-control-bar";
 import { EntryControlBar } from "./entry-control-bar";
 
 import { applySorting } from "@/util/sorting";
+import { Playlist } from "@prisma/client";
 
 const DEFAULT_SORT_OPTION: SortOption = "rating";
 
 interface CollectionContainerProps {
   collection: CollectionWithGamesGenresPlaylists[];
   genres: string[];
-  playlists: PlaylistWithGames[];
+  playlists: Playlist[];
 }
 
 export function CollectionContainer({
@@ -151,7 +152,6 @@ export function CollectionContainer({
         handlePlayedFilterClicked={handlePlayedFilterClicked}
         handleGenreToggled={handleGenreToggled}
         handleToggleAllGenres={handleToggleAllGenres}
-        playlists={playlists}
       />
 
       <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">

@@ -9,11 +9,12 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { DeleteIcon } from "@/components/ui/icons/DeleteIcon";
 import { MenuIcon } from "@/components/ui/icons/MenuIcon";
 import { PlaylistWithGames } from "@/types";
+import { Playlist } from "@prisma/client";
 
 interface CardToolbarProps {
   gameId: number;
   isPlayed: boolean;
-  playlists: PlaylistWithGames[];
+  playlists: Playlist[];
 
   handleGameAddedToPlaylist: (playlistId: number, gameId: number) => Promise<void>;
   handleEntryPlayedToggled: (gameId: number) => Promise<void>;
@@ -29,11 +30,11 @@ export function EntryControlBar({
   playlists,
 }: CardToolbarProps) {
   const handlePlayedClicked = async () => {
-    await handleEntryPlayedToggled(gameId)
+    await handleEntryPlayedToggled(gameId);
   };
 
   const handleRemoveClicked = async () => {
-    await handleRemoveEntry(gameId)
+    await handleRemoveEntry(gameId);
   };
 
   const handleSaveToPlaylistClicked = async (e: React.MouseEvent<HTMLButtonElement>) => {
