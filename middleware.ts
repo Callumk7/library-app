@@ -10,6 +10,7 @@ export default authMiddleware({
 		"/api/genres",
 		"/api/artwork",
 		"/api/playlists",
+		"/api/playlists/(.*)",
 		"/api/worker",
 		"/api/worker/(.*)",
 		"/api/collection",
