@@ -17,6 +17,11 @@ export async function getCollection(userId: string) {
 					},
 					artworks: true,
 					screenshots: true,
+					playlists: {
+						include: {
+							playlist: true,
+						},
+					},
 				},
 			},
 		},
