@@ -2,7 +2,12 @@
 
 import { useMemo, useState } from "react";
 
-import { CollectionWithGamesAndGenres, PlaylistWithGames, SortOption } from "@/types";
+import {
+  CollectionWithGamesAndGenres,
+  CollectionWithGamesGenresPlaylists,
+  PlaylistWithGames,
+  SortOption,
+} from "@/types";
 
 import { GameCard } from "../games/game-cover";
 import CollectionControlBar from "./collection-control-bar";
@@ -13,7 +18,7 @@ import { applySorting } from "@/util/sorting";
 const DEFAULT_SORT_OPTION: SortOption = "rating";
 
 interface CollectionContainerProps {
-  collection: CollectionWithGamesAndGenres[];
+  collection: CollectionWithGamesGenresPlaylists[];
   genres: string[];
   playlists: PlaylistWithGames[];
 }
@@ -29,7 +34,6 @@ export function CollectionContainer({
   const [sortOption, setSortOption] = useState<SortOption>(DEFAULT_SORT_OPTION);
   const [isPlayedFilterActive, setIsPlayedFilterActive] = useState<boolean>(false);
   const [genreFilter, setGenreFilter] = useState<string[]>(genres);
-  const [playlistsState, setPlaylistsState] = useState(playlists); // integrate state workflow for playlists
 
   // We have multiple stages to finalise the list order.
   // 1. filter out based on the search term.
@@ -152,7 +156,7 @@ export function CollectionContainer({
 
       <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {sortedCollection.map((entry, index) => (
-          <GameCard key={index} entry={entry}>
+          <GameCard key={index} game={entry.game}>
             <EntryControlBar
               gameId={entry.gameId}
               isPlayed={entry.played}

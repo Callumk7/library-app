@@ -36,14 +36,10 @@ export default function CollectionControlBar({
   handlePlayedFilterClicked,
   handleGenreToggled,
   handleToggleAllGenres,
-  playlists,
 }: CollectionControlBarProps) {
   return (
     <div>
       <div className="flex flex-row space-x-6">
-        <Button asChild>
-          <Link href="/collection/playlists/">Playlists</Link>
-        </Button>
         <CollectionSearch
           handleSearchTermChanged={handleSearchTermChanged}
           searchTerm={searchTerm}
