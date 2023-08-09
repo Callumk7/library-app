@@ -1,12 +1,16 @@
 "use client";
 
-import { CollectionWithGamesAndGenres, PlaylistWithGames, SortOption } from "@/types";
 import { useMemo, useState } from "react";
-import { applySorting } from "./sorting-util";
-import CollectionControlBar from "./controls";
-import { CollectionEntry } from "../item/entry";
 
-const DEFAULT_SORT_OPTION: SortOption = "nameAsc";
+import { CollectionWithGamesAndGenres, PlaylistWithGames, SortOption } from "@/types";
+
+import { GameCard } from "../games/item/game-card";
+import CollectionControlBar from "./collection-control-bar";
+import { EntryControlBar } from "./entry-control-bar";
+
+import { applySorting } from "@/util/sorting";
+
+const DEFAULT_SORT_OPTION: SortOption = "rating";
 
 interface CollectionContainerProps {
   collection: CollectionWithGamesAndGenres[];
@@ -25,7 +29,7 @@ export function CollectionContainer({
   const [sortOption, setSortOption] = useState<SortOption>(DEFAULT_SORT_OPTION);
   const [isPlayedFilterActive, setIsPlayedFilterActive] = useState<boolean>(false);
   const [genreFilter, setGenreFilter] = useState<string[]>(genres);
-  const [playlistsState, setPlaylistsState] = useState(playlists);
+  const [playlistsState, setPlaylistsState] = useState(playlists); // integrate state workflow for playlists
 
   // We have multiple stages to finalise the list order.
   // 1. filter out based on the search term.
@@ -81,7 +85,7 @@ export function CollectionContainer({
     setIsPlayedFilterActive(!isPlayedFilterActive);
   };
 
-  const handlePlayedToggledEntry = async (gameId: number) => {
+  const handleEntryPlayedToggled = async (gameId: number) => {
     setCollectionState((prevState) => {
       const updatedCollection = prevState.map((entry) => {
         if (entry.gameId === gameId) {
@@ -124,6 +128,12 @@ export function CollectionContainer({
     }
   };
 
+  const handleGameAddedToPlaylist = async (playlistId: number, gameId: number) => {
+    const res = await fetch(`/api/playlists/${playlistId}?gameId=${gameId}`, {
+      method: "POST",
+    });
+  };
+
   return (
     <>
       <CollectionControlBar
@@ -139,15 +149,19 @@ export function CollectionContainer({
         handleToggleAllGenres={handleToggleAllGenres}
         playlists={playlists}
       />
+
       <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        {sortedCollection.map((entry) => (
-          <CollectionEntry
-            key={entry.gameId}
-            entry={entry}
-            handleRemoveEntry={handleRemoveEntry}
-            handlePlayedToggledEntry={handlePlayedToggledEntry}
-            playlists={playlists}
-          />
+        {sortedCollection.map((entry, index) => (
+          <GameCard key={index} entry={entry}>
+            <EntryControlBar
+              gameId={entry.gameId}
+              isPlayed={entry.played}
+              playlists={playlists}
+              handleRemoveEntry={handleRemoveEntry}
+              handleEntryPlayedToggled={handleEntryPlayedToggled}
+              handleGameAddedToPlaylist={handleGameAddedToPlaylist}
+            />
+          </GameCard>
         ))}
       </div>
     </>

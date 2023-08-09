@@ -1,55 +1,19 @@
-import { CollectionWithGamesAndGenres, PlaylistWithGames } from "@/types";
+import { CollectionWithGamesAndGenres } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import { Circle } from "rc-progress";
-
-import { CardToolbar } from "./controls";
-import clsx from "clsx";
 import { Checkbox } from "@/components/ui/checkbox";
 
 interface CollectionItemProps {
   entry: CollectionWithGamesAndGenres;
-  handleRemoveEntry: (gameId: number) => Promise<void>;
-  handlePlayedToggledEntry: (gameId: number) => Promise<void>;
-  playlists: PlaylistWithGames[];
+  children: React.ReactNode;
 }
 
-export function CollectionEntry({
-  entry,
-  handleRemoveEntry,
-  handlePlayedToggledEntry,
-  playlists,
-}: CollectionItemProps) {
-  const handleRemoveClicked = async () => {
-    await handleRemoveEntry(entry.gameId);
-  };
-
-  const handlePlayedToggled = async () => {
-    await handlePlayedToggledEntry(entry.gameId);
-  };
-
-  const handleGameAddedToPlaylist = async (playlistId: number) => {
-    const res = await fetch(`/api/playlists/${playlistId}?gameId=${entry.gameId}`, {
-      method: "POST",
-    });
-  };
-
+export function GameCard({ entry, children }: CollectionItemProps) {
   const size = "720p";
 
-  let borderStyle = "";
-  if (entry) {
-    borderStyle = "border-secondary/40 hover:border-secondary";
-  } else {
-    borderStyle = "hover:border-foreground";
-  }
-
   return (
-    <div
-      className={clsx(
-        borderStyle,
-        "relative flex max-w-sm flex-col justify-between overflow-hidden rounded-lg border text-foreground"
-      )}
-    >
+    <div className="relative flex max-w-sm flex-col justify-between overflow-hidden rounded-lg border text-foreground">
       <Checkbox className="absolute right-4 top-4 z-40" />
       <Link
         className="group relative z-0 transition ease-in-out"
@@ -83,13 +47,7 @@ export function CollectionEntry({
           </p>
         ))}
       </div>
-      <CardToolbar
-        isPlayed={entry.played}
-        handlePlayedToggled={handlePlayedToggled}
-        handleRemoveClicked={handleRemoveClicked}
-        handleGameAddedToPlaylist={handleGameAddedToPlaylist}
-        playlists={playlists}
-      ></CardToolbar>
+      {children}
     </div>
   );
 }

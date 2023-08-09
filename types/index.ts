@@ -44,6 +44,12 @@ const fullGameDataModel = Prisma.validator<Prisma.GameArgs>()({
 	},
 });
 
+const playlistWithGames = Prisma.validator<Prisma.PlaylistArgs>()({
+	include: {
+		games: true,
+	}
+})
+
 type GameWithCover = Prisma.GameGetPayload<typeof gameWithCover>;
 type GameWithCoverAndCollection = Prisma.GameGetPayload<
 	typeof gameWithCoverAndCollection
@@ -52,6 +58,7 @@ type CollectionWithGamesAndGenres = Prisma.UserGameCollectionGetPayload<
 	typeof collectionWithGamesAndGenres
 >;
 type FullGameDataModel = Prisma.GameGetPayload<typeof fullGameDataModel>;
+type PlaylistWithGames = Prisma.PlaylistGetPayload<typeof playlistWithGames>;
 
 type GameUpload = Prisma.GameCreateInput;
 
@@ -62,6 +69,7 @@ export type {
 	GameWithCoverAndCollection,
 	CollectionWithGamesAndGenres,
 	FullGameDataModel,
+	PlaylistWithGames,
 };
 
 type SortOption = "nameAsc" | "nameDesc" | "releaseDate" | "rating";

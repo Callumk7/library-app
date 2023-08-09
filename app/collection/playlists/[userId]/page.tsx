@@ -1,13 +1,16 @@
-import PlayListContainer from "@/components/playlists/playlist-container";
-import PlaylistView from "@/components/playlists/playlist-view";
+import { PlayListContainer } from "@/components/playlists/playlist-container";
+import { getPlaylists } from "@/lib/prisma/playlists/queries";
+import { auth } from "@clerk/nextjs";
 
-export default function PlaylistsPage() {
+export default async function PlaylistsPage() {
+  const { userId } = auth();
+  if (!userId) {
+    return <div>No playlists</div>;
+  }
+  const playlists = await getPlaylists(userId);
   return (
     <div>
-      <h1>Playlists</h1>
-      <PlayListContainer>
-        <PlaylistView />
-      </PlayListContainer>
+      <PlayListContainer playlists={playlists} />
     </div>
   );
 }

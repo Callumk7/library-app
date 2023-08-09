@@ -11,31 +11,34 @@ import { MenuIcon } from "@/components/ui/icons/MenuIcon";
 import { PlaylistWithGames } from "@/types";
 
 interface CardToolbarProps {
+  gameId: number;
   isPlayed: boolean;
   playlists: PlaylistWithGames[];
-  handleGameAddedToPlaylist: (playlistId: number) => Promise<void>;
-  handlePlayedToggled: () => Promise<void>;
-  handleRemoveClicked: () => Promise<void>;
+
+  handleGameAddedToPlaylist: (playlistId: number, gameId: number) => Promise<void>;
+  handleEntryPlayedToggled: (gameId: number) => Promise<void>;
+  handleRemoveEntry: (gameId: number) => Promise<void>;
 }
 
-export function CardToolbar({
+export function EntryControlBar({
+  gameId,
   isPlayed,
-  handleRemoveClicked,
-  handlePlayedToggled,
+  handleRemoveEntry,
+  handleEntryPlayedToggled,
   handleGameAddedToPlaylist,
   playlists,
 }: CardToolbarProps) {
   const handlePlayedClicked = async () => {
-    await handlePlayedToggled();
+    await handleEntryPlayedToggled(gameId)
   };
 
-  const handleRemoveClickedSync = () => {
-    handleRemoveClicked().catch((reason) => console.error(reason));
+  const handleRemoveClicked = async () => {
+    await handleRemoveEntry(gameId)
   };
 
   const handleSaveToPlaylistClicked = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const playlistId = e.currentTarget.name;
-    await handleGameAddedToPlaylist(Number(playlistId));
+    await handleGameAddedToPlaylist(Number(playlistId), gameId);
   };
 
   return (
@@ -72,7 +75,7 @@ export function CardToolbar({
         </DropdownMenu>
         <HoverCard>
           <HoverCardTrigger>
-            <Button variant={"linkMono"} size={"icon"} onClick={handleRemoveClickedSync}>
+            <Button variant={"linkMono"} size={"icon"} onClick={handleRemoveClicked}>
               <DeleteIcon />
             </Button>
           </HoverCardTrigger>

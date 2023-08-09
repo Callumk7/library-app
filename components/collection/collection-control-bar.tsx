@@ -3,7 +3,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuPortal,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown";
 import { DotsIcon } from "@/components/ui/icons/DotsIcon";
@@ -39,7 +38,6 @@ export default function CollectionControlBar({
   handleToggleAllGenres,
   playlists,
 }: CollectionControlBarProps) {
-
   return (
     <div>
       <div className="flex flex-row space-x-6">
@@ -79,21 +77,21 @@ export default function CollectionControlBar({
               <DotsIcon className="ml-auto h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-            <DropdownMenuContent className="flex flex-col">
-              {genres.map((genre, index) => (
-                <GenreDropdownCheckboxItem
-                  key={index}
-                  genre={genre}
-                  genreFilter={genreFilter}
-                  handleGenreToggled={handleGenreToggled}
-                />
-              ))}
-              <DropdownMenuItem asChild>
-                <Button size={"sm"} className="m-4" onClick={handleToggleAllGenres}>
-                  toggle all
-                </Button>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
+          <DropdownMenuContent className="flex flex-col">
+            {genres.map((genre, index) => (
+              <GenreDropdownCheckboxItem
+                key={index}
+                genre={genre}
+                genreFilter={genreFilter}
+                handleGenreToggled={handleGenreToggled}
+              />
+            ))}
+            <DropdownMenuItem asChild>
+              <Button size={"sm"} className="m-4" onClick={handleToggleAllGenres}>
+                toggle all
+              </Button>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
         </DropdownMenu>
       </div>
     </div>
