@@ -1,6 +1,6 @@
+import { getRecentGames } from "@/lib/prisma/games/queries";
 import { IGDBImage } from "@/types";
 import Image from "next/image";
-import { getRecentGames } from "./collection/(util)/queries";
 
 const size: IGDBImage = "cover_big";
 

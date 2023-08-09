@@ -1,15 +1,16 @@
 "use client";
 
 import { GameSearchResult, IGDBGame } from "@/types";
-import { SearchResult } from "./result";
 import { useEffect, useState } from "react";
+import { GameCardArtwork } from "../games/game-artwork";
+import { SearchResultControls } from "./result-controls";
 
 interface SearchResultsProps {
   results: IGDBGame[];
   collectionIds: number[];
 }
 
-export function SearchResults({ results, collectionIds }: SearchResultsProps) {
+export function SearchContainer({ results, collectionIds }: SearchResultsProps) {
   const [collectionState, setCollectionState] = useState<number[]>(collectionIds);
   const [resultsState, setResultsState] = useState<GameSearchResult[]>([]);
 
@@ -38,7 +39,7 @@ export function SearchResults({ results, collectionIds }: SearchResultsProps) {
     setResultsState(initResultsState);
   }, [results, collectionIds]);
 
-  const handleSave = async (gameId: number) => {
+  const handleSaveToCollection = async (gameId: number) => {
     // set state to saving, try the database, update to saved or reset.
     setResultsState((prevState) => {
       return prevState.map((result) => {
@@ -81,7 +82,7 @@ export function SearchResults({ results, collectionIds }: SearchResultsProps) {
     }
   };
 
-  const handleRemove = async (gameId: number) => {
+  const handleRemoveFromCollection = async (gameId: number) => {
     setResultsState((prevState) => {
       return prevState.map((result) => {
         if (result.id === gameId) {
@@ -119,12 +120,13 @@ export function SearchResults({ results, collectionIds }: SearchResultsProps) {
     <div className="grid w-full grid-cols-3 gap-4 md:grid-cols-2">
       {resultsState.map((game, index) => {
         return (
-          <SearchResult
-            key={index}
-            game={game}
-            handleSave={handleSave}
-            handleRemove={handleRemove}
-          />
+          <GameCardArtwork key={index} game={game}>
+            <SearchResultControls
+              game={game}
+              handleSaveToCollection={handleSaveToCollection}
+              handleRemoveFromCollection={handleRemoveFromCollection}
+            />
+          </GameCardArtwork>
         );
       })}
     </div>

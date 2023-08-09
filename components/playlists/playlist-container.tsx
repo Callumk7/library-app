@@ -1,41 +1,18 @@
 "use client";
 
-import { ReactNode, useState } from "react";
-import CreatePlaylistForm from "./create-playlist-form";
-import PlaylistView from "./playlist-view";
+import { PlaylistWithGames } from "@/types";
+import { useState } from "react";
 
-async function createPlaylist(name: string) {
-  const body = { name: name };
-  const newPlaylist = await fetch("/api/playlists", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
-  const json: unknown = await newPlaylist.json();
-  console.log(json);
+interface PlayListContainerProps {
+  playlists: PlaylistWithGames[];
 }
 
-export default function PlayListContainer({ children }: { children: ReactNode }) {
-  const [newPlaylistName, setNewPlaylistName] = useState<string>("");
-
-  const handleSubmit = async () => {
-    await createPlaylist(newPlaylistName);
-  };
-
-  const handleChange = (name: string) => {
-    setNewPlaylistName(name);
-  };
+export function PlayListContainer({ playlists }: PlayListContainerProps) {
+  const [playlistState, setPlaylistState] = useState<PlaylistWithGames[]>(playlists);
 
   return (
     <div>
-      <CreatePlaylistForm
-        handleSubmit={handleSubmit}
-        handleChange={handleChange}
-        newPlaylistName={newPlaylistName}
-      />
-      {children}
+      <h1>hello</h1>
     </div>
   );
 }

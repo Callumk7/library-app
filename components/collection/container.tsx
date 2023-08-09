@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 import { CollectionWithGamesAndGenres, PlaylistWithGames, SortOption } from "@/types";
 
-import { GameCard } from "../games/item/game-card";
+import { GameCard } from "../games/game-cover";
 import CollectionControlBar from "./collection-control-bar";
 import { EntryControlBar } from "./entry-control-bar";
 
