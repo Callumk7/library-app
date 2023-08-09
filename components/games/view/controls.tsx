@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown";
 import { DotsIcon } from "@/components/ui/icons/DotsIcon";
-import { SortOption } from "@/types";
+import { PlaylistWithGames, SortOption } from "@/types";
 import Link from "next/link";
 import { GenreDropdownCheckboxItem } from "./genre-dropdown";
 import CollectionSearch from "./search";
@@ -23,6 +23,7 @@ interface CollectionControlBarProps {
   handlePlayedFilterClicked: () => void;
   handleGenreToggled: (genre: string) => void;
   handleToggleAllGenres: () => void;
+  playlists: PlaylistWithGames[];
 }
 
 export default function CollectionControlBar({
@@ -36,6 +37,7 @@ export default function CollectionControlBar({
   handlePlayedFilterClicked,
   handleGenreToggled,
   handleToggleAllGenres,
+  playlists,
 }: CollectionControlBarProps) {
 
   return (
@@ -77,8 +79,7 @@ export default function CollectionControlBar({
               <DotsIcon className="ml-auto h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuContent className="flex flex-col bg-background">
+            <DropdownMenuContent className="flex flex-col">
               {genres.map((genre, index) => (
                 <GenreDropdownCheckboxItem
                   key={index}
@@ -93,7 +94,6 @@ export default function CollectionControlBar({
                 </Button>
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenuPortal>
         </DropdownMenu>
       </div>
     </div>

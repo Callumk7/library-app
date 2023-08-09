@@ -1,29 +1,36 @@
 "use client";
 
-import { CollectionWithGamesAndGenres, SortOption } from "@/types";
-import { useEffect, useMemo, useState } from "react";
+import { CollectionWithGamesAndGenres, PlaylistWithGames, SortOption } from "@/types";
+import { useMemo, useState } from "react";
 import { applySorting } from "./sorting-util";
 import CollectionControlBar from "./controls";
 import { CollectionEntry } from "../item/entry";
-import { GenreFilter } from "./genre-filter";
 
 const DEFAULT_SORT_OPTION: SortOption = "nameAsc";
+
+interface CollectionContainerProps {
+  collection: CollectionWithGamesAndGenres[];
+  genres: string[];
+  playlists: PlaylistWithGames[];
+}
 
 export function CollectionContainer({
   collection,
   genres,
-}: {
-  collection: CollectionWithGamesAndGenres[];
-  genres: string[];
-}) {
+  playlists,
+}: CollectionContainerProps) {
   const [collectionState, setCollectionState] =
     useState<CollectionWithGamesAndGenres[]>(collection);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortOption, setSortOption] = useState<SortOption>(DEFAULT_SORT_OPTION);
   const [isPlayedFilterActive, setIsPlayedFilterActive] = useState<boolean>(false);
   const [genreFilter, setGenreFilter] = useState<string[]>(genres);
-  const [isGenreFilterOpen, setIsGenreFilterOpen] = useState<boolean>(false);
+  const [playlistsState, setPlaylistsState] = useState(playlists);
 
+  // We have multiple stages to finalise the list order.
+  // 1. filter out based on the search term.
+  // 2. filter out based on played filter.
+  // 3. filter out based on genre filter.
   const filteredCollection = useMemo(() => {
     let output = [...collectionState];
     if (searchTerm !== "") {
@@ -36,10 +43,6 @@ export function CollectionContainer({
     }
 
     output = output.filter((entry) => {
-      // needs to return true or false -->
-      // true if one of game's genres is in filtered list,
-      // false if one of game's genres IS NOT in filtered list.
-
       for (const genre of entry.game.genres) {
         if (genreFilter.includes(genre.genre.name)) {
           return true;
@@ -50,6 +53,8 @@ export function CollectionContainer({
     return output;
   }, [collectionState, searchTerm, isPlayedFilterActive, genreFilter]);
 
+  // ...following from the above useMemo, we sort the filtered list.
+  // In this way, we don't recompute when not required.
   const sortedCollection = useMemo(() => {
     return applySorting(filteredCollection, sortOption);
   }, [filteredCollection, sortOption]);
@@ -117,7 +122,7 @@ export function CollectionContainer({
     } else {
       setGenreFilter([]);
     }
-  }
+  };
 
   return (
     <>
@@ -132,6 +137,7 @@ export function CollectionContainer({
         handlePlayedFilterClicked={handlePlayedFilterClicked}
         handleGenreToggled={handleGenreToggled}
         handleToggleAllGenres={handleToggleAllGenres}
+        playlists={playlists}
       />
       <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {sortedCollection.map((entry) => (
@@ -140,6 +146,7 @@ export function CollectionContainer({
             entry={entry}
             handleRemoveEntry={handleRemoveEntry}
             handlePlayedToggledEntry={handlePlayedToggledEntry}
+            playlists={playlists}
           />
         ))}
       </div>

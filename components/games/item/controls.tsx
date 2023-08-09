@@ -1,22 +1,29 @@
-// played, remove, collections dropdown
-
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover";
 import { DeleteIcon } from "@/components/ui/icons/DeleteIcon";
 import { MenuIcon } from "@/components/ui/icons/MenuIcon";
-import * as Dropdown from "@radix-ui/react-dropdown-menu";
+import { PlaylistWithGames } from "@/types";
 
 interface CardToolbarProps {
   isPlayed: boolean;
-  handleRemoveClicked: () => Promise<void>;
+  playlists: PlaylistWithGames[];
+  handleGameAddedToPlaylist: (playlistId: number) => Promise<void>;
   handlePlayedToggled: () => Promise<void>;
+  handleRemoveClicked: () => Promise<void>;
 }
 
 export function CardToolbar({
   isPlayed,
   handleRemoveClicked,
   handlePlayedToggled,
+  handleGameAddedToPlaylist,
+  playlists,
 }: CardToolbarProps) {
   const handlePlayedClicked = async () => {
     await handlePlayedToggled();
@@ -24,6 +31,11 @@ export function CardToolbar({
 
   const handleRemoveClickedSync = () => {
     handleRemoveClicked().catch((reason) => console.error(reason));
+  };
+
+  const handleSaveToPlaylistClicked = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const playlistId = e.currentTarget.name;
+    await handleGameAddedToPlaylist(Number(playlistId));
   };
 
   return (
@@ -40,6 +52,24 @@ export function CardToolbar({
           </HoverCardTrigger>
           <HoverCardContent>Toggle played</HoverCardContent>
         </HoverCard>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant={"linkMono"} size={"icon"}>
+              <MenuIcon />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="flex flex-col gap-2">
+            {playlists.map((playlist, index) => (
+              <DropdownMenuItem key={index} asChild>
+                <Button
+                  name={String(playlist.id)}
+                  variant={"link"}
+                  onClick={handleSaveToPlaylistClicked}
+                >{`Add to ${playlist.name}`}</Button>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
         <HoverCard>
           <HoverCardTrigger>
             <Button variant={"linkMono"} size={"icon"} onClick={handleRemoveClickedSync}>

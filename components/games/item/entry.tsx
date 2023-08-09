@@ -1,4 +1,4 @@
-import { CollectionWithGamesAndGenres } from "@/types";
+import { CollectionWithGamesAndGenres, PlaylistWithGames } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import { Circle } from "rc-progress";
@@ -11,12 +11,14 @@ interface CollectionItemProps {
   entry: CollectionWithGamesAndGenres;
   handleRemoveEntry: (gameId: number) => Promise<void>;
   handlePlayedToggledEntry: (gameId: number) => Promise<void>;
+  playlists: PlaylistWithGames[];
 }
 
 export function CollectionEntry({
   entry,
   handleRemoveEntry,
   handlePlayedToggledEntry,
+  playlists,
 }: CollectionItemProps) {
   const handleRemoveClicked = async () => {
     await handleRemoveEntry(entry.gameId);
@@ -24,6 +26,12 @@ export function CollectionEntry({
 
   const handlePlayedToggled = async () => {
     await handlePlayedToggledEntry(entry.gameId);
+  };
+
+  const handleGameAddedToPlaylist = async (playlistId: number) => {
+    const res = await fetch(`/api/playlists/${playlistId}?gameId=${entry.gameId}`, {
+      method: "POST",
+    });
   };
 
   const size = "720p";
@@ -39,7 +47,7 @@ export function CollectionEntry({
     <div
       className={clsx(
         borderStyle,
-        "relative flex max-w-sm flex-col overflow-hidden rounded-lg border text-foreground justify-between"
+        "relative flex max-w-sm flex-col justify-between overflow-hidden rounded-lg border text-foreground"
       )}
     >
       <Checkbox className="absolute right-4 top-4 z-40" />
@@ -53,22 +61,34 @@ export function CollectionEntry({
           width={720}
           height={1280}
         />
-        <Circle percent={entry.game.aggregatedRating!} strokeWidth={8} strokeColor="#F0F757" className="absolute top-2 left-2 w-10 h-10" />
+        <Circle
+          percent={entry.game.aggregatedRating!}
+          strokeWidth={8}
+          strokeColor="#F0F757"
+          className="absolute left-2 top-2 h-10 w-10"
+        />
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-80 opacity-0 transition ease-in-out group-hover:opacity-100">
           <div className="animate-pulse text-center text-4xl text-white">
             <div>{entry.game.title}</div>
           </div>
         </div>
       </Link>
-        <div className="flex flex-wrap gap-1 m-2">
-          {entry.game.genres.map((genre, index) => (
-            <p className="text-[10px] text-light/70 bg-gray-800 px-2 py-1 inline rounded-md" key={index}>{genre.genre.name}</p>
-          ))}
-        </div>
+      <div className="m-2 flex flex-wrap gap-1">
+        {entry.game.genres.map((genre, index) => (
+          <p
+            className="inline rounded-md bg-gray-800 px-2 py-1 text-[10px] text-light/70"
+            key={index}
+          >
+            {genre.genre.name}
+          </p>
+        ))}
+      </div>
       <CardToolbar
         isPlayed={entry.played}
         handlePlayedToggled={handlePlayedToggled}
         handleRemoveClicked={handleRemoveClicked}
+        handleGameAddedToPlaylist={handleGameAddedToPlaylist}
+        playlists={playlists}
       ></CardToolbar>
     </div>
   );
