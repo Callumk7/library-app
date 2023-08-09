@@ -26,11 +26,7 @@ export async function getCollection(userId: string) {
 	return userCollection;
 }
 
-export async function getCollectionGameIds(userId: string | null): Promise<number[]> {
-	if (!userId) {
-		return [];
-	}
-
+export async function getCollectionGameIds(userId: string): Promise<number[]> {
 	const findCollection = await prisma.userGameCollection.findMany({
 		where: {
 			userId,
@@ -44,6 +40,5 @@ export async function getCollectionGameIds(userId: string | null): Promise<numbe
 	for (const result of findCollection) {
 		results.push(result.gameId);
 	}
-	console.log("get collection completed");
 	return results;
 }
