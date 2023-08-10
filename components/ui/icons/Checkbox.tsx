@@ -1,4 +1,4 @@
-export const Checkbox = ({ className }: { className: string }) => {
+export const Checkbox = ({ className }: { className?: string }) => {
   return (
     <svg
       width="24"

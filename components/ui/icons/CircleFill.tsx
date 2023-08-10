@@ -1,4 +1,4 @@
-export const ChevronRight = ({ className }: { className?: string }) => {
+export const CircleFill = ({ className }: { className?: string }) => {
   return (
     <svg
       width="24"
@@ -9,7 +9,7 @@ export const ChevronRight = ({ className }: { className?: string }) => {
     >
       <path
         fill="currentColor"
-        d="M8.59 16.58L13.17 12L8.59 7.41L10 6l6 6l-6 6l-1.41-1.42Z"
+        d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10Z"
       />
     </svg>
   );

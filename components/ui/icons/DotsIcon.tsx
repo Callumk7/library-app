@@ -1,4 +1,4 @@
-export const DotsIcon = ({ className }: { className: string }) => {
+export const DotsIcon = ({ className }: { className?: string }) => {
   return (
     <svg
       width="24"
