@@ -139,6 +139,33 @@ export function CollectionContainer({
     });
   };
 
+  const handleEntryCompletedToggled = async (gameId: number) => {
+    setCollectionState((prevState) => {
+      const updatedCollection = prevState.map((entry) => {
+        if (entry.gameId === gameId) {
+          return { ...entry, completed: !entry.completed };
+        }
+        return entry;
+      });
+
+      return updatedCollection;
+    });
+
+    const prevState = collectionState.find((entry) => entry.gameId === gameId)?.completed;
+    try {
+      const res = await fetch(`/api/collection/games/${gameId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ completed: !prevState }),
+      });
+      console.log(res.status);
+    } catch (err) {
+      console.error("error updating server", err);
+    }
+  };
+
   return (
     <>
       <CollectionControlBar
@@ -156,14 +183,21 @@ export function CollectionContainer({
 
       <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {sortedCollection.map((entry, index) => (
-          <GameCard key={index} game={entry.game}>
+          <GameCard
+            key={index}
+            game={entry.game}
+            isCompleted={entry.completed}
+            isStarred={entry.starred}
+          >
             <EntryControlBar
               gameId={entry.gameId}
               isPlayed={entry.played}
+              isCompleted={entry.completed}
               playlists={playlists}
               handleRemoveEntry={handleRemoveEntry}
               handleEntryPlayedToggled={handleEntryPlayedToggled}
               handleGameAddedToPlaylist={handleGameAddedToPlaylist}
+              handleEntryCompletedToggled={handleEntryCompletedToggled}
             />
           </GameCard>
         ))}

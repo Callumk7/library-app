@@ -3,17 +3,35 @@ import Image from "next/image";
 import Link from "next/link";
 import { Circle } from "rc-progress";
 import { Checkbox } from "@/components/ui/checkbox";
+import clsx from "clsx";
 
 interface CollectionItemProps {
   game: GameWithCoverAndGenres;
+  isCompleted: boolean;
+  isStarred: boolean;
   children: React.ReactNode;
 }
 
-export function GameCard({ game, children }: CollectionItemProps) {
+export function GameCard({
+  game,
+  isCompleted,
+  isStarred,
+  children,
+}: CollectionItemProps) {
   const size: IGDBImage = "720p";
 
+  let borderStyle = "border hover:border-foreground";
+  if (isCompleted) {
+    borderStyle = "border border-lime-500/40 hover:border-lime-500 shadow-lg shadow-lime-500/20 hover:shadow-lime-500/40";
+  }
+
   return (
-    <div className="relative flex max-w-sm flex-col justify-between overflow-hidden rounded-lg border text-foreground hover:border-foreground">
+    <div
+      className={clsx(
+        borderStyle,
+        "relative flex max-w-sm flex-col justify-between overflow-hidden rounded-lg text-foreground"
+      )}
+    >
       <Checkbox className="absolute right-4 top-4 z-40" />
       <Link
         className="group relative z-0 transition ease-in-out"

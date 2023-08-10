@@ -8,24 +8,27 @@ import {
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover";
 import { DeleteIcon } from "@/components/ui/icons/DeleteIcon";
 import { MenuIcon } from "@/components/ui/icons/MenuIcon";
-import { PlaylistWithGames } from "@/types";
 import { Playlist } from "@prisma/client";
 
 interface CardToolbarProps {
   gameId: number;
   isPlayed: boolean;
+  isCompleted: boolean;
   playlists: Playlist[];
 
   handleGameAddedToPlaylist: (playlistId: number, gameId: number) => Promise<void>;
   handleEntryPlayedToggled: (gameId: number) => Promise<void>;
+  handleEntryCompletedToggled: (gameId: number) => Promise<void>;
   handleRemoveEntry: (gameId: number) => Promise<void>;
 }
 
 export function EntryControlBar({
   gameId,
   isPlayed,
+  isCompleted,
   handleRemoveEntry,
   handleEntryPlayedToggled,
+  handleEntryCompletedToggled,
   handleGameAddedToPlaylist,
   playlists,
 }: CardToolbarProps) {
@@ -36,6 +39,11 @@ export function EntryControlBar({
   const handleRemoveClicked = async () => {
     await handleRemoveEntry(gameId);
   };
+  
+  const handleCompletedClicked = async () => {
+    await handleEntryCompletedToggled(gameId);
+  };
+
 
   const handleSaveToPlaylistClicked = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const playlistId = e.currentTarget.name;
@@ -49,6 +57,7 @@ export function EntryControlBar({
           <HoverCardTrigger asChild>
             <Button
               variant={isPlayed ? "default" : "outline"}
+              size={"sm"}
               onClick={handlePlayedClicked}
             >
               {isPlayed ? "played" : "not played"}
@@ -81,6 +90,18 @@ export function EntryControlBar({
             </Button>
           </HoverCardTrigger>
           <HoverCardContent>Delete game from collection</HoverCardContent>
+        </HoverCard>
+        <HoverCard>
+          <HoverCardTrigger>
+            <Button
+              variant={isCompleted ? "default" : "outline"}
+              size={"sm"}
+              onClick={handleCompletedClicked}
+            >
+              {isCompleted ? "completed" : "unfinished"}
+            </Button>
+          </HoverCardTrigger>
+          <HoverCardContent>Mark game as completed!</HoverCardContent>
         </HoverCard>
       </div>
     </div>
