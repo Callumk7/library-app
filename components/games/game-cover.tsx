@@ -22,7 +22,8 @@ export function GameCard({
 
   let borderStyle = "border hover:border-foreground";
   if (isCompleted) {
-    borderStyle = "border border-lime-500/40 hover:border-lime-500 shadow-lg shadow-lime-500/20 hover:shadow-lime-500/40";
+    borderStyle =
+      "border border-lime-500/40 hover:border-lime-500 shadow-lg shadow-lime-500/20 hover:shadow-lime-500/40";
   }
 
   return (
@@ -32,7 +33,6 @@ export function GameCard({
         "relative flex max-w-sm flex-col justify-between overflow-hidden rounded-lg text-foreground"
       )}
     >
-      <Checkbox className="absolute right-4 top-4 z-40" />
       <Link
         className="group relative z-0 transition ease-in-out"
         href={`/games/${game.gameId}`}

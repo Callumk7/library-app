@@ -63,6 +63,7 @@ export function SearchResultControls({
           </Button>
         )}
       </div>
+
       <Toast open={saveToastOpen} onOpenChange={setSaveToastOpen} variant={"default"}>
         <ToastClose />
         <ToastTitle>{`${game.name} saved to your collection`}</ToastTitle>
