@@ -15,7 +15,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <html lang="en">
         <body className="flex min-h-screen flex-col items-center bg-background text-foreground">
           <Navbar />
-          <Back />
           {children}
           <ToastViewport />
         </body>
