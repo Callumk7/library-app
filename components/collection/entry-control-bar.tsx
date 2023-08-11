@@ -1,14 +1,18 @@
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover";
 import { DeleteIcon } from "@/components/ui/icons/DeleteIcon";
 import { MenuIcon } from "@/components/ui/icons/MenuIcon";
 import { Playlist } from "@prisma/client";
+import { CircleFill } from "../ui/icons/CircleFill";
+import { CircleProgress } from "../ui/icons/CircleProgress";
+import { PlayFill } from "../ui/icons/PlayFill";
+import { PlayOutline } from "../ui/icons/PlayOutline";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 interface CardToolbarProps {
   gameId: number;
@@ -39,11 +43,10 @@ export function EntryControlBar({
   const handleRemoveClicked = async () => {
     await handleRemoveEntry(gameId);
   };
-  
+
   const handleCompletedClicked = async () => {
     await handleEntryCompletedToggled(gameId);
   };
-
 
   const handleSaveToPlaylistClicked = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const playlistId = e.currentTarget.name;
@@ -51,20 +54,16 @@ export function EntryControlBar({
   };
 
   return (
-    <div className="m-2 rounded-md border px-2 py-2">
+    <div className="m-2 px-2 py-2">
       <div className="flex flex-row items-center justify-between">
-        <HoverCard>
-          <HoverCardTrigger asChild>
-            <Button
-              variant={isPlayed ? "default" : "outline"}
-              size={"sm"}
-              onClick={handlePlayedClicked}
-            >
-              {isPlayed ? "played" : "not played"}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant={"linkMono"} size={"icon"} onClick={handlePlayedClicked}>
+              {isPlayed ? <PlayFill /> : <PlayOutline />}
             </Button>
-          </HoverCardTrigger>
-          <HoverCardContent>Toggle played</HoverCardContent>
-        </HoverCard>
+          </TooltipTrigger>
+          <TooltipContent>Toggle played</TooltipContent>
+        </Tooltip>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant={"linkMono"} size={"icon"}>
@@ -76,33 +75,29 @@ export function EntryControlBar({
               <DropdownMenuItem key={index} asChild>
                 <Button
                   name={String(playlist.id)}
-                  variant={"link"}
+                  variant={"linkMono"}
                   onClick={handleSaveToPlaylistClicked}
                 >{`Add to ${playlist.name}`}</Button>
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
-        <HoverCard>
-          <HoverCardTrigger>
+        <Tooltip>
+          <TooltipTrigger asChild>
             <Button variant={"linkMono"} size={"icon"} onClick={handleRemoveClicked}>
               <DeleteIcon />
             </Button>
-          </HoverCardTrigger>
-          <HoverCardContent>Delete game from collection</HoverCardContent>
-        </HoverCard>
-        <HoverCard>
-          <HoverCardTrigger>
-            <Button
-              variant={isCompleted ? "default" : "outline"}
-              size={"sm"}
-              onClick={handleCompletedClicked}
-            >
-              {isCompleted ? "completed" : "unfinished"}
+          </TooltipTrigger>
+          <TooltipContent>Delete game from collection</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant={"linkMono"} size={"sm"} onClick={handleCompletedClicked}>
+              {isCompleted ? <CircleFill /> : <CircleProgress />}
             </Button>
-          </HoverCardTrigger>
-          <HoverCardContent>Mark game as completed!</HoverCardContent>
-        </HoverCard>
+          </TooltipTrigger>
+          <TooltipContent>Mark game as completed!</TooltipContent>
+        </Tooltip>
       </div>
     </div>
   );
