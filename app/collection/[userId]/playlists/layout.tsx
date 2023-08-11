@@ -17,7 +17,7 @@ export default async function PlaylistLayout({
   const playlists = await getPlaylists(userId);
 
   return (
-    <div>
+    <div className="mt-10">
       <PlaylistNavBar playlists={playlists} />
       {children}
     </div>

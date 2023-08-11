@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { isArray, isNumber } from "util";
 
 export async function POST(
 	req: NextRequest,
@@ -10,14 +11,40 @@ export async function POST(
 	const searchParams = new URLSearchParams(url.search);
 	const gameId = searchParams.get("gameId");
 
-	console.log(`Playlist route hit with playlist id: ${playlistId}, game id: ${gameId}`);
+	if (gameId) {
+		console.log(
+			`Playlist route hit with playlist id: ${playlistId}, game id: ${gameId}`
+		);
 
-	const addPlaylist = await prisma.playlistsOnGames.create({
-		data: {
-			gameId: Number(gameId),
-			playlistId: Number(playlistId),
-		},
-	});
+		const addToPlaylist = await prisma.playlistsOnGames.create({
+			data: {
+				gameId: Number(gameId),
+				playlistId: Number(playlistId),
+			},
+		});
 
-	return new NextResponse("added!", { status: 200 });
+		return new NextResponse("added!", { status: 200 });
+	} else {
+		const body = await req.json();
+
+		if (body) {
+			if (isArray(body)) {
+				for (const gameId of body) {
+					if (isNumber(gameId)) {
+						const addToPlaylist = await prisma.playlistsOnGames.create({
+							data: {
+								gameId: Number(gameId),
+								playlistId: Number(playlistId),
+							},
+						});
+
+						console.log(`added ${gameId} to ${playlistId}`);
+					}
+				}
+				return new NextResponse("bulk added!", { status: 200 });
+			}
+		}
+
+		return new NextResponse("no body or gameId found", { status: 401 });
+	}
 }
