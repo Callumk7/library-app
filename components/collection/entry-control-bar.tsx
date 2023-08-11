@@ -58,7 +58,7 @@ export function EntryControlBar({
       <div className="flex flex-row items-center justify-between">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant={"linkMono"} size={"icon"} onClick={handlePlayedClicked}>
+            <Button variant={"link-mono"} size={"icon"} onClick={handlePlayedClicked}>
               {isPlayed ? <PlayFill /> : <PlayOutline />}
             </Button>
           </TooltipTrigger>
@@ -66,7 +66,7 @@ export function EntryControlBar({
         </Tooltip>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant={"linkMono"} size={"icon"}>
+            <Button variant={"link-mono"} size={"icon"}>
               <MenuIcon />
             </Button>
           </DropdownMenuTrigger>
@@ -75,7 +75,7 @@ export function EntryControlBar({
               <DropdownMenuItem key={index} asChild>
                 <Button
                   name={String(playlist.id)}
-                  variant={"linkMono"}
+                  variant={"link-mono"}
                   onClick={handleSaveToPlaylistClicked}
                 >{`Add to ${playlist.name}`}</Button>
               </DropdownMenuItem>
@@ -84,7 +84,7 @@ export function EntryControlBar({
         </DropdownMenu>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant={"linkMono"} size={"icon"} onClick={handleRemoveClicked}>
+            <Button variant={"link-mono"} size={"icon"} onClick={handleRemoveClicked}>
               <DeleteIcon />
             </Button>
           </TooltipTrigger>
@@ -92,7 +92,7 @@ export function EntryControlBar({
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant={"linkMono"} size={"sm"} onClick={handleCompletedClicked}>
+            <Button variant={"link-mono"} size={"sm"} onClick={handleCompletedClicked}>
               {isCompleted ? <CircleFill /> : <CircleProgress />}
             </Button>
           </TooltipTrigger>

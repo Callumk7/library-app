@@ -8,7 +8,6 @@ import { GameCard } from "../games/game-cover";
 
 import { applySorting } from "@/util/sorting";
 import { Playlist } from "@prisma/client";
-import { GameCheckbox } from "../games/game-checkbox";
 import { CollectionMenubar } from "./collection-menubar";
 import { EntryMenubar } from "./entry-menubar";
 
