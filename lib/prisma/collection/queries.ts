@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma/client";
+import { CollectionWithGamesGenresPlaylists } from "@/types";
 
-export async function getCollection(userId: string) {
+export async function getCollection(userId: string): Promise<CollectionWithGamesGenresPlaylists[]> {
 	console.time("get collection");
 	const userCollection = await prisma.userGameCollection.findMany({
 		where: {
@@ -15,8 +16,6 @@ export async function getCollection(userId: string) {
 							genre: true,
 						},
 					},
-					artworks: true,
-					screenshots: true,
 					playlists: {
 						include: {
 							playlist: true,

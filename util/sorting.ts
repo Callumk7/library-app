@@ -1,9 +1,9 @@
-import { CollectionWithGamesAndGenres, SortOption } from "@/types";
+import { CollectionWithGamesGenresPlaylists, SortOption } from "@/types";
 
 export const applySorting = (
-	collection: CollectionWithGamesAndGenres[],
+	collection: CollectionWithGamesGenresPlaylists[],
 	sortOption: SortOption
-): CollectionWithGamesAndGenres[] => {
+): CollectionWithGamesGenresPlaylists[] => {
 	const sortedCollection = [...collection];
 	switch (sortOption) {
 		case "nameAsc":
