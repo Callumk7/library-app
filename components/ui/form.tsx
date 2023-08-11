@@ -1,13 +1,13 @@
 import clsx from "clsx";
 
-const Search = ({
-  searchTerm,
+const Input = ({
+  value,
   onChange,
   name,
   className,
   placeholder,
 }: {
-  searchTerm: string;
+  value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name?: string;
   className?: string;
@@ -16,16 +16,16 @@ const Search = ({
   return (
     <input
       type="text"
-      name={name ? name : "search"}
+      name={name ? name : "input"}
       className={clsx(
         className,
         "rounded-md border bg-inherit px-4 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2"
       )}
-      value={searchTerm}
+      value={value}
       placeholder={placeholder}
       onChange={onChange}
     />
   );
 };
 
-export { Search };
+export { Input };
