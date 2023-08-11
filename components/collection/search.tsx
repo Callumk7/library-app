@@ -1,4 +1,4 @@
-import { Search } from "../ui/form";
+import { Input } from "../ui/form";
 
 interface CollectionSearchProps {
   searchTerm: string;
@@ -10,8 +10,9 @@ export default function CollectionSearch({
   handleSearchTermChanged,
 }: CollectionSearchProps) {
   return (
-    <Search
-      searchTerm={searchTerm}
+    <Input
+      value={searchTerm}
+      name="search"
       onChange={handleSearchTermChanged}
       placeholder="Search for a game"
     />

@@ -2,20 +2,15 @@
 
 import { useMemo, useState } from "react";
 
-import {
-  CollectionWithGamesAndGenres,
-  CollectionWithGamesGenresPlaylists,
-  SortOption,
-} from "@/types";
+import { CollectionWithGamesGenresPlaylists, SortOption } from "@/types";
 
 import { GameCard } from "../games/game-cover";
-import CollectionControlBar from "./collection-control-bar";
-import { EntryControlBar } from "./entry-control-bar";
 
 import { applySorting } from "@/util/sorting";
 import { Playlist } from "@prisma/client";
 import { GameCheckbox } from "../games/game-checkbox";
 import { CollectionMenubar } from "./collection-menubar";
+import { EntryMenubar } from "./entry-menubar";
 
 const DEFAULT_SORT_OPTION: SortOption = "rating";
 
@@ -31,7 +26,7 @@ export function CollectionContainer({
   playlists,
 }: CollectionContainerProps) {
   const [collectionState, setCollectionState] =
-    useState<CollectionWithGamesAndGenres[]>(collection);
+    useState<CollectionWithGamesGenresPlaylists[]>(collection);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortOption, setSortOption] = useState<SortOption>(DEFAULT_SORT_OPTION);
   const [isPlayedFilterActive, setIsPlayedFilterActive] = useState<boolean>(false);
@@ -70,7 +65,6 @@ export function CollectionContainer({
     return applySorting(filteredCollection, sortOption);
   }, [filteredCollection, sortOption]);
 
-  // HANDLERS
   const handleSearchTermChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
@@ -214,19 +208,12 @@ export function CollectionContainer({
             isCompleted={entry.completed}
             isStarred={entry.starred}
           >
-            <GameCheckbox
-              gameId={entry.gameId}
-              handleCheckedChanged={handleCheckedChanged}
-            />
-            <EntryControlBar
-              gameId={entry.gameId}
-              isPlayed={entry.played}
-              isCompleted={entry.completed}
+            <EntryMenubar
+              entry={entry}
               playlists={playlists}
-              handleRemoveEntry={handleRemoveEntry}
               handleEntryPlayedToggled={handleEntryPlayedToggled}
-              handleGameAddedToPlaylist={handleGameAddedToPlaylist}
               handleEntryCompletedToggled={handleEntryCompletedToggled}
+              handleGameAddedToPlaylist={handleGameAddedToPlaylist}
             />
           </GameCard>
         ))}

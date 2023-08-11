@@ -15,6 +15,17 @@ import {
 } from "../ui/menubar";
 import { SortOption } from "@/types";
 import CollectionSearch from "./search";
+import AddPlaylistForm from "../playlists/add-playlist-form";
+import { Button } from "../ui/button";
+import { Add } from "../ui/icons/Add";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { useState } from "react";
 
 interface CollectionMenubarProps {
   genres: string[];
@@ -45,6 +56,8 @@ export function CollectionMenubar({
   handleToggleAllGenres,
   handleBulkAddToPlaylist,
 }: CollectionMenubarProps) {
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
   return (
     <div className="flex flex-row space-x-6">
       <CollectionSearch
@@ -106,6 +119,7 @@ export function CollectionMenubar({
         <MenubarMenu>
           <MenubarTrigger>Actions</MenubarTrigger>
           <MenubarContent>
+            <MenubarItem className="focus-visible:bg-destructive/80">Delete selected</MenubarItem>
             <MenubarItem>Select all</MenubarItem>
             <MenubarSub>
               <MenubarSubTrigger>Add to Playlist</MenubarSubTrigger>
@@ -120,12 +134,24 @@ export function CollectionMenubar({
                   </MenubarItem>
                 ))}
                 <MenubarSeparator />
-                <MenubarItem>Create Playlist..</MenubarItem>
+                <MenubarItem onClick={() => setDialogOpen(true)}>
+                  Create Playlist..
+                </MenubarItem>
               </MenubarSubContent>
             </MenubarSub>
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent>
+          <DialogTitle>Create playlist</DialogTitle>
+          <DialogDescription>
+            Create a list that you can use to collect games that you think go together
+            well
+          </DialogDescription>
+          <AddPlaylistForm />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
