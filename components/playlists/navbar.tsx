@@ -1,6 +1,16 @@
 import { auth } from "@clerk/nextjs";
 import { Playlist } from "@prisma/client";
 import Link from "next/link";
+import { Button } from "../ui/button";
+import { Add } from "../ui/icons/Add";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import AddPlaylistForm from "./add-playlist-form";
 
 interface PlaylistNavBarProps {
   playlists: Playlist[];
@@ -19,6 +29,21 @@ export function PlaylistNavBar({ playlists }: PlaylistNavBarProps) {
           </li>
         ))}
       </ul>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button size={"icon"}>
+            <Add className="" />
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogTitle>Create playlist</DialogTitle>
+          <DialogDescription>
+            Create a list that you can use to collect games that you think go together
+            well
+          </DialogDescription>
+          <AddPlaylistForm />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

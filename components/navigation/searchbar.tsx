@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { Search } from "../ui/form";
 
 export default function Searchbar() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,11 +18,9 @@ export default function Searchbar() {
 
   return (
     <form onSubmit={handleSearch} className="flex flex-row space-x-3 items-center">
-      <input
-        type="text"
+      <Search
+        searchTerm={searchTerm}
         name="q"
-        className="rounded-md border bg-inherit px-4 py-2 focus:border-foreground"
-        value={searchTerm}
         placeholder="search for a game"
         onChange={(e) => setSearchTerm(e.target.value)}
       />
