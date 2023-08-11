@@ -32,6 +32,7 @@ export async function getCollection(userId: string) {
 }
 
 export async function getCollectionGameIds(userId: string): Promise<number[]> {
+	console.time("get collection game ids")
 	const findCollection = await prisma.userGameCollection.findMany({
 		where: {
 			userId,
@@ -45,5 +46,6 @@ export async function getCollectionGameIds(userId: string): Promise<number[]> {
 	for (const result of findCollection) {
 		results.push(result.gameId);
 	}
+	console.timeEnd("get collection game ids")
 	return results;
 }
