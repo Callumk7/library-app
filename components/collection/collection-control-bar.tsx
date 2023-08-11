@@ -6,13 +6,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown";
 import { DotsIcon } from "@/components/ui/icons/DotsIcon";
-import { PlaylistWithGames, SortOption } from "@/types";
-import Link from "next/link";
+import { SortOption } from "@/types";
 import { GenreDropdownCheckboxItem } from "./genre-dropdown";
 import CollectionSearch from "./search";
+import { Add } from "../ui/icons/Add";
+import { Playlist } from "@prisma/client";
+import { CollectionMenubar } from "./collection-menubar";
 
 interface CollectionControlBarProps {
   genres: string[];
+  playlists: Playlist[];
   genreFilter: string[];
   searchTerm: string;
   sortOption: SortOption;
@@ -22,10 +25,12 @@ interface CollectionControlBarProps {
   handlePlayedFilterClicked: () => void;
   handleGenreToggled: (genre: string) => void;
   handleToggleAllGenres: () => void;
+  handleBulkAddToPlaylist: (playlistId: number) => Promise<void>;
 }
 
 export default function CollectionControlBar({
   genres,
+  playlists,
   genreFilter,
   searchTerm,
   sortOption,
@@ -35,7 +40,12 @@ export default function CollectionControlBar({
   handlePlayedFilterClicked,
   handleGenreToggled,
   handleToggleAllGenres,
+  handleBulkAddToPlaylist,
 }: CollectionControlBarProps) {
+  const handleAddToPlaylistClicked = async (e: React.MouseEvent<HTMLDivElement>) => {
+    const playlistId = Number(e.currentTarget.id);
+    await handleBulkAddToPlaylist(playlistId);
+  };
   return (
     <div>
       <div className="flex flex-row space-x-6">
@@ -67,7 +77,7 @@ export default function CollectionControlBar({
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button className="flex flex-row gap-3">
+            <Button variant={"outline"} className="flex flex-row gap-3">
               genres
               <DotsIcon className="ml-auto h-4 w-4" />
             </Button>
@@ -86,6 +96,25 @@ export default function CollectionControlBar({
                 toggle all
               </Button>
             </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="flex flex-row gap-3">
+              Add to playlist
+              <Add />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {playlists.map((playlist, index) => (
+              <DropdownMenuItem
+                id={String(playlist.id)}
+                key={index}
+                onClick={handleAddToPlaylistClicked}
+              >
+                {playlist.name}
+              </DropdownMenuItem>
+            ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

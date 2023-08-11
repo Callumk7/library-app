@@ -5,7 +5,6 @@ import { useMemo, useState } from "react";
 import {
   CollectionWithGamesAndGenres,
   CollectionWithGamesGenresPlaylists,
-  PlaylistWithGames,
   SortOption,
 } from "@/types";
 
@@ -15,6 +14,8 @@ import { EntryControlBar } from "./entry-control-bar";
 
 import { applySorting } from "@/util/sorting";
 import { Playlist } from "@prisma/client";
+import { GameCheckbox } from "../games/game-checkbox";
+import { CollectionMenubar } from "./collection-menubar";
 
 const DEFAULT_SORT_OPTION: SortOption = "rating";
 
@@ -35,6 +36,7 @@ export function CollectionContainer({
   const [sortOption, setSortOption] = useState<SortOption>(DEFAULT_SORT_OPTION);
   const [isPlayedFilterActive, setIsPlayedFilterActive] = useState<boolean>(false);
   const [genreFilter, setGenreFilter] = useState<string[]>(genres);
+  const [checkedGames, setCheckedGames] = useState<number[]>([]);
 
   // We have multiple stages to finalise the list order.
   // 1. filter out based on the search term.
@@ -166,11 +168,34 @@ export function CollectionContainer({
     }
   };
 
+  const handleCheckedChanged = (gameId: number) => {
+    setCheckedGames((prevCheckedGames) => {
+      if (prevCheckedGames.includes(gameId)) {
+        // Remove gameId
+        return prevCheckedGames.filter((id) => id !== gameId);
+      } else {
+        // Add gameId
+        return [...prevCheckedGames, gameId];
+      }
+    });
+  };
+
+  const handleBulkAddToPlaylist = async (playlistId: number) => {
+    const res = await fetch(`/api/playlists/${playlistId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(checkedGames),
+    });
+  };
+
   return (
     <>
-      <CollectionControlBar
+      <CollectionMenubar
         genreFilter={genreFilter}
         genres={genres}
+        playlists={playlists}
         handleSearchTermChanged={handleSearchTermChanged}
         searchTerm={searchTerm}
         sortOption={sortOption}
@@ -179,8 +204,8 @@ export function CollectionContainer({
         handlePlayedFilterClicked={handlePlayedFilterClicked}
         handleGenreToggled={handleGenreToggled}
         handleToggleAllGenres={handleToggleAllGenres}
+        handleBulkAddToPlaylist={handleBulkAddToPlaylist}
       />
-
       <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {sortedCollection.map((entry, index) => (
           <GameCard
@@ -189,6 +214,10 @@ export function CollectionContainer({
             isCompleted={entry.completed}
             isStarred={entry.starred}
           >
+            <GameCheckbox
+              gameId={entry.gameId}
+              handleCheckedChanged={handleCheckedChanged}
+            />
             <EntryControlBar
               gameId={entry.gameId}
               isPlayed={entry.played}
