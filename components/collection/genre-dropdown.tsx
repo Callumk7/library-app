@@ -1,5 +1,4 @@
 import { DropdownMenuCheckboxItem } from "@/components/ui/dropdown";
-import { useState } from "react";
 
 export function GenreDropdownCheckboxItem({
   genre,
