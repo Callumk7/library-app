@@ -19,7 +19,7 @@ interface PlaylistNavBarProps {
 export function PlaylistNavBar({ playlists }: PlaylistNavBarProps) {
   const { userId } = auth();
   return (
-    <div className="w-full rounded-md border px-8 py-4">
+    <div className="w-auto rounded-md border px-8 py-4">
       <ul className="flex flex-row space-x-5">
         {playlists.map((playlist, index) => (
           <li key={index}>
@@ -29,21 +29,6 @@ export function PlaylistNavBar({ playlists }: PlaylistNavBarProps) {
           </li>
         ))}
       </ul>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button size={"icon"}>
-            <Add className="" />
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogTitle>Create playlist</DialogTitle>
-          <DialogDescription>
-            Create a list that you can use to collect games that you think go together
-            well
-          </DialogDescription>
-          <AddPlaylistForm />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

@@ -6,10 +6,11 @@ const size: IGDBImage = "cover_big";
 
 export default async function Home() {
   const recentGames = await getRecentGames(5);
+  
   return (
     <main className="mx-auto w-4/5">
       <h1 className="text-2xl font-bold">Recent Games</h1>
-      <div className="flex flex-row justify-center space-x-1">
+      <div className="flex flex-wrap gap-2 justify-center">
         {recentGames.map((gc, index) => (
           <Image
             key={index}

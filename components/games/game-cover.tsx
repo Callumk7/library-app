@@ -52,9 +52,9 @@ export function GameCard({
           strokeColor="#F0F757"
           trailColor=""
         />
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-80 opacity-0 transition ease-in-out group-hover:opacity-100">
-          <div className="animate-pulse text-center text-4xl text-white">
-            <div>{game.title}</div>
+        <div className="absolute inset-0 flex items-center justify-center bg-background/70 opacity-0 transition ease-in-out group-hover:opacity-100">
+          <div className="absolute bottom-3 left-3 text-l text-foreground">
+            <div>{game.title.toUpperCase()}</div>
           </div>
         </div>
       </Link>

@@ -117,7 +117,7 @@ export function SearchContainer({ results, collectionIds }: SearchResultsProps) 
   };
 
   return (
-    <div className="grid w-full grid-cols-3 gap-4 md:grid-cols-2">
+    <div className="w-4/5 flex flex-col space-y-2">
       {resultsState.map((game, index) => {
         return (
           <GameCardArtwork key={index} game={game}>
