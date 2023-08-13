@@ -4,35 +4,58 @@
 
 @layer base {
 	:root {
-		--background: 200 20% 98%;
-		--foreground: 200 50% 3%;
+		--background: 209 17% 95%;
+		--foreground: 240 17% 10%;
 
-		--primary: 63 91% 65%;
-		--secondary: 25 41% 63%;
-		--destructive: 348 53% 58%;
+		--primary: 63 91% 65%; /* yellow */
+		--primary-foreground: 240 17% 10%;
 
-		--light: 200 20% 98%;
-		--dark: 200 50% 3%;
+		--secondary: 25 41% 63%; /* orange */
+		--secondary-foreground: 25 59% 9%;
 
-		--btn-background: 200 10% 91%;
-		--btn-background-hover: 200 10% 89%;
+		--destructive: 348 53% 58%; /* red */
+		--destructive-foreground: 65 17% 98%;
+
+		--success: 166 91% 65%; /* green */
+		--success-foreground: 240 17% 10%;
+
+		--alt: 336 29% 39%;
+		--alt-foreground: 336 17% 90%;
+
+		--ring: 220 75% 68%;
+		--input: 220 40% 90%;
+
+		--accent: 65 5% 96%;
+		--accent-foreground: 240 6% 10%;
+
+		--midnight-1: 240 17% 25%;
+		--midnight-2: 240 17% 20%;
+		--midnight-3: 240 17% 15%;
+		--midnight-4: 240 17% 12%;
+		--midnight-5: 240 17% 10%;
 
 		--viewport-padding: 25px;
 	}
 
 	@media (prefers-color-scheme: dark) {
 		:root {
-			--background: 200 50% 3%;
-			--btn-background: 200 10% 9%;
-			--btn-background-hover: 200 10% 12%;
-			--foreground: 200 20% 96%;
+			--background: 240 17% 4%;
+			--foreground: 65 17% 92%;
+
+			--ring: 220 5% 84%;
+
+			--accent: 240 5% 15%;
+			--accent-foreground: 0 0% 98%;
+
+			--background-95: 240 17% 5%;
+			--background-90: 240 17% 6%;
 		}
 	}
 }
 
 @layer base {
 	* {
-		@apply border-foreground/20;
+		@apply border-foreground/10;
 	}
 }
 

@@ -109,7 +109,6 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 	return new NextResponse("game added successfully", { status: 200 });
 }
 
-// CURRENTLY JUST FOR PLAYED TOGGLING
 export async function PATCH(
 	req: NextRequest,
 	{ params }: { params: { gameId: number } }
@@ -124,7 +123,7 @@ export async function PATCH(
 	const gameJson = await req.json();
 
 	if ("played" in gameJson) {
-		console.log(`PATCH REQUEST: ${userId}`);
+		console.log(`PATCH REQUEST: PLAYED for: ${userId}`);
 		const updatePlayedGame = await prisma.userGameCollection.update({
 			where: {
 				userId_gameId: {
@@ -134,6 +133,22 @@ export async function PATCH(
 			},
 			data: {
 				played: gameJson.played,
+			},
+		});
+		return NextResponse.json(updatePlayedGame);
+	}
+
+	if ("completed" in gameJson) {
+		console.log(`PATCH REQUEST: COMPLETED for: ${userId}`);
+		const updatePlayedGame = await prisma.userGameCollection.update({
+			where: {
+				userId_gameId: {
+					userId,
+					gameId,
+				},
+			},
+			data: {
+				completed: gameJson.completed,
 			},
 		});
 		return NextResponse.json(updatePlayedGame);

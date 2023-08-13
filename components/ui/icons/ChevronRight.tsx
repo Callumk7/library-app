@@ -1,4 +1,4 @@
-export const ChevronRight = ({ className }: { className: string }) => {
+export const ChevronRight = ({ className }: { className?: string }) => {
   return (
     <svg
       width="24"

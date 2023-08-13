@@ -4,8 +4,8 @@ import * as MenubarPrimitive from "@radix-ui/react-menubar";
 import clsx from "clsx";
 import { forwardRef } from "react";
 import { ChevronRight } from "./icons/ChevronRight";
-import { Circle } from "./icons/Circle";
-import { Checkbox } from "./icons/Checkbox";
+import { Tick } from "./icons/Tick";
+import { Dot } from "./icons/Dot";
 
 const MenubarMenu = MenubarPrimitive.Menu;
 const MenubarGroup = MenubarPrimitive.Group;
@@ -71,7 +71,7 @@ const MenubarSubContent = forwardRef<
   <MenubarPrimitive.SubContent
     ref={ref}
     className={clsx(
-      "bg-popover text-popover-foreground z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      "bg-background-95 text-foreground z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
       className
     )}
     {...props}
@@ -90,7 +90,7 @@ const MenubarContent = forwardRef<
       alignOffset={alignOffset}
       sideOffset={sideOffset}
       className={clsx(
-        "bg-popover text-popover-foreground z-50 min-w-[12rem] overflow-hidden rounded-md border p-1 shadow-md data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        "bg-background-95 text-foreground z-50 min-w-[12rem] overflow-hidden rounded-md border p-1 shadow-md data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
         className
       )}
       {...props}
@@ -132,7 +132,7 @@ const MenubarCheckboxItem = forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <MenubarPrimitive.ItemIndicator>
-        <Checkbox className="h-4 w-4" />
+        <Tick />
       </MenubarPrimitive.ItemIndicator>
     </span>
     {children}
@@ -154,7 +154,7 @@ const MenubarRadioItem = forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <MenubarPrimitive.ItemIndicator>
-        <Circle className="h-2 w-2 fill-current" />
+        <Dot />
       </MenubarPrimitive.ItemIndicator>
     </span>
     {children}
@@ -182,7 +182,7 @@ const MenubarSeparator = forwardRef<
 >(({ className, ...props }, ref) => (
   <MenubarPrimitive.Separator
     ref={ref}
-    className={clsx("bg-muted -mx-1 my-1 h-px", className)}
+    className={clsx("bg-foreground/10 -mx-1 my-1 h-px", className)}
     {...props}
   />
 ));

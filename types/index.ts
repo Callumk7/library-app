@@ -9,12 +9,12 @@ const gameWithCover = Prisma.validator<Prisma.GameArgs>()({
 	},
 });
 
-const gameWithCoverAndCollection = Prisma.validator<Prisma.GameArgs>()({
+const gameWithCoverAndGenres = Prisma.validator<Prisma.GameArgs>()({
 	include: {
 		cover: true,
-		users: {
-			where: {
-				userId: "unique string",
+		genres: {
+			include: {
+				genre: true,
 			},
 		},
 	},
@@ -27,31 +27,69 @@ const collectionWithGamesAndGenres = Prisma.validator<Prisma.UserGameCollectionA
 				cover: true,
 				genres: {
 					include: {
-						genre: true
-					}
-				}
+						genre: true,
+					},
+				},
 			},
 		},
 	},
 });
 
-const fullGameDataModel = Prisma.validator<Prisma.GameArgs>()({
+const collectionWithGamesGenresPlaylists =
+	Prisma.validator<Prisma.UserGameCollectionArgs>()({
+		include: {
+			game: {
+				include: {
+					cover: true,
+					genres: {
+						include: {
+							genre: true,
+						},
+					},
+					playlists: {
+						include: {
+							playlist: true,
+						},
+					},
+				},
+			},
+		},
+	});
+
+const playlistWithGames = Prisma.validator<Prisma.PlaylistArgs>()({
 	include: {
-		cover: true,
-		genres: true,
-		artworks: true,
-		screenshots: true,
+		games: true,
+	},
+});
+
+const playlistWithGamesAndCover = Prisma.validator<Prisma.PlaylistArgs>()({
+	include: {
+		games: {
+			include: {
+				game: {
+					include: {
+						cover: true,
+					},
+				},
+			},
+		},
 	},
 });
 
 type GameWithCover = Prisma.GameGetPayload<typeof gameWithCover>;
-type GameWithCoverAndCollection = Prisma.GameGetPayload<
-	typeof gameWithCoverAndCollection
->;
+type GameWithCoverAndGenres = Prisma.GameGetPayload<typeof gameWithCoverAndGenres>;
+
 type CollectionWithGamesAndGenres = Prisma.UserGameCollectionGetPayload<
 	typeof collectionWithGamesAndGenres
 >;
-type FullGameDataModel = Prisma.GameGetPayload<typeof fullGameDataModel>;
+type CollectionWithGamesGenresPlaylists = Prisma.UserGameCollectionGetPayload<
+	typeof collectionWithGamesGenresPlaylists
+>;
+
+type PlaylistWithGames = Prisma.PlaylistGetPayload<typeof playlistWithGames>;
+type PlaylistWithGamesAndCover = Prisma.PlaylistGetPayload<
+	typeof playlistWithGamesAndCover
+>;
 
 type GameUpload = Prisma.GameCreateInput;
 
@@ -59,9 +97,11 @@ export type { Cover, Game, Genre, User, UserGameCollection };
 export type {
 	GameUpload,
 	GameWithCover,
-	GameWithCoverAndCollection,
+	GameWithCoverAndGenres,
 	CollectionWithGamesAndGenres,
-	FullGameDataModel,
+	CollectionWithGamesGenresPlaylists,
+	PlaylistWithGames,
+	PlaylistWithGamesAndCover,
 };
 
 type SortOption = "nameAsc" | "nameDesc" | "releaseDate" | "rating";
@@ -147,6 +187,19 @@ type IGDBImage =
 	| "micro"
 	| "720p"
 	| "1080p";
+
+/* 
+cover_small			90 x 128 	Fit
+screenshot_med		569 x 320 	Lfill, Center gravity
+cover_big			264 x 374 	Fit
+logo_med			284 x 160 	Fit
+screenshot_big		889 x 500 	Lfill, Center gravity
+screenshot_huge 	1280 x 720 	Lfill, Center gravity
+thumb				90 x 90 	Thumb, Center gravity
+micro				35 x 35 	Thumb, Center gravity
+720p				1280 x 720 	Fit, Center gravity
+1080p				1920 x 1080 	Fit, Center gravity 
+*/
 
 export { IGDBGameSchema };
 export type { IGDBGame, IGDBImage };
