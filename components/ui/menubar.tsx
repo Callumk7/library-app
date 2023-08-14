@@ -1,5 +1,3 @@
-"use client";
-
 import * as MenubarPrimitive from "@radix-ui/react-menubar";
 import clsx from "clsx";
 import { forwardRef } from "react";
