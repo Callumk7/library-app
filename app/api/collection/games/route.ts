@@ -1,5 +1,4 @@
-import { prisma } from "@/lib/prisma/client";
-import { IGDBGameSchema } from "@/types";
+import { prisma } from "@/lib/db/prisma";
 import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 

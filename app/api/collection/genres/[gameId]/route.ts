@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/prisma/client";
-import { IGDBGame, IGDBGameSchema } from "@/types";
+import { prisma } from "@/lib/db/prisma";
+import { IGDBGameSchema } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest, { params }: { params: { gameId: number } }) {
@@ -9,7 +9,6 @@ export async function POST(req: NextRequest, { params }: { params: { gameId: num
 	try {
 		const reqJson: unknown = await req.json();
 		const game = IGDBGameSchema.parse(reqJson);
-
 
 		if (game.genres) {
 			const genrePromises = game.genres.map(async (genre) => {

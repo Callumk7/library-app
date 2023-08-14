@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma/client";
+import { prisma } from "@/lib/db/prisma";
 import { Job } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -70,7 +70,9 @@ export async function POST(req: NextRequest) {
 			},
 		});
 		processedConnections.push(upsertGenreConnection);
-		console.log(`processed genre ${upsertGenreConnection.genreId} on game ${upsertGenreConnection.gameId}`)
+		console.log(
+			`processed genre ${upsertGenreConnection.genreId} on game ${upsertGenreConnection.gameId}`
+		);
 	});
 
 	const returnJson = JSON.stringify(processedConnections);

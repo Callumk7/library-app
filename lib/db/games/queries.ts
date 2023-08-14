@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma/client";
+import { prisma } from "../prisma";
 
 export async function getRecentGames(count: number) {
 	const getGames = await prisma.userGameCollection.findMany({

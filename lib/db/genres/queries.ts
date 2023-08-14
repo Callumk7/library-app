@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma/client";
+import { prisma } from "../prisma";
 
 export async function getUserGenres(userId: string) {
 	console.time("get user genres");

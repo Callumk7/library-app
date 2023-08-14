@@ -1,4 +1,4 @@
-import { prisma } from "../client";
+import { prisma } from "../prisma";
 
 export async function getPlaylists(userId: string) {
 	console.time("get playlists");
