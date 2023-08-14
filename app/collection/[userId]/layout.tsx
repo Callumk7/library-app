@@ -1,5 +1,5 @@
 import { PlaylistSidebar } from "@/components/playlists/playlist-sidebar";
-import { getPlaylistsWithGames } from "@/lib/prisma/playlists/queries";
+import { getPlaylistsWithGames } from "@/lib/db/playlists/queries";
 import { auth } from "@clerk/nextjs";
 
 export default async function PlaylistLayout({

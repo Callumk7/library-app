@@ -1,5 +1,3 @@
-import { prisma } from "@/lib/prisma/client";
-
 export async function getGameDetails(gameId: number): Promise<unknown> {
 	const res = await fetch(process.env.IGDB_URL!, {
 		method: "POST",

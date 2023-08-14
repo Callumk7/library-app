@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs";
-import { getPlaylists } from "@/lib/prisma/playlists/queries";
 import { CollectionContainer } from "@/components/collection/container";
-import { getUserGenres } from "@/lib/prisma/genres/queries";
-import { getCollection } from "@/lib/prisma/collection/queries";
+import { getUserGenres } from "@/lib/db/genres/queries";
+import { getCollection } from "@/lib/db/collection/queries";
+import { getPlaylists } from "@/lib/db/playlists/queries";
 
 export default async function CollectionPage({ params }: { params: { userId: string } }) {
   const { userId } = auth();
@@ -20,6 +20,7 @@ export default async function CollectionPage({ params }: { params: { userId: str
   return (
     <main className="flex min-h-screen flex-col items-center space-y-10 p-24 animate-in">
       <CollectionContainer
+        userId={userId}
         collection={collection}
         genres={genres}
         playlists={playlists}

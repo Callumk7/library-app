@@ -1,5 +1,5 @@
 import { PlaylistContainer } from "@/components/playlists/container";
-import { getGamesInPlaylist } from "@/lib/prisma/playlists/queries";
+import { getGamesInPlaylist } from "@/lib/db/playlists/queries";
 
 export default async function PlaylistPage({
   params,

@@ -2,7 +2,7 @@ import { IGDBGame, IGDBGameSchema } from "@/types";
 import { auth } from "@clerk/nextjs";
 import { SearchContainer } from "@/components/search/container";
 import { getSearchResults } from "@/util/igdb";
-import { getCollectionGameIds } from "@/lib/prisma/collection/queries";
+import { getCollectionGameIds } from "@/lib/db/collection/queries";
 
 export default async function SearchPage({
   searchParams,

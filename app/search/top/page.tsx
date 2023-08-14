@@ -1,8 +1,8 @@
 import { IGDBGame, IGDBGameSchema } from "@/types";
 import { auth } from "@clerk/nextjs";
 import { SearchContainer } from "@/components/search/container";
-import { getSearchResults, getTopGames } from "@/util/igdb";
-import { getCollectionGameIds } from "@/lib/prisma/collection/queries";
+import { getTopGames } from "@/util/igdb";
+import { getCollectionGameIds } from "@/lib/db/collection/queries";
 
 export default async function SearchPage() {
   const { userId } = auth();

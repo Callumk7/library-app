@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { prisma } from "@/lib/prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { IGDBGame, IGDBGameSchema, IGDBImage } from "@/types";
 import { getGameDetails } from "@/util/igdb";
+import { prisma } from "@/lib/db/prisma";
 
 export default async function GamePage({ params }: { params: { gameId: string } }) {
   const gameId = Number(params.gameId);

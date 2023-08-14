@@ -1,5 +1,5 @@
 import { PlaylistCard } from "@/components/playlists/playlist-card";
-import { getPlaylistsWithGames } from "@/lib/prisma/playlists/queries";
+import { getPlaylistsWithGames } from "@/lib/db/playlists/queries";
 import { PlaylistWithGamesAndCover } from "@/types";
 import { auth } from "@clerk/nextjs";
 
