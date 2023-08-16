@@ -12,20 +12,17 @@ import {
   MenubarSubContent,
   MenubarSubTrigger,
   MenubarTrigger,
-} from "../ui/menubar";
+} from "@/components/ui/menubar";
 import { SortOption } from "@/types";
-import CollectionSearch from "./search";
-import AddPlaylistForm from "../playlists/add-playlist-form";
-import { Button } from "../ui/button";
-import { Add } from "../ui/icons/Add";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
+} from "@/components/ui/dialog";
 import { useState } from "react";
+import { Input } from "@/components/ui/form";
+import AddPlaylistForm from "@/features/playlists/components/AddPlaylistForm";
 
 interface CollectionViewMenubarProps {
   genres: string[];
@@ -60,9 +57,11 @@ export function CollectionViewMenubar({
 
   return (
     <div className="flex flex-row space-x-6">
-      <CollectionSearch
-        handleSearchTermChanged={handleSearchTermChanged}
-        searchTerm={searchTerm}
+      <Input
+        value={searchTerm}
+        name="search"
+        onChange={handleSearchTermChanged}
+        placeholder="Search for a game"
       />
       <Menubar>
         <MenubarMenu>
@@ -119,7 +118,9 @@ export function CollectionViewMenubar({
         <MenubarMenu>
           <MenubarTrigger>Actions</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem className="focus-visible:bg-destructive/80">Delete selected</MenubarItem>
+            <MenubarItem className="focus-visible:bg-destructive/80">
+              Delete selected
+            </MenubarItem>
             <MenubarItem>Select all</MenubarItem>
             <MenubarSub>
               <MenubarSubTrigger>Add to Playlist</MenubarSubTrigger>

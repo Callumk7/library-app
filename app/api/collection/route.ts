@@ -1,6 +1,6 @@
-import { getFullCollection } from "@/lib/db/collection/queries";
 import { CollectionWithGamesGenresPlaylists } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
+import { getFullCollection } from "@/features/collection/queries/prisma-functions";
 
 // GET entire collection, and sub data (genres, artworks, screenshots)
 // in one go. This is the initial fetch of all data
@@ -18,5 +18,3 @@ export async function GET(req: NextRequest) {
 	}
 	return NextResponse.json(collection);
 }
-
-

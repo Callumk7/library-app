@@ -1,7 +1,8 @@
 import { auth } from "@clerk/nextjs";
 import { getUserGenres } from "@/lib/db/genres/queries";
 import { getPlaylists } from "@/lib/db/playlists/queries";
-import { getFullCollection } from "@/lib/db/collection/queries";
+import { getFullCollection } from "@/features/collection/queries/prisma-functions";
+import { ClientCollectionContainer } from "@/features/collection/components/ClientCollectionContainer";
 
 export default async function CollectionPage({ params }: { params: { userId: string } }) {
   const { userId } = auth();

@@ -1,4 +1,4 @@
-import { getCollectionGameIds } from "@/lib/db/collection/queries";
+import { getCollectionGameIds } from "@/features/collection/queries/prisma-functions";
 import { NextResponse } from "next/server";
 
 export async function GET(_req: Request, { params }: { params: { userId: string } }) {
