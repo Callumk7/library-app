@@ -1,21 +1,19 @@
 import { GameWithCoverAndGenres, IGDBImage } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
-import { Line } from "rc-progress";
 import clsx from "clsx";
 import { Tag } from "../ui/tag";
+import { RatingLine } from "./Rating";
 
 interface CollectionItemProps {
   game: GameWithCoverAndGenres;
   isCompleted: boolean;
-  isStarred: boolean;
   children: React.ReactNode;
 }
 
-export function GameCard({
+export function GameCardCover({
   game,
   isCompleted,
-  isStarred,
   children,
 }: CollectionItemProps) {
   const size: IGDBImage = "720p";
@@ -46,7 +44,7 @@ export function GameCard({
           width={720}
           height={1280}
         />
-        <Line
+        <RatingLine
           percent={game.aggregatedRating ? game.aggregatedRating : 0}
           strokeWidth={2}
           strokeColor="#F0F757"

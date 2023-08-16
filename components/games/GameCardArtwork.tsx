@@ -12,7 +12,7 @@ export function GameCardArtwork({ game, children }: SearchResultProps) {
   const size: IGDBImage = "screenshot_med";
 
   return (
-    <div className="relative flex max-h-28 w-full flex-row overflow-hidden rounded-lg border text-foreground animate-in hover:border-foreground">
+    <div className="relative flex max-h-28 w-full min-w-full flex-row overflow-hidden rounded-lg border text-foreground animate-in hover:border-foreground">
       <Link href={`/games/${game.id}`}>
         <Image
           src={`https://images.igdb.com/igdb/image/upload/t_${size}/${game.artworks[0].image_id}.jpg`}

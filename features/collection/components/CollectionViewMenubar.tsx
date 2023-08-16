@@ -27,7 +27,7 @@ import {
 } from "../ui/dialog";
 import { useState } from "react";
 
-interface CollectionMenubarProps {
+interface CollectionViewMenubarProps {
   genres: string[];
   playlists: Playlist[];
   genreFilter: string[];
@@ -42,7 +42,7 @@ interface CollectionMenubarProps {
   handleBulkAddToPlaylist: (playlistId: number) => Promise<void>;
 }
 
-export function CollectionMenubar({
+export function CollectionViewMenubar({
   genres,
   playlists,
   genreFilter,
@@ -55,7 +55,7 @@ export function CollectionMenubar({
   handleGenreToggled,
   handleToggleAllGenres,
   handleBulkAddToPlaylist,
-}: CollectionMenubarProps) {
+}: CollectionViewMenubarProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   return (

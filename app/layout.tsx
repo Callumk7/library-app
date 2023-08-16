@@ -1,5 +1,5 @@
-import Navbar from "@/components/navigation/navbar";
 import "./globals.css";
+import Navbar from "@/components/navigation/navbar";
 import { Providers } from "@/components/providers";
 import { ToastViewport } from "@/components/ui/toast";
 

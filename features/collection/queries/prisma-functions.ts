@@ -1,7 +1,9 @@
+import { prisma } from "@/lib/db/prisma";
 import { CollectionWithGamesGenresPlaylists } from "@/types";
-import { prisma } from "../prisma";
 
-export async function getCollection(userId: string): Promise<CollectionWithGamesGenresPlaylists[]> {
+export async function getFullCollection(
+	userId: string
+): Promise<CollectionWithGamesGenresPlaylists[]> {
 	console.time("get collection");
 	const userCollection = await prisma.userGameCollection.findMany({
 		where: {
@@ -31,7 +33,7 @@ export async function getCollection(userId: string): Promise<CollectionWithGames
 }
 
 export async function getCollectionGameIds(userId: string): Promise<number[]> {
-	console.time("get collection game ids")
+	console.time("get collection game ids");
 	const findCollection = await prisma.userGameCollection.findMany({
 		where: {
 			userId,
@@ -45,6 +47,6 @@ export async function getCollectionGameIds(userId: string): Promise<number[]> {
 	for (const result of findCollection) {
 		results.push(result.gameId);
 	}
-	console.timeEnd("get collection game ids")
+	console.timeEnd("get collection game ids");
 	return results;
 }

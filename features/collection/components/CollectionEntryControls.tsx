@@ -6,37 +6,38 @@ import {
   MenubarItem,
   MenubarMenu,
   MenubarTrigger,
-} from "../ui/menubar";
+} from "@/components/ui/menubar";
 import { Playlist } from "@prisma/client";
-import { Button } from "../ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { getUserPlaylists } from "@/lib/db/playlists/fetches";
+import { DeleteIcon } from "@/components/ui/icons/DeleteIcon";
 
-interface EntryMenubarProps {
+interface CollectionEntryControlsProps {
   entry: CollectionWithGamesGenresPlaylists;
   playlists: Playlist[];
   handleEntryPlayedToggled: (gameId: number) => Promise<void>;
   handleEntryCompletedToggled: (gameId: number) => Promise<void>;
   handleGameAddedToPlaylist: (playlistId: number, gameId: number) => Promise<void>;
+  handleRemoveEntry: (gameId: number) => void;
 }
 
-export function EntryMenubar({
+export function CollectionEntryControls({
   entry,
   playlists,
   handleEntryPlayedToggled,
   handleEntryCompletedToggled,
   handleGameAddedToPlaylist,
-}: EntryMenubarProps) {
-  // requirements:
-  // 1. View playlists that the game is part of
-  // 2. Add and remove from playlists
-  // 3. Remove from collection
-  // 4. mark as unplayed, played or completed
-  // 5. Provide user score
-  // 6. Add personal tags (later...)
-  // 7. Add notes (later...)
-  // 8. Add personal genres (later...)
+  handleRemoveEntry,
+}: CollectionEntryControlsProps) {
+
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: ["playlists", entry.userId],
+    queryFn: () => getUserPlaylists(entry.userId),
+    initialData: playlists,
+  });
 
   return (
-    <Menubar className="mb-2 border-none">
+    <Menubar className="mx-1 mb-2">
       <MenubarMenu>
         <MenubarTrigger>Status</MenubarTrigger>
         <MenubarContent>
@@ -57,7 +58,7 @@ export function EntryMenubar({
       <MenubarMenu>
         <MenubarTrigger>Playlists</MenubarTrigger>
         <MenubarContent>
-          {playlists.map((playlist, index) => {
+          {data.map((playlist, index) => {
             const isChecked = entry.game.playlists.some(
               (pl) => pl.playlist.id === playlist.id
             );
@@ -74,6 +75,11 @@ export function EntryMenubar({
             );
           })}
         </MenubarContent>
+      </MenubarMenu>
+      <MenubarMenu>
+        <MenubarTrigger onClick={() => handleRemoveEntry(entry.gameId)}>
+          <DeleteIcon />
+        </MenubarTrigger>
       </MenubarMenu>
     </Menubar>
   );

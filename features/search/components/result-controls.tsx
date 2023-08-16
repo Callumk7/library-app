@@ -3,23 +3,47 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { Toast, ToastClose, ToastDescription, ToastTitle } from "../ui/toast";
 import Link from "next/link";
+import { useMutation } from "@tanstack/react-query";
+import { addGameToCollection } from "@/lib/db/collection/fetches";
+import { queryClient } from "@/lib/db/query";
 
 interface SearchResultControlsProps {
+  userId: string;
   game: GameSearchResult;
-  handleSaveToCollection: (gameId: number) => Promise<void>;
   handleRemoveFromCollection: (gameId: number) => Promise<void>;
 }
 
 export function SearchResultControls({
+  userId,
   game,
-  handleSaveToCollection,
   handleRemoveFromCollection,
 }: SearchResultControlsProps) {
   const [saveToastOpen, setSaveToastOpen] = useState(false);
 
-  const handleSaveClicked = async () => {
-    await handleSaveToCollection(game.id);
-    setSaveToastOpen(true);
+  // to clean things up, this can actually be an import rather than the
+  // addGameToCollection function
+  const addToCollection = useMutation({
+    mutationFn: ({ gameId }: { gameId: number }) => {
+      return addGameToCollection(gameId);
+    },
+    onMutate: () => {
+      console.log("about to mutate");
+    },
+    onSuccess: (newCollection) => {
+      console.log("nice, I did a mutation");
+      console.log(newCollection);
+
+      // this is where we can handle updating state, and revalidating collection
+      // fetches on the server. Should consider if I can revalidate anything on the
+      // next side as well..
+      queryClient.setQueryData(["collection", "ids", userId], newCollection.gameId);
+
+      setSaveToastOpen(true);
+    },
+  });
+
+  const handleSaveClicked = () => {
+    addToCollection.mutate({ gameId: game.id });
   };
 
   const handleRemoveClicked = async () => {

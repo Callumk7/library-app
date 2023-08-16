@@ -9,11 +9,10 @@ import { DotsIcon } from "@/components/ui/icons/DotsIcon";
 import { SortOption } from "@/types";
 import { GenreDropdownCheckboxItem } from "./genre-dropdown";
 import CollectionSearch from "./search";
-import { Add } from "../ui/icons/Add";
 import { Playlist } from "@prisma/client";
-import { CollectionMenubar } from "./collection-menubar";
+import { Add } from "@/components/ui/icons/Add";
 
-interface CollectionControlBarProps {
+interface CollectionViewControlsProps {
   genres: string[];
   playlists: Playlist[];
   genreFilter: string[];
@@ -28,7 +27,7 @@ interface CollectionControlBarProps {
   handleBulkAddToPlaylist: (playlistId: number) => Promise<void>;
 }
 
-export default function CollectionControlBar({
+export default function CollectionViewControls({
   genres,
   playlists,
   genreFilter,
@@ -41,7 +40,7 @@ export default function CollectionControlBar({
   handleGenreToggled,
   handleToggleAllGenres,
   handleBulkAddToPlaylist,
-}: CollectionControlBarProps) {
+}: CollectionViewControlsProps) {
   const handleAddToPlaylistClicked = async (e: React.MouseEvent<HTMLDivElement>) => {
     const playlistId = Number(e.currentTarget.id);
     await handleBulkAddToPlaylist(playlistId);

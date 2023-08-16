@@ -1,33 +1,6 @@
-import { searchGames } from "@/lib/db/games/queries";
 import { prisma } from "@/lib/db/prisma";
 import { Job } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
-
-export async function GET(req: NextRequest) {
-	console.log("GET /games hit.");
-
-	// search results...
-	const url = new URL(req.url);
-	const params = new URLSearchParams(url.search);
-	const query = params.get("q");
-
-	if (query) {
-		console.log(`search query: ${query}`);
-		const results = await searchGames(query);
-
-		if (results.length === 0) {
-			console.log("no results found");
-			return new NextResponse("no results found", { status: 404 });
-		} else {
-			const body = JSON.stringify(results);
-			return new NextResponse(body, { status: 200 });
-		}
-	}
-
-	// get all games..
-
-	// other..
-}
 
 export async function POST(req: NextRequest) {
 	console.log("games route hit!");

@@ -40,7 +40,9 @@ export async function POST(req: NextRequest) {
 		console.log(
 			`added collection ${createCollection.userId}, ${createCollection.gameId}`
 		);
-		return new NextResponse("game added to collection");
+
+		const resBody = JSON.stringify(createCollection);
+		return new NextResponse(resBody, {status: 200});
 	} catch (err) {
 		console.error("error when processing game collection creation", err);
 		throw err;

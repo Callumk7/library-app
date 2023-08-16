@@ -1,29 +1,22 @@
-import { prisma } from "@/lib/db/prisma";
+import { getFullCollection } from "@/lib/db/collection/queries";
+import { CollectionWithGamesGenresPlaylists } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
-async function getGames(userId: string) {
-	const userCollection = await prisma.userGameCollection.findMany({
-		where: {
-			userId,
-		},
-		include: {
-			game: {
-				include: {
-					cover: true,
-					genres: true,
-					artworks: true,
-					screenshots: true,
-				},
-			},
-		},
-	});
-
-	return userCollection;
-}
-
+// GET entire collection, and sub data (genres, artworks, screenshots)
+// in one go. This is the initial fetch of all data
 export async function GET(req: NextRequest) {
 	const userId = req.headers.get("user");
-	console.log(userId);
-	const collection = await getGames(userId!);
+	if (!userId) {
+		return new NextResponse("No user id provided", { status: 401 });
+	}
+
+	let collection: CollectionWithGamesGenresPlaylists[] = [];
+	try {
+		collection = await getFullCollection(userId);
+	} catch (err) {
+		console.error("something went wrong", err);
+	}
 	return NextResponse.json(collection);
 }
+
+

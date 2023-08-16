@@ -14,7 +14,7 @@ export default async function SearchPage({
   if (results.length === 0) {
     // search and process IGDB
   }
-
+ 
   return (
     <div className="mt-10">
       <ClientSearchContainer results={results} />
