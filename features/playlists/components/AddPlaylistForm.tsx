@@ -1,8 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/form";
 import { useState } from "react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/form";
 
 export default function AddPlaylistForm() {
   const [playlistName, setPlaylistName] = useState("");
@@ -22,18 +22,18 @@ export default function AddPlaylistForm() {
   };
 
   return (
-      <form onSubmit={handleSubmit} className="flex flex-row items-center space-x-3">
-        <Input
-          value={playlistName}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setPlaylistName(e.target.value)
-          }
-          name="name"
-          placeholder="Best RPGs ever.."
-        />
-        <Button variant={"outline"} size={"sm"}>
-          Add
-        </Button>
-      </form>
+    <form onSubmit={handleSubmit} className="flex flex-row items-center space-x-3">
+      <Input
+        value={playlistName}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setPlaylistName(e.target.value)
+        }
+        name="name"
+        placeholder="Best RPGs ever.."
+      />
+      <Button variant={"outline"} size={"sm"}>
+        Add
+      </Button>
+    </form>
   );
 }
