@@ -1,4 +1,4 @@
-import { getPlaylists } from "@/lib/db/playlists/queries";
+import { getPlaylists } from "@/features/playlists/queries/prisma-functions";
 import { prisma } from "@/lib/db/prisma";
 import { NextRequest, NextResponse } from "next/server";
 

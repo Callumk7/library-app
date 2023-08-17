@@ -1,7 +1,6 @@
-import { PlaylistCard } from "@/components/playlists/playlist-card";
-import { getPlaylistsWithGames } from "@/lib/db/playlists/queries";
+import { PlaylistCard } from "@/features/playlists/components/PlaylistCard";
+import { getPlaylistsWithGames } from "@/features/playlists/queries/prisma-functions";
 import { PlaylistWithGamesAndCover } from "@/types";
-import { auth } from "@clerk/nextjs";
 
 export default async function PlaylistsPage() {
   const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";

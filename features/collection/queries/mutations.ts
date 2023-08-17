@@ -29,6 +29,10 @@ export const useDeleteMutation = (userId: string) => {
 
 		onSuccess: () => {
 			console.log("mutation successful");
+		},
+
+		onSettled: () => {
+			console.log("settled")
 			queryClient.invalidateQueries({ queryKey: ["collection", userId] });
 		},
 	});

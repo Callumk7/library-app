@@ -1,5 +1,6 @@
 import { CollectionWithGamesGenresPlaylists } from "@/types";
 
+// client function..
 export async function fetchFullCollection(
 	userId: string
 ): Promise<CollectionWithGamesGenresPlaylists[]> {
