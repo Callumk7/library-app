@@ -1,19 +1,21 @@
 import { CollectionWithGamesGenresPlaylists } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 import { getFullCollection } from "@/features/collection/queries/prisma-functions";
-import { auth } from "@clerk/nextjs";
 import { prisma } from "@/lib/db/prisma";
 
 // GET entire collection, and sub data (genres, artworks, screenshots)
 // in one go. This is the initial fetch of all data
 export async function GET(req: NextRequest) {
-	const userId = req.headers.get("user");
+	const url = new URL(req.url);
+	const params = new URLSearchParams(url.search);
+	const userId = params.get("userId");
 	if (!userId) {
 		return new NextResponse("No user id provided", { status: 401 });
 	}
 
 	let collection: CollectionWithGamesGenresPlaylists[] = [];
 	try {
+		console.log("fetching from api route..")
 		collection = await getFullCollection(userId);
 	} catch (err) {
 		console.error("something went wrong", err);

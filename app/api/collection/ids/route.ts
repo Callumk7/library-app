@@ -3,7 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 // GET collection ids for a specific user, provided in the request body
 export async function GET(req: NextRequest) {
-	const userId = req.headers.get("user");
+	const url = new URL(req.url);
+	const searchParams = new URLSearchParams(url.search);
+	const userId = searchParams.get("userId");
+
 	if (!userId) {
 		return new NextResponse("No user id provided", { status: 401 });
 	}
