@@ -1,11 +1,12 @@
-import { auth } from "@clerk/nextjs";
 import { getUserGenres } from "@/lib/db/genres/queries";
 import { getPlaylists } from "@/lib/db/playlists/queries";
 import { getFullCollection } from "@/features/collection/queries/prisma-functions";
 import { ClientCollectionContainer } from "@/features/collection/components/ClientCollectionContainer";
 
+export const revalidate = 300;
+
 export default async function CollectionPage({ params }: { params: { userId: string } }) {
-  const { userId } = auth();
+  const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
   if (userId !== params.userId) {
     // TODO: handle seeing other peoples collections if they are not private
     return <h1>NOT YOU, GET OUT</h1>;

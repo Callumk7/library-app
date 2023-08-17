@@ -1,7 +1,7 @@
+import { ClientProviders } from "@/components/ClientProviders";
 import "./globals.css";
-import Navbar from "@/components/navigation/navbar";
-import { Providers } from "@/components/providers";
 import { ToastViewport } from "@/components/ui/toast";
+import Navbar from "@/components/navigation/Navbar";
 
 export const metadata = {
   title: "playQ",
@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <Providers>
+    <ClientProviders>
       <html lang="en">
         <body className="flex min-h-screen flex-col items-center bg-background text-foreground">
           <Navbar />
@@ -18,6 +18,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ToastViewport />
         </body>
       </html>
-    </Providers>
+    </ClientProviders>
   );
 }

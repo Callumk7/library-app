@@ -1,13 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { applySorting } from "@/util/sorting";
 
 import { CollectionWithGamesGenresPlaylists, SortOption } from "@/types";
 import { Playlist } from "@prisma/client";
 
-import { queryClient } from "@/lib/db/query";
 import { fetchFullCollection } from "../queries/query-functions";
 import { CollectionViewMenubar } from "./CollectionViewMenubar";
 import { GameCardCover } from "@/components/games/GameCardCover";
@@ -37,21 +36,6 @@ export function ClientCollectionContainer({
     queryKey: ["collection", userId],
     queryFn: () => fetchFullCollection(userId),
     initialData: collection,
-  });
-
-  const deleteEntry = useMutation({
-    mutationFn: (gameId: number) => {
-      return fetch(`/api/collection/games/${gameId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    },
-
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["collection"] });
-    },
   });
 
   // We have multiple stages to finalise the list order.
@@ -90,10 +74,6 @@ export function ClientCollectionContainer({
     setSearchTerm(e.target.value);
   };
 
-  const handleRemoveEntry = (gameId: number) => {
-    deleteEntry.mutate(gameId);
-  };
-
   const handlePlayedFilterClicked = () => {
     setIsPlayedFilterActive(!isPlayedFilterActive);
   };
@@ -103,7 +83,7 @@ export function ClientCollectionContainer({
   };
 
   const handleGenreToggled = (genre: string) => {
-  // handle genre toggled
+    // handle genre toggled
   };
 
   const handleToggleAllGenres = () => {
@@ -140,18 +120,14 @@ export function ClientCollectionContainer({
       />
       <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {sortedCollection.map((entry, index) => (
-          <GameCardCover
-            key={index}
-            game={entry.game}
-            isCompleted={entry.completed}
-          >
+          <GameCardCover key={index} game={entry.game} isCompleted={entry.completed}>
             <CollectionEntryControls
+              userId={userId}
               entry={entry}
               playlists={playlists}
               handleEntryPlayedToggled={handleEntryPlayedToggled}
               handleEntryCompletedToggled={handleEntryCompletedToggled}
               handleGameAddedToPlaylist={handleGameAddedToPlaylist}
-              handleRemoveEntry={handleRemoveEntry}
             />
           </GameCardCover>
         ))}
