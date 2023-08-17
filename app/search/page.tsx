@@ -1,15 +1,18 @@
-import { searchGames } from "@/lib/db/games/queries";
-import { ClientSearchContainer } from "@/components/search/ClientSearchContainer";
+import { getFullCollection } from "@/features/collection/queries/prisma-functions";
+import { ClientSearchContainer } from "@/features/search/components/ClientSearchContainer";
+import { searchGames } from "@/features/search/queries/prisma-functions";
 
 export default async function SearchPage({
   searchParams,
 }: {
   searchParams: { q: string };
 }) {
+  const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
   const query = searchParams.q;
   console.log(query);
 
   const results = await searchGames(query);
+  const collection = await getFullCollection(userId!);
 
   if (results.length === 0) {
     // search and process IGDB
@@ -17,7 +20,7 @@ export default async function SearchPage({
 
   return (
     <div className="mt-10">
-      <ClientSearchContainer results={results} />
+      <ClientSearchContainer results={results} userId={userId!} collection={collection} />
     </div>
   );
 }

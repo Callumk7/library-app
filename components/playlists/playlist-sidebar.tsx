@@ -1,14 +1,13 @@
 import { PlaylistWithGames } from "@/types";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { auth } from "@clerk/nextjs";
 
 interface PlaylistSidebarProps {
   playlists: PlaylistWithGames[];
 }
 
 export function PlaylistSidebar({ playlists }: PlaylistSidebarProps) {
-  const {userId} = auth();
+  const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
   return (
     <div className="mx-10 w-full rounded-lg border">
       {playlists.map((playlist, index) => (

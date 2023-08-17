@@ -2,10 +2,10 @@
 
 import { GameWithCoverAndGenres, PlaylistWithGames } from "@/types";
 import { useState } from "react";
-import { GameCard } from "../games/game-cover";
+import { GameCardCover } from "../games/GameCardCover";
 
 interface PlaylistContainerProps {
-  games: GameWithCoverAndGenres[]
+  games: GameWithCoverAndGenres[];
 }
 
 export function PlaylistContainer({ games }: PlaylistContainerProps) {
@@ -14,9 +14,9 @@ export function PlaylistContainer({ games }: PlaylistContainerProps) {
   return (
     <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {playlistState.map((game, index) => (
-        <GameCard key={index} game={game} isCompleted={false} isStarred={false}>
+        <GameCardCover key={index} game={game} isCompleted={false}>
           <div>controls will go here</div>
-        </GameCard>
+        </GameCardCover>
       ))}
     </div>
   );

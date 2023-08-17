@@ -1,4 +1,4 @@
-import { getCollectionGameIds } from "@/lib/db/collection/queries";
+import { getCollectionGameIds } from "@/features/collection/queries/prisma-functions";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET collection ids for a specific user, provided in the request body

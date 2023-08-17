@@ -4,7 +4,7 @@ import { PlaylistWithGamesAndCover } from "@/types";
 import { auth } from "@clerk/nextjs";
 
 export default async function PlaylistsPage() {
-  const { userId } = auth();
+  const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
 
   if (!userId) {
     return <div>Get the hell out of this place</div>;
@@ -15,7 +15,7 @@ export default async function PlaylistsPage() {
   );
 
   return (
-    <main className="flex mx-auto flex-wrap items-center gap-10 p-24 animate-in">
+    <main className="mx-auto flex flex-wrap items-center gap-10 p-24 animate-in">
       {playlistsWithGames.map((playlist, index) => (
         <PlaylistCard key={index} playlist={playlist} />
       ))}

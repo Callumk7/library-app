@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
 	const params = new URLSearchParams(url.search);
 	const gameId = params.get("gameId");
 
-	const { userId } = auth();
+	const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
 
 	if (!userId) {
 		return new NextResponse("not logged in, missing user id", { status: 401 });
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
 		);
 
 		const resBody = JSON.stringify(createCollection);
-		return new NextResponse(resBody, {status: 200});
+		return new NextResponse(resBody, { status: 200 });
 	} catch (err) {
 		console.error("error when processing game collection creation", err);
 		throw err;

@@ -1,4 +1,4 @@
-import { searchGames } from "@/lib/db/games/queries";
+import { searchGames } from "@/features/search/queries/prisma-functions";
 import { prisma } from "@/lib/db/prisma";
 import { Job } from "@/types";
 import { NextRequest, NextResponse } from "next/server";

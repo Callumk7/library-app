@@ -1,11 +1,11 @@
 import { GameSearchResult } from "@/types";
-import { Button } from "../ui/button";
 import { useState } from "react";
-import { Toast, ToastClose, ToastDescription, ToastTitle } from "../ui/toast";
+import { Toast, ToastClose, ToastDescription, ToastTitle } from "@/components/ui/toast";
 import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
-import { addGameToCollection } from "@/lib/db/collection/fetches";
 import { queryClient } from "@/lib/db/query";
+import { addGameToCollection } from "@/features/collection/queries/query-functions";
+import { Button } from "@/components/ui/button";
 
 interface SearchResultControlsProps {
   userId: string;
@@ -20,10 +20,8 @@ export function SearchResultControls({
 }: SearchResultControlsProps) {
   const [saveToastOpen, setSaveToastOpen] = useState(false);
 
-  // to clean things up, this can actually be an import rather than the
-  // addGameToCollection function
   const addToCollection = useMutation({
-    mutationFn: ({ gameId }: { gameId: number }) => {
+    mutationFn: (gameId: number) => {
       return addGameToCollection(gameId);
     },
     onMutate: () => {
@@ -43,7 +41,7 @@ export function SearchResultControls({
   });
 
   const handleSaveClicked = () => {
-    addToCollection.mutate({ gameId: game.id });
+    addToCollection.mutate(game.id);
   };
 
   const handleRemoveClicked = async () => {

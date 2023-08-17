@@ -11,6 +11,7 @@ import { fetchFullCollection } from "../queries/query-functions";
 import { CollectionViewMenubar } from "./CollectionViewMenubar";
 import { GameCardCover } from "@/components/games/GameCardCover";
 import { CollectionEntryControls } from "./CollectionEntryControls";
+import { useDeleteMutation } from "../queries/mutations";
 
 const DEFAULT_SORT_OPTION: SortOption = "rating";
 

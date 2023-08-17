@@ -1,12 +1,11 @@
 import { getPlaylists } from "@/lib/db/playlists/queries";
 import { prisma } from "@/lib/db/prisma";
-import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
 	console.log("new post request to playlists..");
 	const data = (await req.json()) as { name: string };
-	const { userId } = auth();
+	const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
 
 	console.log(data);
 	console.log(userId);
@@ -41,7 +40,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
 	console.log("new get request to playlists");
-	const { userId } = auth();
+	const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
 
 	if (!userId) {
 		return new NextResponse("Error, no user", { status: 401 });

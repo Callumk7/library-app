@@ -3,7 +3,8 @@ import { getPlaylists } from "@/lib/db/playlists/queries";
 import { getFullCollection } from "@/features/collection/queries/prisma-functions";
 import { ClientCollectionContainer } from "@/features/collection/components/ClientCollectionContainer";
 
-export const revalidate = 300;
+export const revalidate = 3600;
+export const dynamic = "force-static";
 
 export default async function CollectionPage({ params }: { params: { userId: string } }) {
   const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
