@@ -1,11 +1,10 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/form";
 import { useState } from "react";
 
 export default function AddPlaylistForm() {
   const [playlistName, setPlaylistName] = useState("");
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
