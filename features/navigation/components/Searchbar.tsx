@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { Input } from "../ui/form";
+import { Input } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
 
 export default function Searchbar() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,7 +17,7 @@ export default function Searchbar() {
   };
 
   return (
-    <form onSubmit={handleSearch} className="flex flex-row space-x-3 items-center">
+    <form onSubmit={handleSearch} className="flex flex-row items-center gap-3">
       <Input
         value={searchTerm}
         name="q"
