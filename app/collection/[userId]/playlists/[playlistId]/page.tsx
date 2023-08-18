@@ -1,5 +1,5 @@
-import { PlaylistContainer } from "@/components/playlists/container";
-import { getGamesInPlaylist } from "@/lib/db/playlists/queries";
+import { PlaylistContainer } from "@/features/playlists/components/PlaylistContainer";
+import { getGamesInPlaylist } from "@/features/playlists/queries/prisma-functions";
 
 export default async function PlaylistPage({
   params,
@@ -8,7 +8,7 @@ export default async function PlaylistPage({
 }) {
   const games = await getGamesInPlaylist(Number(params.playlistId));
   return (
-    <main className="flex min-h-screen flex-col items-center space-y-10 p-24 animate-in">
+    <main className="flex min-h-screen flex-col items-center space-y-10 animate-in">
       <PlaylistContainer games={games} />
     </main>
   );

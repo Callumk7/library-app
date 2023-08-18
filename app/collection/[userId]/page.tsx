@@ -1,6 +1,6 @@
 import { getUserGenres } from "@/lib/db/genres/queries";
-import { getPlaylists } from "@/lib/db/playlists/queries";
 import { getFullCollection } from "@/features/collection/queries/prisma-functions";
+import { getPlaylists } from "@/features/playlists/queries/prisma-functions";
 import { ClientCollectionContainer } from "@/features/collection/components/ClientCollectionContainer";
 
 export const revalidate = 300;
@@ -21,7 +21,7 @@ export default async function CollectionPage({ params }: { params: { userId: str
   const genres = getGenres.map((g) => g.name);
 
   return (
-    <main className="flex min-h-screen flex-col items-center space-y-10 p-24 animate-in">
+    <main className="flex min-h-screen flex-col items-center space-y-10 animate-in">
       <ClientCollectionContainer
         userId={userId}
         collection={collection}
