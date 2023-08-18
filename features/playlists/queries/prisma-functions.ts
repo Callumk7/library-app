@@ -12,6 +12,21 @@ export async function getPlaylists(userId: string) {
 	return getPlaylists;
 }
 
+export async function getPlaylistTitles(userId: string) {
+	console.time("get playlist titles");
+	const getPlaylistTitles = await prisma.playlist.findMany({
+		where: {
+			userId,
+		},
+		select: {
+			id: true,
+			name: true,
+		},
+	});
+
+	return getPlaylistTitles;
+}
+
 export async function getPlaylistsWithGames(userId: string) {
 	console.time("get playlists with games");
 	const getPlaylists = await prisma.playlist.findMany({

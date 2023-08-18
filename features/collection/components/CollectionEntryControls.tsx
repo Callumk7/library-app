@@ -8,9 +8,9 @@ import {
 } from "@/components/ui/menubar";
 import { Playlist } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
-import { fetchUserPlaylists } from "@/lib/db/playlists/fetches";
 import { DeleteIcon } from "@/components/ui/icons/DeleteIcon";
 import { useDeleteMutation } from "../queries/mutations";
+import { fetchUserPlaylists } from "@/features/playlists/queries/query-functions";
 
 interface CollectionEntryControlsProps {
   userId: string,

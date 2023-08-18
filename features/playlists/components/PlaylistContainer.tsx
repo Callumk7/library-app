@@ -1,8 +1,8 @@
 "use client";
 
+import { GameCardCover } from "@/components/games/GameCardCover";
 import { GameWithCoverAndGenres, PlaylistWithGames } from "@/types";
 import { useState } from "react";
-import { GameCardCover } from "../games/GameCardCover";
 
 interface PlaylistContainerProps {
   games: GameWithCoverAndGenres[];

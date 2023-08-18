@@ -23,6 +23,7 @@ import {
 import { useState } from "react";
 import { Input } from "@/components/ui/form";
 import AddPlaylistForm from "@/features/playlists/components/AddPlaylistForm";
+import { AddPlaylistDialog } from "@/features/playlists/components/AddPlaylistDialog";
 
 interface CollectionViewMenubarProps {
   genres: string[];
@@ -143,16 +144,7 @@ export function CollectionViewMenubar({
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
-          <DialogTitle>Create playlist</DialogTitle>
-          <DialogDescription>
-            Create a list that you can use to collect games that you think go together
-            well
-          </DialogDescription>
-          <AddPlaylistForm />
-        </DialogContent>
-      </Dialog>
+      <AddPlaylistDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
     </div>
   );
 }

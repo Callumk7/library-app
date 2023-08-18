@@ -50,3 +50,5 @@ export async function getCollectionGameIds(userId: string): Promise<number[]> {
 	console.timeEnd("get collection game ids");
 	return results;
 }
+
+

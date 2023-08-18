@@ -1,25 +1,48 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Add } from "@/components/ui/icons/Add";
 import { PlaylistWithGames } from "@/types";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { Button } from "../ui/button";
+import { AddPlaylistDialog } from "./AddPlaylistDialog";
+import { useState } from "react";
+import { fetchUserPlaylists } from "../queries/query-functions";
 
 interface PlaylistSidebarProps {
+  userId: string;
   playlists: PlaylistWithGames[];
 }
 
-export function PlaylistSidebar({ playlists }: PlaylistSidebarProps) {
-  const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
+export function PlaylistSidebar({ playlists, userId }: PlaylistSidebarProps) {
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
+  const playlistQuery = useQuery({
+    queryKey: ["playlists", userId],
+    queryFn: () => fetchUserPlaylists(userId),
+    initialData: playlists,
+  });
+
   return (
-    <div className="mx-10 w-full rounded-lg border">
-      {playlists.map((playlist, index) => (
-        <div className="flex justify-between px-8 py-12" key={index}>
-          <Button variant={"link"} asChild>
-            <Link href={`/collection/${userId}/playlists/${playlist.id}`}>{playlist.name}</Link>
+    <>
+      <div className="flex w-[15vw] min-w-[168px] flex-col space-y-1 rounded-lg border px-2 py-1">
+        <Button className="mx-2 my-4" onClick={() => setDialogOpen(true)}>
+          <Add />
+        </Button>
+        {playlistQuery.data.map((playlist, index) => (
+          <Button
+            className="justify-start self-start p-2 text-start"
+            key={index}
+            variant={"link"}
+            asChild
+          >
+            <Link href={`/collection/${userId}/playlists/${playlist.id}`}>
+              {playlist.name}
+            </Link>
           </Button>
-          <span className="rounded-full bg-secondary px-2 py-1 text-sm text-background">
-            {playlist.games.length}
-          </span>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+      <AddPlaylistDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
+    </>
   );
 }
