@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/db/prisma";
 import { IGDBGameSchema } from "@/types";
-import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 
 // Create new user game collection entry.
