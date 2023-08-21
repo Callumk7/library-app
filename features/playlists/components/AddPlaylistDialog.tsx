@@ -8,11 +8,12 @@ import AddPlaylistForm from "./AddPlaylistForm";
 import { Dispatch } from "react";
 
 interface AddPlaylistDialogProps {
+  userId: string;
   dialogOpen: boolean;
   setDialogOpen: Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function AddPlaylistDialog({ dialogOpen, setDialogOpen }: AddPlaylistDialogProps) {
+export function AddPlaylistDialog({ userId, dialogOpen, setDialogOpen }: AddPlaylistDialogProps) {
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogContent>
@@ -20,7 +21,7 @@ export function AddPlaylistDialog({ dialogOpen, setDialogOpen }: AddPlaylistDial
         <DialogDescription>
           Create a list that you can use to collect games that you think go together well
         </DialogDescription>
-        <AddPlaylistForm />
+        <AddPlaylistForm userId={userId} />
       </DialogContent>
     </Dialog>
   );

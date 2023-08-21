@@ -1,37 +1,29 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/form";
 import { useState } from "react";
+import { useAddPlaylist } from "../queries/mutations";
 
-export default function AddPlaylistForm() {
+export default function AddPlaylistForm({ userId }: { userId: string }) {
   const [playlistName, setPlaylistName] = useState("");
 
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const res = await fetch(`/api/playlists/`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: playlistName }),
-    });
-
-    if (res.ok) {
-      console.log("playlist created");
-      setPlaylistName("");
-    }
-  };
+  const addPlaylist = useAddPlaylist(userId);
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-row items-center space-x-3">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        addPlaylist.mutate(playlistName);
+      }}
+      className="flex flex-row items-center space-x-3"
+    >
       <Input
         value={playlistName}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setPlaylistName(e.target.value)
-        }
+        onChange={(e) => setPlaylistName(e.target.value)}
         name="name"
         placeholder="Best RPGs ever.."
       />
-      <Button variant={"outline"} size={"sm"}>
-        Add
+      <Button variant={"outline"} size={"sm"} disabled={addPlaylist.isLoading}>
+        {addPlaylist.isLoading ? "adding" : "add"}
       </Button>
     </form>
   );

@@ -5,16 +5,16 @@ import { Add } from "@/components/ui/icons/Add";
 import { PlaylistWithGames } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { fetchUserPlaylists } from "../queries/query-functions";
 import { AddPlaylistDialog } from "./AddPlaylistDialog";
 import { useState } from "react";
-import { fetchUserPlaylists } from "../queries/query-functions";
 
 interface PlaylistSidebarProps {
   userId: string;
   playlists: PlaylistWithGames[];
 }
 
-export function PlaylistSidebar({ playlists, userId }: PlaylistSidebarProps) {
+export function PlaylistSidebar({ userId, playlists }: PlaylistSidebarProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   const playlistQuery = useQuery({
@@ -25,13 +25,13 @@ export function PlaylistSidebar({ playlists, userId }: PlaylistSidebarProps) {
 
   return (
     <>
-      <div className="flex w-[15vw] min-w-[168px] flex-col space-y-1 rounded-lg border px-2 py-1">
-        <Button className="mx-2 my-4" onClick={() => setDialogOpen(true)}>
+      <div className="inset-3 flex h-fit w-1/4 min-w-[164px] flex-col gap-4 rounded-lg border">
+        <Button onClick={() => setDialogOpen(true)} className="mx-2 my-1">
           <Add />
         </Button>
         {playlistQuery.data.map((playlist, index) => (
           <Button
-            className="justify-start self-start p-2 text-start"
+            className="mb-4 justify-start self-start text-start"
             key={index}
             variant={"link"}
             asChild
@@ -42,7 +42,11 @@ export function PlaylistSidebar({ playlists, userId }: PlaylistSidebarProps) {
           </Button>
         ))}
       </div>
-      <AddPlaylistDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
+      <AddPlaylistDialog
+        userId={userId}
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+      />
     </>
   );
 }
