@@ -11,14 +11,15 @@ import { useQuery } from "@tanstack/react-query";
 import { DeleteIcon } from "@/components/ui/icons/DeleteIcon";
 import { useDeleteMutation } from "../queries/mutations";
 import { fetchUserPlaylists } from "@/features/playlists/queries/query-functions";
+import { useAddGameToPlaylist } from "@/features/playlists/queries/mutations";
+import { useEffect, useState } from "react";
 
 interface CollectionEntryControlsProps {
-  userId: string,
+  userId: string;
   entry: CollectionWithGamesGenresPlaylists;
   playlists: Playlist[];
   handleEntryPlayedToggled: (gameId: number) => Promise<void>;
   handleEntryCompletedToggled: (gameId: number) => Promise<void>;
-  handleGameAddedToPlaylist: (playlistId: number, gameId: number) => Promise<void>;
 }
 
 export function CollectionEntryControls({
@@ -27,16 +28,28 @@ export function CollectionEntryControls({
   playlists,
   handleEntryPlayedToggled,
   handleEntryCompletedToggled,
-  handleGameAddedToPlaylist,
 }: CollectionEntryControlsProps) {
+  const [isCheckedArray, setIsCheckedArray] = useState<number[]>([]);
 
-  const { isLoading, isError, data, error } = useQuery({
-    queryKey: ["playlists", entry.userId],
-    queryFn: () => fetchUserPlaylists(entry.userId),
+  const playlistsQuery = useQuery({
+    queryKey: ["playlists", userId],
+    queryFn: () => fetchUserPlaylists(userId),
     initialData: playlists,
   });
 
+  useEffect(() => {
+    const initCheckedArray = [];
+    for (const playlist of playlistsQuery.data) {
+      if (entry.game.playlists.some((pl) => pl.playlistId === playlist.id)) {
+        initCheckedArray.push(playlist.id);
+      }
+    }
+
+    setIsCheckedArray(initCheckedArray);
+  }, [entry.game.playlists, playlistsQuery.data]);
+
   const deleteEntry = useDeleteMutation(userId);
+  const addToPlaylist = useAddGameToPlaylist(userId);
 
   return (
     <Menubar className="mx-1 mb-2">
@@ -60,16 +73,19 @@ export function CollectionEntryControls({
       <MenubarMenu>
         <MenubarTrigger>Playlists</MenubarTrigger>
         <MenubarContent>
-          {data.map((playlist, index) => {
-            const isChecked = entry.game.playlists.some(
-              (pl) => pl.playlist.id === playlist.id
-            );
+          {playlistsQuery.data.map((playlist, index) => {
             return (
               <MenubarCheckboxItem
                 key={index}
-                checked={isChecked}
+                checked={isCheckedArray.some((playlistId) => playlistId === playlist.id)}
                 onCheckedChange={() =>
-                  handleGameAddedToPlaylist(playlist.id, entry.gameId)
+                  addToPlaylist.mutate(
+                    { playlistId: playlist.id, gameId: entry.gameId },
+                    {
+                      onSuccess: (data, variables) =>
+                        setIsCheckedArray([...isCheckedArray, variables.playlistId]),
+                    }
+                  )
                 }
               >
                 {playlist.name}

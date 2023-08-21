@@ -105,6 +105,7 @@ export function ClientCollectionContainer({
   return (
     <>
       <CollectionViewMenubar
+        userId={userId}
         genreFilter={genreFilter}
         genres={genres}
         playlists={playlists}

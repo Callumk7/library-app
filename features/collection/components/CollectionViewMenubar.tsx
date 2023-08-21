@@ -26,6 +26,7 @@ import AddPlaylistForm from "@/features/playlists/components/AddPlaylistForm";
 import { AddPlaylistDialog } from "@/features/playlists/components/AddPlaylistDialog";
 
 interface CollectionViewMenubarProps {
+  userId: string;
   genres: string[];
   playlists: Playlist[];
   genreFilter: string[];
@@ -41,6 +42,7 @@ interface CollectionViewMenubarProps {
 }
 
 export function CollectionViewMenubar({
+  userId,
   genres,
   playlists,
   genreFilter,
@@ -144,7 +146,7 @@ export function CollectionViewMenubar({
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
-      <AddPlaylistDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
+      <AddPlaylistDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} userId={userId} />
     </div>
   );
 }
