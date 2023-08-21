@@ -2,17 +2,13 @@
 
 import { GameCardCover } from "@/components/games/GameCardCover";
 import {
-  fetchCollectionIds,
-  fetchFullCollection,
-} from "@/features/collection/queries/query-functions";
-import {
   CollectionWithGamesGenresPlaylists,
   GameWithCoverAndGenres,
   GameWithCoverGenresUsers,
 } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { SearchResultEntryControls } from "./SearchResultEntryControls";
-import { useEffect } from "react";
+import { fetchFullCollection } from "@/features/collection/queries";
 
 interface ClientSearchContainerProps {
   userId: string;

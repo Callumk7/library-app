@@ -73,3 +73,13 @@ export async function getGamesInPlaylist(playlistId: number) {
 	console.timeEnd("get games in playlist");
 	return getGames;
 }
+
+export async function deletePlaylist(playlistId: number) {
+	const deletedPlaylist = await prisma.playlist.delete({
+		where: {
+			id: playlistId
+		}
+	})
+
+	return deletedPlaylist;
+}

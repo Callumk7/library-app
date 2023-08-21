@@ -51,3 +51,16 @@ export async function fetchUserPlaylistTitles(userId: string): Promise<string[]>
 	const data = await res.json();
 	return data as string[];
 }
+
+export async function deletePlaylistFromServer(playlistId: number) {
+	const res = await fetch(`${process.env.NEXT_PUBLIC_FRONTLINE_URL}/api/playlists?playlistId=${playlistId}`, {
+		method: "DELETE",
+	})
+
+	if (!res.ok) {
+		throw new Error("Network response was not ok");
+	}
+
+	const data = await res.json();
+	return data as Playlist;
+}

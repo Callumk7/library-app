@@ -1,7 +1,7 @@
 export default function Loading() {
   // You can add any UI inside Loading, including a Skeleton.
   return (
-    <div className="h-screen w-full">
+    <div className="h-screen w-max">
       <svg
         className="absolute left-1/2 top-1/2 animate-spin"
         width="24"

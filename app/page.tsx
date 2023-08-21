@@ -1,5 +1,3 @@
-"use client";
-
 export default function HomePage() {
   return (
     <main className="mx-auto grid w-4/5 grid-cols-2 gap-5 md:grid-cols-3">

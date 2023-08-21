@@ -68,7 +68,34 @@ export async function DELETE(req: NextRequest) {
 	}
 
 	if (!gameId) {
-		return new NextResponse("gameId missing", { status: 404 });
+		try {
+			const body = (await req.json()) as number[];
+			if (!body) {
+				return new NextResponse("gameIds missing", { status: 404 });
+			}
+
+			if (body.length === 0) {
+				return new NextResponse("gameIds missing", { status: 404 });
+			}
+
+			const deleteManyGamesFromCollection =
+				await prisma.userGameCollection.deleteMany({
+					where: {
+						userId,
+						gameId: {
+							in: body,
+						},
+					},
+				});
+			console.log(`deleted ${body.length} games from collection`);
+			console.log(body);
+
+			const resBody = JSON.stringify(deleteManyGamesFromCollection);
+			return new NextResponse(resBody, { status: 200 });
+		} catch (err) {
+			console.error("Something went wrong", err);
+			throw err;
+		}
 	}
 
 	try {

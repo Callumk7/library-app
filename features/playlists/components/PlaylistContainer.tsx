@@ -1,10 +1,10 @@
 "use client";
 
 import { GameCardCover } from "@/components/games/GameCardCover";
-import { GameWithCoverAndGenres, PlaylistWithGames } from "@/types";
+import { GameWithCoverAndGenres } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { fetchGamesFromPlaylist } from "../queries/query-functions";
+import { fetchGamesFromPlaylist } from "../queries";
 
 interface PlaylistContainerProps {
   userId: string;
@@ -15,7 +15,7 @@ interface PlaylistContainerProps {
 export function PlaylistContainer({ userId, playlistId, games }: PlaylistContainerProps) {
 
   const playlistQuery = useQuery({
-    queryKey: ["playlists", playlistId, userId],
+    queryKey: ["playlists", userId, playlistId],
     queryFn: () => fetchGamesFromPlaylist(userId, playlistId),
     initialData: games
   });

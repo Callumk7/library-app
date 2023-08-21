@@ -30,7 +30,11 @@ export const useAddPlaylist = (userId: string) => {
 
 		onSuccess: (playlist) => {
 			console.log(`success ${playlist.name} created`);
-			queryClient.setQueryData(["playlists", userId], (old) => [...old, playlist]);
+			const oldState = queryClient.getQueryData([
+				"playlists",
+				userId,
+			]) as Playlist[];
+			queryClient.setQueryData(["playlists", userId], [...oldState, playlist]);
 		},
 	});
 

@@ -1,4 +1,5 @@
 import {
+	deletePlaylist,
 	getGamesInPlaylist,
 	getPlaylists,
 } from "@/features/playlists/queries/prisma-functions";
@@ -102,5 +103,29 @@ export async function POST(req: NextRequest) {
 			console.error("error posting game to playlist", err);
 			return new NextResponse("Error posting game to playlist", { status: 500 });
 		}
+	}
+
+	console.log("insufficient parameters provided");
+	return new NextResponse("insufficient parameters provided", { status: 500 });
+}
+
+export async function DELETE(req: NextRequest) {
+	console.log("playlist DELETE function hit");
+	const url = new URL(req.url);
+	const params = new URLSearchParams(url.search);
+	const playlistId = params.get("playlistId");
+
+	if (!playlistId) {
+		console.log("no playlist id provided");
+		return new NextResponse("no playlist id provided", { status: 401 });
+	}
+
+	try {
+		const deletedPlaylist = await deletePlaylist(Number(playlistId));
+		const body = JSON.stringify(deletedPlaylist);
+		return new NextResponse(body, { status: 200 });
+	} catch (err) {
+		console.error("error deleting playlist", err);
+		return new NextResponse("Error deleting playlist", { status: 500 });
 	}
 }

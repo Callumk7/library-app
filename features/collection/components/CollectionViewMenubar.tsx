@@ -14,25 +14,22 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar";
 import { SortOption } from "@/types";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useState } from "react";
 import { Input } from "@/components/ui/form";
-import AddPlaylistForm from "@/features/playlists/components/AddPlaylistForm";
 import { AddPlaylistDialog } from "@/features/playlists/components/AddPlaylistDialog";
+import { useDeleteManyMutation } from "../queries/mutations";
 
 interface CollectionViewMenubarProps {
   userId: string;
+  checkedGames: number[];
   genres: string[];
   playlists: Playlist[];
   genreFilter: string[];
   searchTerm: string;
   isPlayedFilterActive: boolean;
   sortOption: SortOption;
+  handleCheckAll: () => void;
+  handleUncheckAll: () => void;
   setSortOption: (option: SortOption) => void;
   handleSearchTermChanged: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handlePlayedFilterClicked: () => void;
@@ -43,10 +40,13 @@ interface CollectionViewMenubarProps {
 
 export function CollectionViewMenubar({
   userId,
+  checkedGames,
   genres,
   playlists,
   genreFilter,
   searchTerm,
+  handleCheckAll,
+  handleUncheckAll,
   sortOption,
   setSortOption,
   handleSearchTermChanged,
@@ -57,6 +57,8 @@ export function CollectionViewMenubar({
   handleBulkAddToPlaylist,
 }: CollectionViewMenubarProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
+  const deleteMany = useDeleteManyMutation(userId);
 
   return (
     <div className="flex flex-row space-x-6">
@@ -121,10 +123,10 @@ export function CollectionViewMenubar({
         <MenubarMenu>
           <MenubarTrigger>Actions</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem className="focus-visible:bg-destructive/80">
+            <MenubarItem onClick={() => deleteMany.mutate(checkedGames)} className="focus-visible:bg-destructive/80">
               Delete selected
             </MenubarItem>
-            <MenubarItem>Select all</MenubarItem>
+            <MenubarItem onClick={handleCheckAll}>Select all...</MenubarItem>
             <MenubarSub>
               <MenubarSubTrigger>Add to Playlist</MenubarSubTrigger>
               <MenubarSubContent>
@@ -146,7 +148,11 @@ export function CollectionViewMenubar({
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
-      <AddPlaylistDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} userId={userId} />
+      <AddPlaylistDialog
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+        userId={userId}
+      />
     </div>
   );
 }

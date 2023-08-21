@@ -1,10 +1,5 @@
 import { CollectionWithGamesGenresPlaylists } from "@/types";
 
-//fetch functions are all CLIENT SIDE, so all console logs will land
-//on the browser.
-//TODO: test if the env variable is required for the URL, as I was sure that
-//we actually just needed the route.
-
 export async function fetchFullCollection(
 	userId: string
 ): Promise<CollectionWithGamesGenresPlaylists[]> {
@@ -55,4 +50,20 @@ export async function addGameToCollection(
 
 	const data = await res.json();
 	return data as { userId: string; gameId: number };
+}
+
+export async function fetchUserGenres(userId: string): Promise<string[]> {
+	const res = await fetch(
+		`${process.env.NEXT_PUBLIC_FRONTLINE_URL}/api/genres?userId=${userId}`,
+		{
+			method: "GET",
+		}
+	);
+
+	if (!res.ok) {
+		throw new Error("Network response was not ok");
+	}
+
+	const data = await res.json();
+	return data as string[];
 }

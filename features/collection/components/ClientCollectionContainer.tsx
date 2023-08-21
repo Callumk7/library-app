@@ -7,10 +7,10 @@ import { applySorting } from "@/util/sorting";
 import { CollectionWithGamesGenresPlaylists, SortOption } from "@/types";
 import { Playlist } from "@prisma/client";
 
-import { fetchFullCollection } from "../queries/query-functions";
 import { CollectionViewMenubar } from "./CollectionViewMenubar";
 import { GameCardCover } from "@/components/games/GameCardCover";
 import { CollectionEntryControls } from "./CollectionEntryControls";
+import { fetchFullCollection, fetchUserGenres } from "../queries";
 
 const DEFAULT_SORT_OPTION: SortOption = "rating";
 
@@ -30,13 +30,22 @@ export function ClientCollectionContainer({
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortOption, setSortOption] = useState<SortOption>(DEFAULT_SORT_OPTION);
   const [isPlayedFilterActive, setIsPlayedFilterActive] = useState<boolean>(false);
-  const [genreFilter, setGenreFilter] = useState<string[]>(genres);
+  const [checkedGames, setCheckedGames] = useState<number[]>([]);
 
   const collectionQuery = useQuery({
     queryKey: ["collection", userId],
     queryFn: () => fetchFullCollection(userId),
     initialData: collection,
   });
+
+  // Will likely remove this, react query is probably too heavy here and provides very little value
+  const genreQuery = useQuery({
+    queryKey: ["genres", userId],
+    queryFn: () => fetchUserGenres(userId),
+    initialData: genres,
+  });
+
+  const [genreFilter, setGenreFilter] = useState<string[]>(genreQuery.data);
 
   // We have multiple stages to finalise the list order.
   // 1. filter out based on the search term.
@@ -74,6 +83,24 @@ export function ClientCollectionContainer({
     setSearchTerm(e.target.value);
   };
 
+  const handleCheckedToggled = (gameId: number) => {
+    if (checkedGames.includes(gameId)) {
+      setCheckedGames(checkedGames.filter((game) => game !== gameId));
+    } else {
+      setCheckedGames([...checkedGames, gameId]);
+    }
+  };
+
+  const handleCheckAll = () => {
+    const collectionIds = collectionQuery.data.map((entry) => entry.gameId);
+    console.log(collectionIds)
+    setCheckedGames(collectionIds);
+  };
+
+  const handleUncheckAll = () => {
+    setCheckedGames([]);
+  };
+
   const handlePlayedFilterClicked = () => {
     setIsPlayedFilterActive(!isPlayedFilterActive);
   };
@@ -84,10 +111,20 @@ export function ClientCollectionContainer({
 
   const handleGenreToggled = (genre: string) => {
     // handle genre toggled
+    setGenreFilter((prevGenreFilter) =>
+      prevGenreFilter.includes(genre)
+        ? prevGenreFilter.filter((g) => g !== genre)
+        : [...prevGenreFilter, genre]
+    );
   };
 
   const handleToggleAllGenres = () => {
     // handle toggle all genres
+    if (genres.length > genreFilter.length) {
+      setGenreFilter(genres);
+    } else {
+      setGenreFilter([]);
+    }
   };
 
   const handleGameAddedToPlaylist = async (playlistId: number, gameId: number) => {
@@ -106,12 +143,15 @@ export function ClientCollectionContainer({
     <>
       <CollectionViewMenubar
         userId={userId}
+        checkedGames={checkedGames}
         genreFilter={genreFilter}
         genres={genres}
         playlists={playlists}
         handleSearchTermChanged={handleSearchTermChanged}
         searchTerm={searchTerm}
         sortOption={sortOption}
+        handleCheckAll={handleCheckAll}
+        handleUncheckAll={handleUncheckAll}
         setSortOption={setSortOption}
         isPlayedFilterActive={isPlayedFilterActive}
         handlePlayedFilterClicked={handlePlayedFilterClicked}
@@ -119,16 +159,17 @@ export function ClientCollectionContainer({
         handleToggleAllGenres={handleToggleAllGenres}
         handleBulkAddToPlaylist={handleBulkAddToPlaylist}
       />
-      <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      <div className="mx-auto grid w-4/5 grid-cols-1 gap-4 md:w-full md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
         {sortedCollection.map((entry, index) => (
           <GameCardCover key={index} game={entry.game} isCompleted={entry.completed}>
             <CollectionEntryControls
               userId={userId}
               entry={entry}
               playlists={playlists}
+              checkedGames={checkedGames}
+              handleCheckedToggled={handleCheckedToggled}
               handleEntryPlayedToggled={handleEntryPlayedToggled}
               handleEntryCompletedToggled={handleEntryCompletedToggled}
-              handleGameAddedToPlaylist={handleGameAddedToPlaylist}
             />
           </GameCardCover>
         ))}

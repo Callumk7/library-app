@@ -1,6 +1,28 @@
+import { getUserGenres } from "@/features/collection/queries/prisma-functions";
 import { prisma } from "@/lib/db/prisma";
 import { Job } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
+
+export async function GET(req: NextRequest) {
+	console.log("get request to genres");
+	const url = new URL(req.url);
+	const params = new URLSearchParams(url.search);
+	const userId = params.get("userId");
+
+	if (!userId) {
+		console.log("no user id provided");
+		return new NextResponse("No user id provided", { status: 401 });
+	}
+
+	try {
+		const genres = await getUserGenres(userId);
+		const body = JSON.stringify(genres);
+		return new NextResponse(body, { status: 200 });
+	} catch (err) {
+		console.error("Error getting user genres", err);
+		return new NextResponse("Server error getting genres", { status: 500 });
+	}
+}
 
 export async function POST(req: NextRequest) {
 	console.log("genres route hit!");

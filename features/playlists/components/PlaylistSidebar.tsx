@@ -5,9 +5,9 @@ import { Add } from "@/components/ui/icons/Add";
 import { PlaylistWithGames } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { fetchUserPlaylists } from "../queries/query-functions";
 import { AddPlaylistDialog } from "./AddPlaylistDialog";
 import { useState } from "react";
+import { fetchUserPlaylists } from "../queries";
 
 interface PlaylistSidebarProps {
   userId: string;
@@ -25,9 +25,9 @@ export function PlaylistSidebar({ userId, playlists }: PlaylistSidebarProps) {
 
   return (
     <>
-      <div className="inset-3 flex h-fit w-1/4 min-w-[164px] flex-col gap-4 rounded-lg border">
-        <Button onClick={() => setDialogOpen(true)} className="mx-2 my-1">
-          <Add />
+      <div className="inset-3 flex h-fit w-1/4 min-w-[256px] flex-col gap-4 rounded-lg border">
+        <Button onClick={() => setDialogOpen(true)} className="mx-4 my-6">
+          <span className="mr-1">Add Playlist</span> <Add />
         </Button>
         {playlistQuery.data.map((playlist, index) => (
           <Button
