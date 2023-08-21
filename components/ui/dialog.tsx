@@ -1,5 +1,3 @@
-"use client"
-
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import clsx from "clsx"
 import { ComponentPropsWithoutRef, ElementRef, HTMLAttributes, forwardRef } from "react"

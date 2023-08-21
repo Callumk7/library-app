@@ -20,6 +20,18 @@ const gameWithCoverAndGenres = Prisma.validator<Prisma.GameArgs>()({
 	},
 });
 
+const gameWithCoverGenresUsers = Prisma.validator<Prisma.GameArgs>()({
+	include: {
+		cover: true,
+		genres: {
+			include: {
+				genre: true,
+			},
+		},
+		users: true,
+	},
+});
+
 const collectionWithGamesAndGenres = Prisma.validator<Prisma.UserGameCollectionArgs>()({
 	include: {
 		game: {
@@ -78,6 +90,7 @@ const playlistWithGamesAndCover = Prisma.validator<Prisma.PlaylistArgs>()({
 
 type GameWithCover = Prisma.GameGetPayload<typeof gameWithCover>;
 type GameWithCoverAndGenres = Prisma.GameGetPayload<typeof gameWithCoverAndGenres>;
+type GameWithCoverGenresUsers = Prisma.GameGetPayload<typeof gameWithCoverGenresUsers>;
 
 type CollectionWithGamesAndGenres = Prisma.UserGameCollectionGetPayload<
 	typeof collectionWithGamesAndGenres
@@ -98,6 +111,7 @@ export type {
 	GameUpload,
 	GameWithCover,
 	GameWithCoverAndGenres,
+	GameWithCoverGenresUsers,
 	CollectionWithGamesAndGenres,
 	CollectionWithGamesGenresPlaylists,
 	PlaylistWithGames,

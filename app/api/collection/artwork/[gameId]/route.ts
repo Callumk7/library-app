@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/prisma/client";
-import { IGDBGame, IGDBGameSchema } from "@/types";
+import { prisma } from "@/lib/db/prisma";
+import { IGDBGameSchema } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
 // this route will process game artwork and genres asyncronously from the main request

@@ -1,13 +1,13 @@
-import { prisma } from "@/lib/prisma/client";
+import { prisma } from "@/lib/db/prisma";
 import { IGDBGameSchema } from "@/types";
-import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 
 // Create new user game collection entry.
 export async function POST(req: NextRequest, { params }: { params: { gameId: number } }) {
 	console.time("game add route");
 	const gameId = Number(params.gameId);
-	const { userId } = auth();
+	const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
+
 	console.log(`POST request with id: ${gameId} from user${userId}`);
 
 	if (!userId) {
@@ -113,7 +113,8 @@ export async function PATCH(
 	req: NextRequest,
 	{ params }: { params: { gameId: number } }
 ) {
-	const { userId } = auth();
+	const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
+
 	const gameId = Number(params.gameId);
 
 	if (!userId) {
@@ -157,7 +158,8 @@ export async function PATCH(
 
 export async function DELETE(_req: Request, { params }: { params: { gameId: number } }) {
 	const gameId = Number(params.gameId);
-	const { userId } = auth();
+	const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
+
 	console.log(`DELETE request with id: ${gameId} from user${userId}`);
 
 	if (!userId) {

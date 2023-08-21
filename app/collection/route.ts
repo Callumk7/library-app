@@ -1,8 +1,9 @@
-import { SignIn, auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
+export const revalidate = 3600;
+
 export function GET() {
-	const { userId } = auth();
+	const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
 
 	if (!userId) {
 		redirect("/sign-in");

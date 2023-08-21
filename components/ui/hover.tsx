@@ -1,5 +1,3 @@
-"use client";
-
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
 import clsx from "clsx";
 import { forwardRef } from "react";

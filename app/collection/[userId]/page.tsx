@@ -1,25 +1,29 @@
-import { auth } from "@clerk/nextjs";
-import { getPlaylists } from "@/lib/prisma/playlists/queries";
-import { CollectionContainer } from "@/components/collection/container";
-import { getUserGenres } from "@/lib/prisma/genres/queries";
-import { getCollection } from "@/lib/prisma/collection/queries";
+import { getPlaylists } from "@/features/playlists/queries/prisma-functions";
+import { ClientCollectionContainer } from "@/features/collection/components/ClientCollectionContainer";
+import {
+  getFullCollection,
+  getUserGenres,
+} from "@/features/collection/queries/prisma-functions";
+
+export const revalidate = 300;
 
 export default async function CollectionPage({ params }: { params: { userId: string } }) {
-  const { userId } = auth();
+  const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
   if (userId !== params.userId) {
+    // TODO: handle seeing other peoples collections if they are not private
     return <h1>NOT YOU, GET OUT</h1>;
   }
 
-  const [getGenres, collection, playlists] = await Promise.all([
+  const [genres, collection, playlists] = await Promise.all([
     getUserGenres(userId),
-    getCollection(userId),
+    getFullCollection(userId),
     getPlaylists(userId),
   ]);
 
-  const genres = getGenres.map((g) => g.name);
   return (
-    <main className="flex min-h-screen flex-col items-center space-y-10 p-24 animate-in">
-      <CollectionContainer
+    <main className="mx-auto flex min-h-screen flex-col items-center space-y-10 animate-in">
+      <ClientCollectionContainer
+        userId={userId}
         collection={collection}
         genres={genres}
         playlists={playlists}

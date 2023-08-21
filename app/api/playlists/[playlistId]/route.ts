@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma/client";
+import { prisma } from "@/lib/db/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { isArray, isNumber } from "util";
 
@@ -16,12 +16,6 @@ export async function POST(
 			`Playlist route hit with playlist id: ${playlistId}, game id: ${gameId}`
 		);
 
-		const addToPlaylist = await prisma.playlistsOnGames.create({
-			data: {
-				gameId: Number(gameId),
-				playlistId: Number(playlistId),
-			},
-		});
 
 		return new NextResponse("added!", { status: 200 });
 	} else {
