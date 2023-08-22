@@ -8,6 +8,7 @@
 		"turbo": "next dev --turbo",
 		"build": "prisma generate && next build",
 		"start": "next start",
+        "test": "vitest",
 		"lint": "next lint && tsc --noEmit"
 	},
 	"dependencies": {
