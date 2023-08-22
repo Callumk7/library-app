@@ -2,6 +2,8 @@ import { prisma } from "@/lib/db/prisma";
 import { IGDBGameSchema } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
+// This route is used primarily to handle async updates to the database away from the main request
+
 export async function POST(req: NextRequest, { params }: { params: { gameId: number } }) {
 	console.log("processing genres...");
 	const gameId = Number(params.gameId);
