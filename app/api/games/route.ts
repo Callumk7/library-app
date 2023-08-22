@@ -29,6 +29,9 @@ export async function GET(req: NextRequest) {
 	// other..
 }
 
+// This route is used to update games away from the main thread, by updating storyline and
+// ratings based on jobs
+
 export async function POST(req: NextRequest) {
 	console.log("games route hit!");
 
