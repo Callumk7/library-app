@@ -25,13 +25,13 @@ export function PlaylistSidebar({ userId, playlists }: PlaylistSidebarProps) {
 
   return (
     <>
-      <div className="inset-3 flex h-fit w-1/4 min-w-[256px] flex-col gap-4 rounded-lg border">
+      <div className="inset-3 flex h-fit w-1/4 min-w-[256px] flex-col gap-2 rounded-lg border">
         <Button onClick={() => setDialogOpen(true)} className="mx-4 my-6">
           <span className="mr-1">Add Playlist</span> <Add />
         </Button>
         {playlistQuery.data.map((playlist, index) => (
           <Button
-            className="mb-4 justify-start self-start text-start"
+            className="mb-2 justify-start self-start text-start"
             key={index}
             variant={"link"}
             asChild

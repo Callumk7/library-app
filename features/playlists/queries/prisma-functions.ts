@@ -12,6 +12,48 @@ export async function getPlaylists(userId: string) {
 	return getPlaylists;
 }
 
+export async function getPlaylist(playlistId: number) {
+	const getPlaylist = await prisma.playlist.findFirst({
+		where: {
+			id: playlistId,
+		},
+		select: {
+			id: true,
+			name: true,
+		},
+	});
+
+	return getPlaylist;
+}
+
+export async function getPlaylistWithGames(playlistId: number) {
+	console.time("get playlist with games");
+	const getPlaylist = await prisma.playlist.findUnique({
+		where: {
+			id: playlistId,
+		},
+		include: {
+			games: {
+				include: {
+					game: {
+						include: {
+							genres: {
+								include: {
+									genre: true,
+								},
+							},
+							cover: true,
+						},
+					},
+				},
+			},
+		},
+	});
+
+	console.timeEnd("get playlist with games");
+	return getPlaylist;
+}
+
 export async function getPlaylistTitles(userId: string) {
 	console.time("get playlist titles");
 	const getPlaylistTitles = await prisma.playlist.findMany({
@@ -77,9 +119,9 @@ export async function getGamesInPlaylist(playlistId: number) {
 export async function deletePlaylist(playlistId: number) {
 	const deletedPlaylist = await prisma.playlist.delete({
 		where: {
-			id: playlistId
-		}
-	})
+			id: playlistId,
+		},
+	});
 
 	return deletedPlaylist;
 }

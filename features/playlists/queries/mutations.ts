@@ -1,4 +1,5 @@
 import { queryClient } from "@/lib/db/query";
+import { GameWithCoverAndGenres, PlaylistWithGames } from "@/types";
 import { Playlist, PlaylistsOnGames } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 
@@ -76,4 +77,53 @@ export const useAddGameToPlaylist = (userId: string) => {
 	});
 
 	return addGameMutation;
+};
+
+const deleteGameFromPlaylist = async (playlistId: number, gameId: number) => {
+	const body = { gameId: gameId };
+	const res = await fetch(`/api/playlists/games?playlistId=${playlistId}`, {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(body),
+	});
+
+	if (!res.ok) {
+		throw new Error("Network response was not ok");
+	}
+
+	const data = await res.json();
+	return data as PlaylistsOnGames;
+};
+
+export const useDeleteGameFromPlaylist = (userId: string) => {
+	const deleteGameMutation = useMutation({
+		mutationFn: ({ playlistId, gameId }: { playlistId: number; gameId: number }) => {
+			queryClient.invalidateQueries(["playlist", playlistId, userId]);
+
+			return deleteGameFromPlaylist(playlistId, gameId);
+		},
+
+		onMutate: ({ playlistId, gameId }) => {
+			const oldState = queryClient.getQueryData([
+				"playlists",
+				playlistId,
+				userId,
+			]) as GameWithCoverAndGenres[];
+			const newState = oldState.filter((game) => game.gameId !== gameId);
+			queryClient.cancelQueries(["playlists", playlistId, userId]);
+			queryClient.setQueryData(["playlists", playlistId, userId], newState);
+		},
+
+		onSuccess: (playlistOnGame) => {
+			console.log(
+				`game ${playlistOnGame.gameId} deleted from playlist ${playlistOnGame.playlistId}`
+			);
+
+			queryClient.invalidateQueries(["playlists", userId]);
+		},
+	});
+
+	return deleteGameMutation;
 };
