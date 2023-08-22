@@ -9,7 +9,7 @@ import {
 import { Playlist } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { DeleteIcon } from "@/components/ui/icons/DeleteIcon";
-import { useDeleteMutation } from "../queries/mutations";
+import { useDeleteMutation, useTogglePlayed } from "../queries/mutations";
 import { useAddGameToPlaylist } from "@/features/playlists/queries/mutations";
 import { useEffect, useState } from "react";
 import { MenuIcon } from "@/components/ui/icons/MenuIcon";
@@ -31,7 +31,6 @@ interface CollectionEntryControlsProps {
   playlists: Playlist[];
   checkedGames: number[];
   handleCheckedToggled: (gameId: number) => void;
-  handleEntryPlayedToggled: (gameId: number) => Promise<void>;
   handleEntryCompletedToggled: (gameId: number) => Promise<void>;
 }
 
@@ -41,7 +40,6 @@ export function CollectionEntryControls({
   playlists,
   checkedGames,
   handleCheckedToggled,
-  handleEntryPlayedToggled,
   handleEntryCompletedToggled,
 }: CollectionEntryControlsProps) {
   const [playlistArray, setPlaylistArray] = useState<number[]>([]);
@@ -74,6 +72,7 @@ export function CollectionEntryControls({
 
   const deleteEntry = useDeleteMutation(userId);
   const addToPlaylist = useAddGameToPlaylist(userId);
+  const playedToggled = useTogglePlayed(userId);
 
   return (
     <>
@@ -110,7 +109,7 @@ export function CollectionEntryControls({
           <MenubarContent>
             <MenubarCheckboxItem
               checked={entry.played}
-              onCheckedChange={() => handleEntryPlayedToggled(entry.gameId)}
+              onCheckedChange={() => playedToggled.mutate(entry.gameId)}
             >
               Played
             </MenubarCheckboxItem>

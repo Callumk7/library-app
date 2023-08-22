@@ -163,7 +163,6 @@ export function ClientCollectionContainer({
               playlists={playlists}
               checkedGames={checkedGames}
               handleCheckedToggled={handleCheckedToggled}
-              handleEntryPlayedToggled={handleEntryPlayedToggled}
               handleEntryCompletedToggled={handleEntryCompletedToggled}
             />
           </GameCardCover>
