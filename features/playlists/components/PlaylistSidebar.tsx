@@ -21,7 +21,7 @@ export function PlaylistSidebar({ userId, playlists }: PlaylistSidebarProps) {
     queryKey: ["playlists", userId],
     queryFn: () => fetchUserPlaylists(userId),
     initialData: playlists,
-  });
+ });
 
   return (
     <>

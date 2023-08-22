@@ -18,6 +18,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/form";
 import { AddPlaylistDialog } from "@/features/playlists/components/AddPlaylistDialog";
 import { useDeleteManyMutation } from "../queries/mutations";
+import { useBulkAddGameToPlaylist } from "@/features/playlists/queries/mutations";
 
 interface CollectionViewMenubarProps {
   userId: string;
@@ -35,7 +36,6 @@ interface CollectionViewMenubarProps {
   handlePlayedFilterClicked: () => void;
   handleGenreToggled: (genre: string) => void;
   handleToggleAllGenres: () => void;
-  handleBulkAddToPlaylist: (playlistId: number) => Promise<void>;
 }
 
 export function CollectionViewMenubar({
@@ -54,11 +54,11 @@ export function CollectionViewMenubar({
   handlePlayedFilterClicked,
   handleGenreToggled,
   handleToggleAllGenres,
-  handleBulkAddToPlaylist,
 }: CollectionViewMenubarProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   const deleteMany = useDeleteManyMutation(userId);
+  const addManyToPlaylist = useBulkAddGameToPlaylist(userId);
 
   return (
     <div className="flex flex-row space-x-6">
@@ -123,7 +123,10 @@ export function CollectionViewMenubar({
         <MenubarMenu>
           <MenubarTrigger>Actions</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem onClick={() => deleteMany.mutate(checkedGames)} className="focus-visible:bg-destructive/80">
+            <MenubarItem
+              onClick={() => deleteMany.mutate(checkedGames)}
+              className="focus-visible:bg-destructive/80"
+            >
               Delete selected
             </MenubarItem>
             <MenubarItem onClick={handleCheckAll}>Select all...</MenubarItem>
@@ -134,7 +137,12 @@ export function CollectionViewMenubar({
                   <MenubarItem
                     id={String(playlist.id)}
                     key={index}
-                    onClick={() => handleBulkAddToPlaylist(playlist.id)}
+                    onClick={() =>
+                      addManyToPlaylist.mutate({
+                        playlistId: playlist.id,
+                        gameIds: checkedGames,
+                      })
+                    }
                   >
                     {playlist.name}
                   </MenubarItem>

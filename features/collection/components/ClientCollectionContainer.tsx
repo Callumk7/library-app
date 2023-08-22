@@ -135,10 +135,6 @@ export function ClientCollectionContainer({
     // handle this
   };
 
-  const handleBulkAddToPlaylist = async (gameId: number) => {
-    // handle this
-  };
-
   return (
     <>
       <CollectionViewMenubar
@@ -157,7 +153,6 @@ export function ClientCollectionContainer({
         handlePlayedFilterClicked={handlePlayedFilterClicked}
         handleGenreToggled={handleGenreToggled}
         handleToggleAllGenres={handleToggleAllGenres}
-        handleBulkAddToPlaylist={handleBulkAddToPlaylist}
       />
       <div className="mx-auto grid w-4/5 grid-cols-1 gap-4 md:w-full md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
         {sortedCollection.map((entry, index) => (

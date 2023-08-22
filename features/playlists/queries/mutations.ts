@@ -43,8 +43,8 @@ export const useAddPlaylist = (userId: string) => {
 };
 
 const postGameToPlaylist = async (playlistId: number, gameId: number) => {
-	const body = { gameId: gameId };
-	const res = await fetch(`/api/playlists?playlistId=${playlistId}`, {
+	const body = [gameId];
+	const res = await fetch(`/api/playlists/games?playlistId=${playlistId}`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
@@ -79,15 +79,14 @@ export const useAddGameToPlaylist = (userId: string) => {
 	return addGameMutation;
 };
 
-const postBulkAddGamesToPlaylist =  async (playlistId: number, gameIds: number[]) => {
-	const body = gameIds;
-	const res = await fetch(`/api/playlists?playlistId=${playlistId}`, {
+const postBulkAddGamesToPlaylist = async (playlistId: number, gameIds: number[]) => {
+	const res = await fetch(`/api/playlists/games?playlistId=${playlistId}`, {
 		method: "POST",
 		headers: {
-			"Content-Type": "application/json"
+			"Content-Type": "application/json",
 		},
-		body: JSON.stringify(body),
-	})
+		body: JSON.stringify(gameIds),
+	});
 
 	if (!res.ok) {
 		throw new Error("Network response was not ok");
@@ -95,16 +94,28 @@ const postBulkAddGamesToPlaylist =  async (playlistId: number, gameIds: number[]
 
 	const data = await res.json();
 	return data as PlaylistsOnGames;
-}
+};
 
 export const useBulkAddGameToPlaylist = (userId: string) => {
 	const bulkAddMutation = useMutation({
-		mutationFn: ({playlistId, gameIds}: {playlistId: number; gameIds: number[]}) => {
-			queryClient.invalidateQueries(["playlists", playlistId, userId])
+		mutationFn: ({
+			playlistId,
+			gameIds,
+		}: {
+			playlistId: number;
+			gameIds: number[];
+		}) => {
+			queryClient.invalidateQueries(["playlists", playlistId, userId]);
 			return postBulkAddGamesToPlaylist(playlistId, gameIds);
-		}
-	})
-}
+		},
+
+		onSuccess: (data) => {
+			console.log(data);
+		},
+	});
+
+	return bulkAddMutation;
+};
 
 const deleteGameFromPlaylist = async (playlistId: number, gameId: number) => {
 	const body = { gameId: gameId };
