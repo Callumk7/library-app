@@ -129,7 +129,11 @@ export function CollectionViewMenubar({
             >
               Delete selected
             </MenubarItem>
-            <MenubarItem onClick={handleCheckAll}>Select all...</MenubarItem>
+            <MenubarItem
+              onClick={checkedGames.length > 0 ? handleUncheckAll : handleCheckAll}
+            >
+              {checkedGames.length > 0 ? "Deselect all" : "Select all"}
+            </MenubarItem>
             <MenubarSub>
               <MenubarSubTrigger>Add to Playlist</MenubarSubTrigger>
               <MenubarSubContent>

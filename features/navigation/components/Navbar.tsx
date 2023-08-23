@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Searchbar from "./Searchbar";
+import { UserProfile } from "./UserProfile";
 
 export default function Navbar() {
   return (
@@ -11,6 +12,7 @@ export default function Navbar() {
             <Link href={`/collection/`}>My Collection</Link>
           </Button>
           <Searchbar />
+          <UserProfile />
         </div>
       </div>
     </nav>

@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+import { MenuIcon } from "@/components/ui/icons/MenuIcon";
 import { PlaylistContainer } from "@/features/playlists/components/PlaylistContainer";
 import {
   getGamesInPlaylist,
@@ -20,6 +22,9 @@ export default async function PlaylistPage({
   return (
     <main className="flex min-h-screen flex-col items-center space-y-10 animate-in">
       <h1 className="text-5xl font-bold">{playlist?.name}</h1>
+      <Button size={"icon"}>
+        <MenuIcon />
+      </Button>
       <PlaylistContainer userId={userId} playlistId={playlistId} games={games} />
     </main>
   );

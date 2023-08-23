@@ -11,6 +11,7 @@ import { CollectionViewMenubar } from "./CollectionViewMenubar";
 import { GameCardCover } from "@/components/games/GameCardCover";
 import { CollectionEntryControls } from "./CollectionEntryControls";
 import { fetchFullCollection, fetchUserGenres } from "../queries";
+import { fetchUserPlaylists } from "@/features/playlists/queries";
 
 const DEFAULT_SORT_OPTION: SortOption = "rating";
 
@@ -37,6 +38,12 @@ export function ClientCollectionContainer({
     queryFn: () => fetchFullCollection(userId),
     initialData: collection,
   });
+
+  const playlistQuery = useQuery({
+    queryKey: ["playlists", userId],
+    queryFn: () => fetchUserPlaylists(userId),
+    initialData: playlists,
+ });
 
   // Will likely remove this, react query is probably too heavy here and provides very little value
   const genreQuery = useQuery({
@@ -127,10 +134,6 @@ export function ClientCollectionContainer({
     }
   };
 
-  const handleGameAddedToPlaylist = async (playlistId: number, gameId: number) => {
-    // handle this
-  };
-
   const handleEntryCompletedToggled = async (gameId: number) => {
     // handle this
   };
@@ -142,7 +145,7 @@ export function ClientCollectionContainer({
         checkedGames={checkedGames}
         genreFilter={genreFilter}
         genres={genres}
-        playlists={playlists}
+        playlists={playlistQuery.data}
         handleSearchTermChanged={handleSearchTermChanged}
         searchTerm={searchTerm}
         sortOption={sortOption}

@@ -21,7 +21,7 @@ export function PlaylistSidebar({ userId, playlists }: PlaylistSidebarProps) {
     queryKey: ["playlists", userId],
     queryFn: () => fetchUserPlaylists(userId),
     initialData: playlists,
- });
+  });
 
   return (
     <>
@@ -30,16 +30,20 @@ export function PlaylistSidebar({ userId, playlists }: PlaylistSidebarProps) {
           <span className="mr-1">Add Playlist</span> <Add />
         </Button>
         {playlistQuery.data.map((playlist, index) => (
-          <Button
-            className="mb-2 justify-start self-start text-start"
+          <div
+            className="m-1 mb-2 flex flex-col place-items-start bg-background-95 justify-start rounded-md border p-1"
             key={index}
-            variant={"link"}
-            asChild
           >
-            <Link href={`/collection/${userId}/playlists/${playlist.id}`}>
-              {playlist.name}
-            </Link>
-          </Button>
+            <Button variant={"link"} size={"link"} asChild>
+              <Link href={`/collection/${userId}/playlists/${playlist.id}`}>
+                {playlist.name}
+              </Link>
+            </Button>
+            <div className="inset-3 flex flex-row space-x-4">
+              <p className="px-2 text-xs  text-foreground/60">Author Name</p>
+              <p className=" text-xs  text-foreground/60">14</p>
+            </div>
+          </div>
         ))}
       </div>
       <AddPlaylistDialog

@@ -19,11 +19,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown";
 import { Button } from "@/components/ui/button";
 import { fetchUserPlaylists } from "@/features/playlists/queries";
+import { DropdownMenuRadioGroup } from "@radix-ui/react-dropdown-menu";
 
 interface CollectionEntryControlsProps {
   userId: string;
@@ -101,6 +103,16 @@ export function CollectionEntryControls({
           >
             Select game..
           </DropdownMenuCheckboxItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel>Played</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuCheckboxItem
+            checked={entry.played}
+            onCheckedChange={() => playedToggled.mutate(entry.gameId)}
+          >
+            Played game
+          </DropdownMenuCheckboxItem>
+          <DropdownMenuCheckboxItem>Completed game</DropdownMenuCheckboxItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <Menubar className="mx-1 mb-2">
