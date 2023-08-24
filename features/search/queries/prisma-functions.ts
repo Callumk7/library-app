@@ -1,4 +1,3 @@
-import { POST } from "@/app/api/artwork/route";
 import { prisma } from "@/lib/db/prisma";
 import { GameWithCoverAndGenres, GameWithCoverGenresUsers } from "@/types";
 

@@ -165,3 +165,43 @@ export const useDeleteGameFromPlaylist = (userId: string) => {
 
 	return deleteGameMutation;
 };
+
+// This one requires some thought as we have some interesting use cases..
+// 1. Can an owner of a playlist delete the playlist for everyone (yes, but deliberately)
+// 2. Starred playlists should be separate from owned playlists (deleting user-playlist relation)
+const deletePlaylist = async (playlistId: number) => {
+	const res = await fetch(`/api/playlists?playlistId=${playlistId}`, {
+		method: "DELETE",
+	});
+
+	if (!res.ok) {
+		throw new Error("Network response was not ok");
+	}
+
+	const data = await res.json();
+	return data as Playlist;
+};
+
+export const useDeletePlaylist = (userId: string) => {
+	const deletePlaylistMutation = useMutation({
+		mutationFn: (playlistId: number) => {
+			console.log("deleting playlist");
+			return deletePlaylist(playlistId);
+		},
+		onMutate: async (playlistId) => {
+			await queryClient.cancelQueries(["playlists", userId])
+			const oldState = queryClient.getQueryData([
+				"playlists",
+				userId,
+			]) as PlaylistWithGames[];
+			const newState = oldState.filter((playlist) => playlist.id !== playlistId);
+			queryClient.setQueryData(["playlists", userId], newState);
+		},
+
+		onSuccess: () => {
+			queryClient.invalidateQueries(["playlists", userId]);
+		},
+	});
+
+	return deletePlaylistMutation;
+};

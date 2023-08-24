@@ -1,7 +1,7 @@
-import { GameWithCoverAndGenres } from "@/types";
+import { GameWithCoverAndGenres, PlaylistWithGames } from "@/types";
 import { Playlist } from "@prisma/client";
 
-export async function fetchUserPlaylists(userId: string): Promise<Playlist[]> {
+export async function fetchUserPlaylists(userId: string): Promise<PlaylistWithGames[]> {
 	const res = await fetch(
 		`${process.env.NEXT_PUBLIC_FRONTLINE_URL}/api/playlists?userId=${userId}`,
 		{
@@ -14,7 +14,7 @@ export async function fetchUserPlaylists(userId: string): Promise<Playlist[]> {
 	}
 
 	const data = await res.json();
-	return data as Playlist[];
+	return data as PlaylistWithGames[];
 }
 
 export async function fetchGamesFromPlaylist(

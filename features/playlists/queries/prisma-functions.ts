@@ -1,12 +1,16 @@
 import { prisma } from "@/lib/db/prisma";
-import { Playlist } from "@prisma/client";
 
-export async function getPlaylists(userId: string): Promise<Playlist[]> {
+export async function getPlaylists(userId: string) {
 	console.time("get playlists");
 	const getPlaylists = await prisma.playlist.findMany({
 		where: {
 			userId,
 		},
+		include: {
+			_count: {
+				select: { games: true }
+			}
+		}
 	});
 
 	console.timeEnd("get playlists");
