@@ -19,12 +19,13 @@ import { Input } from "@/components/ui/form";
 import { AddPlaylistDialog } from "@/features/playlists/components/AddPlaylistDialog";
 import { useDeleteManyMutation } from "../queries/mutations";
 import { useBulkAddGameToPlaylist } from "@/features/playlists/queries/mutations";
+import { useQuery } from "@tanstack/react-query";
+import { usePlaylistQuery } from "@/lib/hooks/queries";
 
 interface CollectionViewMenubarProps {
   userId: string;
   checkedGames: number[];
   genres: string[];
-  playlists: Playlist[];
   genreFilter: string[];
   searchTerm: string;
   isPlayedFilterActive: boolean;
@@ -42,7 +43,6 @@ export function CollectionViewMenubar({
   userId,
   checkedGames,
   genres,
-  playlists,
   genreFilter,
   searchTerm,
   handleCheckAll,
@@ -56,6 +56,8 @@ export function CollectionViewMenubar({
   handleToggleAllGenres,
 }: CollectionViewMenubarProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
+  const playlistQuery = usePlaylistQuery(userId);
 
   const deleteMany = useDeleteManyMutation(userId);
   const addManyToPlaylist = useBulkAddGameToPlaylist(userId);
@@ -87,6 +89,12 @@ export function CollectionViewMenubar({
               </MenubarRadioItem>
               <MenubarRadioItem onSelect={() => setSortOption("rating")} value={"rating"}>
                 Rating
+              </MenubarRadioItem>
+              <MenubarRadioItem onSelect={() => setSortOption("releaseDateAsc")} value={"releaseDateAsc"}>
+                Release Date (asc)
+              </MenubarRadioItem>
+              <MenubarRadioItem onSelect={() => setSortOption("releaseDateDesc")} value={"releaseDateDesc"}>
+                Release Date (desc)
               </MenubarRadioItem>
             </MenubarRadioGroup>
           </MenubarContent>
@@ -137,7 +145,7 @@ export function CollectionViewMenubar({
             <MenubarSub>
               <MenubarSubTrigger>Add to Playlist</MenubarSubTrigger>
               <MenubarSubContent>
-                {playlists.map((playlist, index) => (
+                {playlistQuery.data && playlistQuery.data.map((playlist, index) => (
                   <MenubarItem
                     id={String(playlist.id)}
                     key={index}

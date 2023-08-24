@@ -38,6 +38,42 @@ export const applySorting = (
 			break;
 		}
 
+		case "releaseDateAsc": {
+			let bReleaseDate = 0;
+			let aReleaseDate = 0;
+			sortedCollection.sort((a, b) => {
+				if (b.game.releaseDate === null) {
+					bReleaseDate = 0;
+				} else {
+					bReleaseDate = b.game.releaseDate.valueOf();
+				}
+				if (a.game.releaseDate === null) {
+					aReleaseDate = 0;
+				} else {
+					aReleaseDate = a.game.releaseDate.valueOf();
+				}
+				return aReleaseDate - bReleaseDate;
+			});
+			break;
+		}
+		case "releaseDateDesc": {
+			let bReleaseDate = 0;
+			let aReleaseDate = 0;
+			sortedCollection.sort((a, b) => {
+				if (b.game.releaseDate === null) {
+					bReleaseDate = 0;
+				} else {
+					bReleaseDate = b.game.releaseDate.valueOf();
+				}
+				if (a.game.releaseDate === null) {
+					aReleaseDate = 0;
+				} else {
+					aReleaseDate = a.game.releaseDate.valueOf();
+				}
+				return bReleaseDate - aReleaseDate;
+			});
+			break;
+		}
 		default:
 			break;
 	}
