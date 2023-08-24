@@ -12,7 +12,17 @@ export default function Searchbar() {
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.refresh();
+    // const splitSearchTerm = searchTerm.split(" ");
+    // let parsedTerm = "";
+    // for (let i = 0; i < splitSearchTerm.length; i++) {
+    //   const term = splitSearchTerm[i];
+    //   if (i === 0) {
+    //     parsedTerm += term;
+    //   } else if (i < splitSearchTerm.length) {
+    //     parsedTerm += "+";
+    //     parsedTerm += term;
+    //   }
+    // }
     router.push(`/search?q=${searchTerm}`);
   };
 

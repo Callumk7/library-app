@@ -5,13 +5,12 @@ import { useQuery } from "@tanstack/react-query";
 import { applySorting } from "@/util/sorting";
 
 import { CollectionWithGamesGenresPlaylists, SortOption } from "@/types";
-import { Playlist } from "@prisma/client";
 
 import { CollectionViewMenubar } from "./CollectionViewMenubar";
 import { GameCardCover } from "@/components/games/GameCardCover";
 import { CollectionEntryControls } from "./CollectionEntryControls";
 import { fetchFullCollection, fetchUserGenres } from "../queries";
-import { fetchUserPlaylists } from "@/features/playlists/queries";
+import { useCollectionQuery } from "@/lib/hooks/queries";
 
 const DEFAULT_SORT_OPTION: SortOption = "rating";
 
@@ -19,32 +18,19 @@ interface CollectionContainerProps {
   userId: string;
   collection: CollectionWithGamesGenresPlaylists[];
   genres: string[];
-  playlists: Playlist[];
 }
 
 export function ClientCollectionContainer({
   userId,
   collection,
   genres,
-  playlists,
 }: CollectionContainerProps) {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortOption, setSortOption] = useState<SortOption>(DEFAULT_SORT_OPTION);
   const [isPlayedFilterActive, setIsPlayedFilterActive] = useState<boolean>(false);
   const [checkedGames, setCheckedGames] = useState<number[]>([]);
 
-  const collectionQuery = useQuery({
-    queryKey: ["collection", userId],
-    queryFn: () => fetchFullCollection(userId),
-    initialData: collection,
-  });
-
-  const playlistQuery = useQuery({
-    queryKey: ["playlists", userId],
-    queryFn: () => fetchUserPlaylists(userId),
-    initialData: playlists,
- });
-
+  const collectionQuery = useCollectionQuery(userId, collection)
   // Will likely remove this, react query is probably too heavy here and provides very little value
   const genreQuery = useQuery({
     queryKey: ["genres", userId],
@@ -59,7 +45,7 @@ export function ClientCollectionContainer({
   // 2. filter out based on played filter.
   // 3. filter out based on genre filter.
   const filteredCollection = useMemo(() => {
-    let output = [...collectionQuery.data];
+    let output = [...collectionQuery.data!];
     if (searchTerm !== "") {
       output = output.filter((entry) =>
         entry.game.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -99,8 +85,8 @@ export function ClientCollectionContainer({
   };
 
   const handleCheckAll = () => {
-    const collectionIds = collectionQuery.data.map((entry) => entry.gameId);
-    console.log(collectionIds)
+    const collectionIds = collectionQuery.data!.map((entry) => entry.gameId);
+    console.log(collectionIds);
     setCheckedGames(collectionIds);
   };
 
@@ -145,7 +131,6 @@ export function ClientCollectionContainer({
         checkedGames={checkedGames}
         genreFilter={genreFilter}
         genres={genres}
-        playlists={playlistQuery.data}
         handleSearchTermChanged={handleSearchTermChanged}
         searchTerm={searchTerm}
         sortOption={sortOption}
@@ -159,11 +144,14 @@ export function ClientCollectionContainer({
       />
       <div className="mx-auto grid w-4/5 grid-cols-1 gap-4 md:w-full md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
         {sortedCollection.map((entry, index) => (
-          <GameCardCover key={index} game={entry.game} isCompleted={entry.completed}>
+          <GameCardCover
+            key={index}
+            game={entry.game}
+            isCompleted={entry.completed}
+          >
             <CollectionEntryControls
               userId={userId}
               entry={entry}
-              playlists={playlists}
               checkedGames={checkedGames}
               handleCheckedToggled={handleCheckedToggled}
               handleEntryCompletedToggled={handleEntryCompletedToggled}

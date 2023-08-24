@@ -74,6 +74,14 @@ const playlistWithGames = Prisma.validator<Prisma.PlaylistArgs>()({
 	},
 });
 
+const playlistWithGameCount = Prisma.validator<Prisma.PlaylistArgs>()({
+	include: {
+		_count: {
+			select: { games: true }
+		}
+	}
+})
+
 const playlistWithGamesAndCover = Prisma.validator<Prisma.PlaylistArgs>()({
 	include: {
 		games: {
@@ -100,6 +108,7 @@ type CollectionWithGamesGenresPlaylists = Prisma.UserGameCollectionGetPayload<
 >;
 
 type PlaylistWithGames = Prisma.PlaylistGetPayload<typeof playlistWithGames>;
+type PlaylistWithGameCount = Prisma.PlaylistGetPayload<typeof playlistWithGameCount>;
 type PlaylistWithGamesAndCover = Prisma.PlaylistGetPayload<
 	typeof playlistWithGamesAndCover
 >;
@@ -115,10 +124,11 @@ export type {
 	CollectionWithGamesAndGenres,
 	CollectionWithGamesGenresPlaylists,
 	PlaylistWithGames,
+	PlaylistWithGameCount,
 	PlaylistWithGamesAndCover,
 };
 
-type SortOption = "nameAsc" | "nameDesc" | "releaseDate" | "rating";
+type SortOption = "nameAsc" | "nameDesc" | "releaseDateAsc" | "releaseDateDesc" | "rating";
 export type { SortOption };
 
 // zod validation, primarily for data returned from IGDB.

@@ -6,8 +6,6 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { Playlist } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
 import { DeleteIcon } from "@/components/ui/icons/DeleteIcon";
 import { useDeleteMutation, useTogglePlayed } from "../queries/mutations";
 import { useAddGameToPlaylist } from "@/features/playlists/queries/mutations";
@@ -19,18 +17,18 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown";
 import { Button } from "@/components/ui/button";
-import { fetchUserPlaylists } from "@/features/playlists/queries";
-import { DropdownMenuRadioGroup } from "@radix-ui/react-dropdown-menu";
+import { usePlaylistQuery } from "@/lib/hooks/queries";
 
 interface CollectionEntryControlsProps {
   userId: string;
   entry: CollectionWithGamesGenresPlaylists;
-  playlists: Playlist[];
   checkedGames: number[];
   handleCheckedToggled: (gameId: number) => void;
   handleEntryCompletedToggled: (gameId: number) => Promise<void>;
@@ -39,7 +37,6 @@ interface CollectionEntryControlsProps {
 export function CollectionEntryControls({
   userId,
   entry,
-  playlists,
   checkedGames,
   handleCheckedToggled,
   handleEntryCompletedToggled,
@@ -49,15 +46,11 @@ export function CollectionEntryControls({
     checkedGames.some((game) => game !== entry.gameId)
   );
 
-  const playlistsQuery = useQuery({
-    queryKey: ["playlists", userId],
-    queryFn: () => fetchUserPlaylists(userId),
-    initialData: playlists,
-  });
+  const playlistsQuery = usePlaylistQuery(userId);
 
   useEffect(() => {
     const initCheckedArray = [];
-    for (const playlist of playlistsQuery.data) {
+    for (const playlist of playlistsQuery.data!) {
       if (entry.game.playlists.some((pl) => pl.playlistId === playlist.id)) {
         initCheckedArray.push(playlist.id);
       }
@@ -113,32 +106,14 @@ export function CollectionEntryControls({
             Played game
           </DropdownMenuCheckboxItem>
           <DropdownMenuCheckboxItem>Completed game</DropdownMenuCheckboxItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <Menubar className="mx-1 mb-2">
-        <MenubarMenu>
-          <MenubarTrigger>Status</MenubarTrigger>
-          <MenubarContent>
-            <MenubarCheckboxItem
-              checked={entry.played}
-              onCheckedChange={() => playedToggled.mutate(entry.gameId)}
-            >
-              Played
-            </MenubarCheckboxItem>
-            <MenubarCheckboxItem
-              checked={entry.completed}
-              onCheckedChange={() => handleEntryCompletedToggled(entry.gameId)}
-            >
-              Completed
-            </MenubarCheckboxItem>
-          </MenubarContent>
-        </MenubarMenu>
-        <MenubarMenu>
-          <MenubarTrigger>Playlists</MenubarTrigger>
-          <MenubarContent>
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel>Playlists</DropdownMenuLabel>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Add to Playlist</DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
             {playlistsQuery.data.map((playlist, index) => {
               return (
-                <MenubarCheckboxItem
+                <DropdownMenuCheckboxItem
                   key={index}
                   checked={playlistArray.some((playlistId) => playlistId === playlist.id)}
                   onCheckedChange={() =>
@@ -152,12 +127,13 @@ export function CollectionEntryControls({
                   }
                 >
                   {playlist.name}
-                </MenubarCheckboxItem>
+                </DropdownMenuCheckboxItem>
               );
             })}
-          </MenubarContent>
-        </MenubarMenu>
-      </Menubar>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </>
   );
 }

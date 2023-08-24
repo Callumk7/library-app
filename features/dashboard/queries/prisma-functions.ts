@@ -15,6 +15,11 @@ export async function getTopRatedGames(count: number): Promise<GameWithCoverAndG
 				},
 			},
 			cover: true,
+			users: {
+				include: {
+					user: true
+				}
+			}
 		},
 		orderBy: {
 			aggregatedRating: "desc",

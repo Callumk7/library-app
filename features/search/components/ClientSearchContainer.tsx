@@ -26,11 +26,6 @@ export function ClientSearchContainer({
   collectionIds,
 }: ClientSearchContainerProps) {
 
-  const collectionQuery = useQuery({
-    queryKey: ["collection", userId],
-    queryFn: () => fetchFullCollection(userId),
-    initialData: collection,
-  });
 
   return (
     <div className="mx-auto w-4/5 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">

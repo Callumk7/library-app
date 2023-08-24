@@ -22,7 +22,7 @@ export function PlaylistContainer({ userId, playlistId, games }: PlaylistContain
   return (
     <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {playlistQuery.data.map((game, index) => (
-        <GameCardCover key={index} game={game} isCompleted={false}>
+        <GameCardCover key={index} game={game}>
           <PlaylistEntryControls playlistId={playlistId} game={game} userId={userId} />
         </GameCardCover>
       ))}

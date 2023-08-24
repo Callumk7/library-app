@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { GameWithCoverGenresUsers } from "@/types";
 import { Toast, ToastClose, ToastDescription, ToastTitle } from "@/components/ui/toast";
