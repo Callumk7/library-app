@@ -4,7 +4,7 @@ export async function fetchFullCollection(
 	userId: string
 ): Promise<CollectionWithGamesGenresPlaylists[]> {
 	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_FRONTLINE_URL}/api/collection?userId=${userId}`,
+		`/api/collection?userId=${userId}`,
 		{
 			method: "GET",
 		}
@@ -41,7 +41,7 @@ export async function addGameToCollection(
 	gameId: number
 ): Promise<{ userId: string; gameId: number }> {
 	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_FRONTLINE_URL}/api/collection/games?gameId=${gameId}`,
+		`/api/collection/games?gameId=${gameId}`,
 		{
 			method: "POST",
 		}
@@ -57,7 +57,7 @@ export async function addGameToCollection(
 
 export async function fetchUserGenres(userId: string): Promise<string[]> {
 	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_FRONTLINE_URL}/api/genres?userId=${userId}`,
+		`/api/genres?userId=${userId}`,
 		{
 			method: "GET",
 		}
