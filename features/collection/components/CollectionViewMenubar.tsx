@@ -1,4 +1,3 @@
-import { Playlist } from "@prisma/client";
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -18,31 +17,28 @@ import { useState } from "react";
 import { Input } from "@/components/ui/form";
 import { AddPlaylistDialog } from "@/features/playlists/components/AddPlaylistDialog";
 import { useDeleteManyMutation } from "../queries/mutations";
+import { useBulkAddGameToPlaylist } from "@/features/playlists/queries/mutations";
+import { usePlaylistQuery } from "@/lib/hooks/queries";
 
 interface CollectionViewMenubarProps {
   userId: string;
   checkedGames: number[];
   genres: string[];
-  playlists: Playlist[];
   genreFilter: string[];
   searchTerm: string;
-  isPlayedFilterActive: boolean;
   sortOption: SortOption;
   handleCheckAll: () => void;
   handleUncheckAll: () => void;
   setSortOption: (option: SortOption) => void;
   handleSearchTermChanged: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handlePlayedFilterClicked: () => void;
   handleGenreToggled: (genre: string) => void;
   handleToggleAllGenres: () => void;
-  handleBulkAddToPlaylist: (playlistId: number) => Promise<void>;
 }
 
 export function CollectionViewMenubar({
   userId,
   checkedGames,
   genres,
-  playlists,
   genreFilter,
   searchTerm,
   handleCheckAll,
@@ -50,15 +46,15 @@ export function CollectionViewMenubar({
   sortOption,
   setSortOption,
   handleSearchTermChanged,
-  isPlayedFilterActive,
-  handlePlayedFilterClicked,
   handleGenreToggled,
   handleToggleAllGenres,
-  handleBulkAddToPlaylist,
 }: CollectionViewMenubarProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
+  const playlistQuery = usePlaylistQuery(userId);
+
   const deleteMany = useDeleteManyMutation(userId);
+  const addManyToPlaylist = useBulkAddGameToPlaylist(userId);
 
   return (
     <div className="flex flex-row space-x-6">
@@ -88,18 +84,18 @@ export function CollectionViewMenubar({
               <MenubarRadioItem onSelect={() => setSortOption("rating")} value={"rating"}>
                 Rating
               </MenubarRadioItem>
+              <MenubarRadioItem onSelect={() => setSortOption("releaseDateAsc")} value={"releaseDateAsc"}>
+                Release Date (asc)
+              </MenubarRadioItem>
+              <MenubarRadioItem onSelect={() => setSortOption("releaseDateDesc")} value={"releaseDateDesc"}>
+                Release Date (desc)
+              </MenubarRadioItem>
             </MenubarRadioGroup>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
           <MenubarTrigger>Filter</MenubarTrigger>
           <MenubarContent>
-            <MenubarCheckboxItem
-              checked={isPlayedFilterActive}
-              onCheckedChange={handlePlayedFilterClicked}
-            >
-              Played
-            </MenubarCheckboxItem>
             <MenubarSub>
               <MenubarSubTrigger inset>Genres</MenubarSubTrigger>
               <MenubarSubContent>
@@ -123,18 +119,30 @@ export function CollectionViewMenubar({
         <MenubarMenu>
           <MenubarTrigger>Actions</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem onClick={() => deleteMany.mutate(checkedGames)} className="focus-visible:bg-destructive/80">
+            <MenubarItem
+              onClick={() => deleteMany.mutate(checkedGames)}
+              className="focus-visible:bg-destructive/80"
+            >
               Delete selected
             </MenubarItem>
-            <MenubarItem onClick={handleCheckAll}>Select all...</MenubarItem>
+            <MenubarItem
+              onClick={checkedGames.length > 0 ? handleUncheckAll : handleCheckAll}
+            >
+              {checkedGames.length > 0 ? "Deselect all" : "Select all"}
+            </MenubarItem>
             <MenubarSub>
               <MenubarSubTrigger>Add to Playlist</MenubarSubTrigger>
               <MenubarSubContent>
-                {playlists.map((playlist, index) => (
+                {playlistQuery.data && playlistQuery.data.map((playlist, index) => (
                   <MenubarItem
                     id={String(playlist.id)}
                     key={index}
-                    onClick={() => handleBulkAddToPlaylist(playlist.id)}
+                    onClick={() =>
+                      addManyToPlaylist.mutate({
+                        playlistId: playlist.id,
+                        gameIds: checkedGames,
+                      })
+                    }
                   >
                     {playlist.name}
                   </MenubarItem>

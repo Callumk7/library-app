@@ -115,12 +115,13 @@ export async function PATCH(
 	req: NextRequest,
 	{ params }: { params: { gameId: number } }
 ) {
-	const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
-
+	const url = new URL(req.url);
+	const searchParams = new URLSearchParams(url.search);
+	const userId = searchParams.get("userId");
 	const gameId = Number(params.gameId);
 
 	if (!userId) {
-		return NextResponse.error();
+		return new NextResponse("No user id provided", {status: 401})
 	}
 
 	const gameJson = await req.json();

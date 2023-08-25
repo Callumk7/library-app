@@ -1,6 +1,31 @@
-export function Tag({ children }: { children: React.ReactNode }) {
+import { VariantProps, cva } from "class-variance-authority";
+import clsx from "clsx";
+
+const tagVariants = cva("inline rounded-lg", {
+  variants: {
+    variant: {
+      default: "bg-accent text-accent-foreground/80",
+      primary: "bg-primary text-primary-foreground",
+    },
+    size: {
+      default: "text-[10px] px-2 py-1",
+      lg: "text-sm px-3 py-2",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+    size: "default",
+  },
+});
+
+interface TagProps extends VariantProps<typeof tagVariants> {
+  children?: React.ReactNode;
+  className?: string
+}
+
+export function Tag({ children, className, variant, size }: TagProps) {
   return (
-    <div className="inline rounded-lg bg-accent px-2 py-1 text-[10px] text-accent-foreground/80">
+    <div className={clsx(tagVariants({ variant, size, className }))}>
       {children}
     </div>
   );

@@ -4,18 +4,16 @@ import Link from "next/link";
 import clsx from "clsx";
 import { Tag } from "../ui/tag";
 import { RatingLine } from "./Rating";
+import { UserRatingSlider } from "./UserRatingSlider";
+import { InCollectionTag } from "./InCollectionTag";
 
-interface CollectionItemProps {
+interface GameCardCoverProps {
   game: GameWithCoverAndGenres;
-  isCompleted: boolean;
+  isCompleted?: boolean;
   children: React.ReactNode;
 }
 
-export function GameCardCover({
-  game,
-  isCompleted,
-  children,
-}: CollectionItemProps) {
+export function GameCardCover({ game, isCompleted, children }: GameCardCoverProps) {
   const size: IGDBImage = "720p";
 
   let borderStyle = "border hover:border-foreground";
@@ -27,11 +25,17 @@ export function GameCardCover({
       "border border-orange-500/40 hover:border-orange-500 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40";
   }
 
+  let releaseDateStr = "";
+  if (game.releaseDate === null) {
+    releaseDateStr += "unknown release date..";
+  } else {
+    releaseDateStr = new Date(game.releaseDate * 1000).toDateString();
+  }
   return (
     <div
       className={clsx(
         borderStyle,
-        "relative flex max-w-sm flex-col items-center justify-between overflow-hidden rounded-lg text-foreground"
+        "relative flex max-w-sm flex-col items-center justify-between overflow-hidden rounded-lg text-foreground hover:bg-midnight-5"
       )}
     >
       <Link
@@ -44,19 +48,21 @@ export function GameCardCover({
           width={720}
           height={1280}
         />
-        <RatingLine
-          percent={game.aggregatedRating ? game.aggregatedRating : 0}
-          strokeWidth={2}
-          strokeColor="#F0F757"
-          trailColor=""
-        />
-        <div className="absolute inset-0 flex items-center justify-center bg-background/70 opacity-0 transition ease-in-out group-hover:opacity-100">
-          <div className="absolute bottom-3 left-3 text-l text-foreground">
-            <div>{game.title.toUpperCase()}</div>
-          </div>
+        <div className="flex flex-col gap-y-3">
+          <RatingLine
+            percent={game.aggregatedRating ? game.aggregatedRating : 0}
+            strokeWidth={2}
+            strokeColor="#F0F757"
+            trailColor=""
+          />
+          <UserRatingSlider />
         </div>
       </Link>
+      <div className="w-full content-start px-2 py-2 text-xs font-light text-foreground/90">
+        {releaseDateStr}
+      </div>
       <div className="m-2 flex flex-wrap gap-2">
+        <InCollectionTag gameId={game.gameId} />
         {game.genres.map((genre, index) => (
           <Tag key={index}>{genre.genre.name}</Tag>
         ))}

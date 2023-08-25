@@ -3,7 +3,13 @@ import {
   getFullCollection,
 } from "@/features/collection/queries/prisma-functions";
 import { ClientSearchContainer } from "@/features/search/components/ClientSearchContainer";
-import { searchGames, searchGamesWithUsers } from "@/features/search/queries/prisma-functions";
+import { ExternalResultsContainer } from "@/features/search/components/ExternalResultsContainer";
+import {
+  searchGames,
+  searchGamesWithUsers,
+} from "@/features/search/queries/prisma-functions";
+import { IGDBGame, IGDBGameSchema } from "@/types";
+import { getSearchResults } from "@/util/igdb";
 
 export default async function SearchPage({
   searchParams,
@@ -14,26 +20,33 @@ export default async function SearchPage({
   const query = searchParams.q;
   console.log(query);
 
-  const results = await searchGames(query);
-  const resultsWithUsers = await searchGamesWithUsers(query);
-  const collection = await getFullCollection(userId);
-  const collectionIds = await getCollectionGameIds(userId);
+  const [results, igdbResults, resultsWithUsers, collection, collectionIds] =
+    await Promise.all([
+      searchGames(query),
+      getSearchResults(query),
+      searchGamesWithUsers(query),
+      getFullCollection(userId),
+      getCollectionGameIds(userId),
+    ]);
 
-  if (results.length === 0) {
-    // search and process IGDB
-    // for now display no results
-    return <div>No results to show</div>;
+  const externalResults: IGDBGame[] = [];
+  for (const result of igdbResults) {
+    const validResult = IGDBGameSchema.parse(result);
+    externalResults.push(validResult);
   }
 
   return (
-    <div className="mt-10">
-      <ClientSearchContainer
-        results={results}
-        resultsWithUsers={resultsWithUsers}
-        userId={userId}
-        collection={collection}
-        collectionIds={collectionIds}
-      />
+    <div className="mt-10 grid grid-cols-3 gap-4">
+      <div className="col-span-2">
+        <ClientSearchContainer
+          results={results}
+          resultsWithUsers={resultsWithUsers}
+          userId={userId}
+          collection={collection}
+          collectionIds={collectionIds}
+        />
+      </div>
+      <ExternalResultsContainer results={externalResults} />
     </div>
   );
 }

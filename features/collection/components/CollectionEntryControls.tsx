@@ -1,15 +1,10 @@
-import { CollectionWithGamesGenresPlaylists } from "@/types";
 import {
-  Menubar,
-  MenubarCheckboxItem,
-  MenubarContent,
-  MenubarMenu,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
-import { Playlist } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
+  CollectionWithGamesGenresPlaylists,
+  GameWithCoverAndGenres,
+  GameWithCoverGenresPlaylists,
+} from "@/types";
 import { DeleteIcon } from "@/components/ui/icons/DeleteIcon";
-import { useDeleteMutation } from "../queries/mutations";
+import { useDeleteMutation, useTogglePlayed } from "../queries/mutations";
 import { useAddGameToPlaylist } from "@/features/playlists/queries/mutations";
 import { useEffect, useState } from "react";
 import { MenuIcon } from "@/components/ui/icons/MenuIcon";
@@ -20,60 +15,60 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown";
 import { Button } from "@/components/ui/button";
-import { fetchUserPlaylists } from "@/features/playlists/queries";
+import { usePlaylistQuery, useGamePlaylistsQuery } from "@/lib/hooks/queries";
+import { Toast, ToastClose, ToastDescription, ToastTitle } from "@/components/ui/toast";
 
 interface CollectionEntryControlsProps {
   userId: string;
-  entry: CollectionWithGamesGenresPlaylists;
-  playlists: Playlist[];
+  game: GameWithCoverAndGenres;
   checkedGames: number[];
   handleCheckedToggled: (gameId: number) => void;
-  handleEntryPlayedToggled: (gameId: number) => Promise<void>;
-  handleEntryCompletedToggled: (gameId: number) => Promise<void>;
 }
 
 export function CollectionEntryControls({
   userId,
-  entry,
-  playlists,
+  game,
   checkedGames,
   handleCheckedToggled,
-  handleEntryPlayedToggled,
-  handleEntryCompletedToggled,
 }: CollectionEntryControlsProps) {
   const [playlistArray, setPlaylistArray] = useState<number[]>([]);
+  const [saveToastOpen, setSaveToastOpen] = useState<boolean>(false);
+  const [deleteGameToastOpen, setDeleteGameToastOpen] = useState<boolean>(false);
   const [isChecked, setIsChecked] = useState<boolean>(() =>
-    checkedGames.some((game) => game !== entry.gameId)
+    checkedGames.some((gameId) => gameId !== game.gameId)
   );
 
-  const playlistsQuery = useQuery({
-    queryKey: ["playlists", userId],
-    queryFn: () => fetchUserPlaylists(userId),
-    initialData: playlists,
-  });
+  const gamePlaylistsQuery = useGamePlaylistsQuery(userId, game.gameId);
+  const userPlaylistsQuery = usePlaylistQuery(userId);
 
   useEffect(() => {
     const initCheckedArray = [];
-    for (const playlist of playlistsQuery.data) {
-      if (entry.game.playlists.some((pl) => pl.playlistId === playlist.id)) {
-        initCheckedArray.push(playlist.id);
+    for (const playlist of userPlaylistsQuery.data!) {
+      if (gamePlaylistsQuery.data) {
+        if (gamePlaylistsQuery.data.some((pl) => pl.id === playlist.id)) {
+          initCheckedArray.push(playlist.id);
+        }
       }
     }
 
     setPlaylistArray(initCheckedArray);
-  }, [entry.game.playlists, playlistsQuery.data]);
+  }, [userPlaylistsQuery.data, gamePlaylistsQuery.data]);
 
   // Effect for ensuring that the controls instantly reflect that games are selected
   // when a user does a mass toggle
   useEffect(() => {
-    setIsChecked(checkedGames.some((game) => game === entry.gameId));
-  }, [checkedGames, entry.gameId]);
+    setIsChecked(checkedGames.some((gameId) => gameId === game.gameId));
+  }, [checkedGames, game]);
 
   const deleteEntry = useDeleteMutation(userId);
   const addToPlaylist = useAddGameToPlaylist(userId);
+  const playedToggled = useTogglePlayed(userId);
 
   return (
     <>
@@ -87,8 +82,12 @@ export function CollectionEntryControls({
           <DropdownMenuLabel>Manage Game</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            className="focus-visible:bg-destructive/80"
-            onClick={() => deleteEntry.mutate(entry.gameId)}
+            className="focus:bg-destructive/80"
+            onClick={() =>
+              deleteEntry.mutate(game.gameId, {
+                onSuccess: () => setDeleteGameToastOpen(true),
+              })
+            }
           >
             <DeleteIcon className="mr-2 h-4 w-4" />
             <span>Delete from collection</span>
@@ -96,57 +95,58 @@ export function CollectionEntryControls({
           <DropdownMenuCheckboxItem
             checked={isChecked}
             onCheckedChange={() => {
-              handleCheckedToggled(entry.gameId);
+              handleCheckedToggled(game.gameId);
               setIsChecked(!isChecked);
             }}
           >
             Select game..
           </DropdownMenuCheckboxItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel>Playlists</DropdownMenuLabel>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Add to Playlist</DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              {userPlaylistsQuery.data!.map((playlist, index) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={index}
+                    checked={playlistArray.some(
+                      (playlistId) => playlistId === playlist.id
+                    )}
+                    onCheckedChange={() =>
+                      addToPlaylist.mutate(
+                        { playlistId: playlist.id, gameId: game.gameId },
+                        {
+                          onSuccess: (data, variables) => {
+                            setPlaylistArray([...playlistArray, variables.playlistId]);
+                            setSaveToastOpen(true);
+                          },
+                        }
+                      )
+                    }
+                  >
+                    {playlist.name}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
         </DropdownMenuContent>
       </DropdownMenu>
-      <Menubar className="mx-1 mb-2">
-        <MenubarMenu>
-          <MenubarTrigger>Status</MenubarTrigger>
-          <MenubarContent>
-            <MenubarCheckboxItem
-              checked={entry.played}
-              onCheckedChange={() => handleEntryPlayedToggled(entry.gameId)}
-            >
-              Played
-            </MenubarCheckboxItem>
-            <MenubarCheckboxItem
-              checked={entry.completed}
-              onCheckedChange={() => handleEntryCompletedToggled(entry.gameId)}
-            >
-              Completed
-            </MenubarCheckboxItem>
-          </MenubarContent>
-        </MenubarMenu>
-        <MenubarMenu>
-          <MenubarTrigger>Playlists</MenubarTrigger>
-          <MenubarContent>
-            {playlistsQuery.data.map((playlist, index) => {
-              return (
-                <MenubarCheckboxItem
-                  key={index}
-                  checked={playlistArray.some((playlistId) => playlistId === playlist.id)}
-                  onCheckedChange={() =>
-                    addToPlaylist.mutate(
-                      { playlistId: playlist.id, gameId: entry.gameId },
-                      {
-                        onSuccess: (data, variables) =>
-                          setPlaylistArray([...playlistArray, variables.playlistId]),
-                      }
-                    )
-                  }
-                >
-                  {playlist.name}
-                </MenubarCheckboxItem>
-              );
-            })}
-          </MenubarContent>
-        </MenubarMenu>
-      </Menubar>
+      <Toast open={saveToastOpen} onOpenChange={setSaveToastOpen} variant={"default"}>
+        <ToastTitle>{game.title} added to collection</ToastTitle>
+        <ToastDescription>Well done lad</ToastDescription>
+        <ToastClose />
+      </Toast>
+      <Toast
+        open={deleteGameToastOpen}
+        onOpenChange={setDeleteGameToastOpen}
+        variant={"destructive"}
+      >
+        <ToastTitle>{game.title} removed from collection!</ToastTitle>
+        <ToastDescription>Bold move sucker</ToastDescription>
+        <ToastClose />
+      </Toast>
     </>
   );
 }

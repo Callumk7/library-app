@@ -14,10 +14,9 @@ export default async function CollectionPage({ params }: { params: { userId: str
     return <h1>NOT YOU, GET OUT</h1>;
   }
 
-  const [genres, collection, playlists] = await Promise.all([
+  const [genres, collection] = await Promise.all([
     getUserGenres(userId),
     getFullCollection(userId),
-    getPlaylists(userId),
   ]);
 
   return (
@@ -26,7 +25,6 @@ export default async function CollectionPage({ params }: { params: { userId: str
         userId={userId}
         collection={collection}
         genres={genres}
-        playlists={playlists}
       />
     </main>
   );

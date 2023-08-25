@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { isArray, isNumber } from "util";
 
+// TODO: Does this route do anything? 
 export async function POST(
 	req: NextRequest,
 	{ params }: { params: { playlistId: string } }

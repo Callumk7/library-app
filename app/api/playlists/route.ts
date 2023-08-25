@@ -1,7 +1,7 @@
 import {
 	deletePlaylist,
 	getGamesInPlaylist,
-	getPlaylists,
+    getPlaylistsWithGames,
 } from "@/features/playlists/queries/prisma-functions";
 import { prisma } from "@/lib/db/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
 
 	if (!playlistIdParam) {
 		try {
-			const playlists = await getPlaylists(userId);
+			const playlists = await getPlaylistsWithGames(userId);
 			const body = JSON.stringify(playlists);
 			return new NextResponse(body, {
 				headers: {
