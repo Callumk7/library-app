@@ -22,7 +22,7 @@ export async function fetchUserPlaylists(userId: string): Promise<PlaylistWithGa
 
 export async function fetchGamePlaylists(gameId: number): Promise<Playlist[]> {
 	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_FRONTLINE_URL}/api/games/playlists?gameId=${gameId}`,
+		`/api/games/playlists?gameId=${gameId}`,
 		{
 			method: "GET",
 		}

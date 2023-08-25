@@ -20,7 +20,7 @@ export async function fetchFullCollection(
 
 export async function fetchCollectionGameIds(userId: string): Promise<number[]> {
 	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_FRONTLINE_URL}/api/collection/ids?userId=${userId}`,
+		`/api/collection/ids?userId=${userId}`,
 		{
 			method: "GET",
 			headers: {
