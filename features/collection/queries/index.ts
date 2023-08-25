@@ -23,6 +23,9 @@ export async function fetchCollectionGameIds(userId: string): Promise<number[]> 
 		`${process.env.NEXT_PUBLIC_FRONTLINE_URL}/api/collection/ids?userId=${userId}`,
 		{
 			method: "GET",
+			headers: {
+				Accept: "application/json"
+			}
 		}
 	);
 

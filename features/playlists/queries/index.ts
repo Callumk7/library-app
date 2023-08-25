@@ -6,6 +6,9 @@ export async function fetchUserPlaylists(userId: string): Promise<PlaylistWithGa
 		`${process.env.NEXT_PUBLIC_FRONTLINE_URL}/api/playlists?userId=${userId}`,
 		{
 			method: "GET",
+			headers: {
+				Accept: "application/json",
+			},
 		}
 	);
 
@@ -41,6 +44,9 @@ export async function fetchGamesFromPlaylist(
 		`${process.env.NEXT_PUBLIC_FRONTLINE_URL}/api/playlists?userId=${userId}&playlistId=${playlistId}`,
 		{
 			method: "GET",
+			headers: {
+				Accept: "application/json",
+			},
 		}
 	);
 
@@ -69,9 +75,12 @@ export async function fetchUserPlaylistTitles(userId: string): Promise<string[]>
 }
 
 export async function deletePlaylistFromServer(playlistId: number) {
-	const res = await fetch(`${process.env.NEXT_PUBLIC_FRONTLINE_URL}/api/playlists?playlistId=${playlistId}`, {
-		method: "DELETE",
-	})
+	const res = await fetch(
+		`${process.env.NEXT_PUBLIC_FRONTLINE_URL}/api/playlists?playlistId=${playlistId}`,
+		{
+			method: "DELETE",
+		}
+	);
 
 	if (!res.ok) {
 		throw new Error("Network response was not ok");
