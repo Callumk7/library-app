@@ -4,6 +4,7 @@ import {
   getFullCollection,
   getUserGenres,
 } from "@/features/collection/queries/prisma-functions";
+import { fetchFullCollection } from "@/features/collection/queries";
 
 export const revalidate = 300;
 
@@ -16,7 +17,7 @@ export default async function CollectionPage({ params }: { params: { userId: str
 
   const [genres, collection] = await Promise.all([
     getUserGenres(userId),
-    getFullCollection(userId),
+    fetchFullCollection(userId),
   ]);
 
   return (
