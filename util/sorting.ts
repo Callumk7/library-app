@@ -1,20 +1,20 @@
-import { CollectionWithGamesGenresPlaylists, SortOption } from "@/types";
+import { CollectionWithGamesGenresPlaylists, GameWithCoverAndGenres, GameWithCoverGenresPlaylists, SortOption } from "@/types";
 
 export const applySorting = (
-	collection: CollectionWithGamesGenresPlaylists[],
+	games: GameWithCoverAndGenres[],
 	sortOption: SortOption
-): CollectionWithGamesGenresPlaylists[] => {
-	const sortedCollection = [...collection];
+): GameWithCoverAndGenres[] => {
+	const sortedCollection = [...games];
 	switch (sortOption) {
 		case "nameAsc":
 			sortedCollection.sort((a, b) =>
-				a.game.title.toUpperCase().localeCompare(b.game.title.toUpperCase())
+				a.title.toUpperCase().localeCompare(b.title.toUpperCase())
 			);
 			break;
 
 		case "nameDesc":
 			sortedCollection.sort((a, b) =>
-				b.game.title.toUpperCase().localeCompare(a.game.title.toUpperCase())
+				b.title.toUpperCase().localeCompare(a.title.toUpperCase())
 			);
 			break;
 
@@ -22,16 +22,16 @@ export const applySorting = (
 			let bRating = 0;
 			let aRating = 0;
 			sortedCollection.sort((a, b) => {
-				if (b.game.aggregatedRating === null) {
+				if (b.aggregatedRating === null) {
 					bRating = 0;
 				} else {
-					bRating = b.game.aggregatedRating;
+					bRating = b.aggregatedRating;
 				}
 
-				if (a.game.aggregatedRating === null) {
+				if (a.aggregatedRating === null) {
 					aRating = 0;
 				} else {
-					aRating = a.game.aggregatedRating;
+					aRating = a.aggregatedRating;
 				}
 				return bRating - aRating;
 			});
@@ -42,15 +42,15 @@ export const applySorting = (
 			let bReleaseDate = 0;
 			let aReleaseDate = 0;
 			sortedCollection.sort((a, b) => {
-				if (b.game.releaseDate === null) {
+				if (b.releaseDate === null) {
 					bReleaseDate = 0;
 				} else {
-					bReleaseDate = b.game.releaseDate.valueOf();
+					bReleaseDate = b.releaseDate.valueOf();
 				}
-				if (a.game.releaseDate === null) {
+				if (a.releaseDate === null) {
 					aReleaseDate = 0;
 				} else {
-					aReleaseDate = a.game.releaseDate.valueOf();
+					aReleaseDate = a.releaseDate.valueOf();
 				}
 				return aReleaseDate - bReleaseDate;
 			});
@@ -60,15 +60,15 @@ export const applySorting = (
 			let bReleaseDate = 0;
 			let aReleaseDate = 0;
 			sortedCollection.sort((a, b) => {
-				if (b.game.releaseDate === null) {
+				if (b.releaseDate === null) {
 					bReleaseDate = 0;
 				} else {
-					bReleaseDate = b.game.releaseDate.valueOf();
+					bReleaseDate = b.releaseDate.valueOf();
 				}
-				if (a.game.releaseDate === null) {
+				if (a.releaseDate === null) {
 					aReleaseDate = 0;
 				} else {
-					aReleaseDate = a.game.releaseDate.valueOf();
+					aReleaseDate = a.releaseDate.valueOf();
 				}
 				return bReleaseDate - aReleaseDate;
 			});

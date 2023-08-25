@@ -1,31 +1,27 @@
-import { CollectionWithGamesGenresPlaylists, SortOption } from "@/types";
+import { GameWithCoverAndGenres, GameWithCoverGenresPlaylists, SortOption } from "@/types";
 import { applySorting } from "@/util/sorting";
 import { useMemo, useState } from "react";
 
 export const useSortAndFilter = (
 	DEFAULT_SORT_OPTION: SortOption,
 	genres: string[],
-	collection: CollectionWithGamesGenresPlaylists[]
+	games: GameWithCoverAndGenres[]
 ) => {
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [sortOption, setSortOption] = useState<SortOption>(DEFAULT_SORT_OPTION);
-	const [isPlayedFilterActive, setIsPlayedFilterActive] = useState<boolean>(false);
 	const [genreFilter, setGenreFilter] = useState<string[]>(genres);
 	const [checkedGames, setCheckedGames] = useState<number[]>([]);
 
 	const filteredCollection = useMemo(() => {
-		let output = [...collection];
+		let output = [...games];
 		if (searchTerm !== "") {
-			output = output.filter((entry) =>
-				entry.game.title.toLowerCase().includes(searchTerm.toLowerCase())
+			output = output.filter((game) =>
+				game.title.toLowerCase().includes(searchTerm.toLowerCase())
 			);
 		}
-		if (isPlayedFilterActive) {
-			output = output.filter((entry) => entry.played);
-		}
 
-		output = output.filter((entry) => {
-			for (const genre of entry.game.genres) {
+		output = output.filter((game) => {
+			for (const genre of game.genres) {
 				if (genreFilter.includes(genre.genre.name)) {
 					return true;
 				}
@@ -33,7 +29,7 @@ export const useSortAndFilter = (
 			return false;
 		});
 		return output;
-	}, [searchTerm, isPlayedFilterActive, genreFilter, collection]);
+	}, [searchTerm,  genreFilter, games]);
 
 	const sortedCollection = useMemo(() => {
 		return applySorting(filteredCollection, sortOption);
@@ -61,10 +57,6 @@ export const useSortAndFilter = (
 		setCheckedGames([]);
 	};
 
-	const handlePlayedFilterClicked = () => {
-		setIsPlayedFilterActive(!isPlayedFilterActive);
-	};
-
   const handleGenreToggled = (genre: string) => {
     // handle genre toggled
     setGenreFilter((prevGenreFilter) =>
@@ -89,8 +81,6 @@ export const useSortAndFilter = (
 		sortOption,
 		setSortOption,
 		checkedGames,
-		isPlayedFilterActive,
-		setIsPlayedFilterActive,
 		genreFilter,
 		setGenreFilter,
 		sortedCollection,
@@ -99,7 +89,6 @@ export const useSortAndFilter = (
 		handleCheckedToggled,
 		handleCheckAll,
 		handleUncheckAll,
-		handlePlayedFilterClicked,
 		handleGenreToggled,
 		handleToggleAllGenres
 	};

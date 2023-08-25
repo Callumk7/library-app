@@ -20,6 +20,22 @@ const gameWithCoverAndGenres = Prisma.validator<Prisma.GameArgs>()({
 	},
 });
 
+const gameWithCoverGenresPlaylists = Prisma.validator<Prisma.GameArgs>()({
+	include: {
+		cover: true,
+		genres: {
+			include: {
+				genre: true,
+			},
+		},
+		playlists: {
+			include: {
+				playlist: true,
+			},
+		},
+	},
+});
+
 const gameWithCoverGenresUsers = Prisma.validator<Prisma.GameArgs>()({
 	include: {
 		cover: true,
@@ -77,10 +93,10 @@ const playlistWithGames = Prisma.validator<Prisma.PlaylistArgs>()({
 const playlistWithGameCount = Prisma.validator<Prisma.PlaylistArgs>()({
 	include: {
 		_count: {
-			select: { games: true }
-		}
-	}
-})
+			select: { games: true },
+		},
+	},
+});
 
 const playlistWithGamesAndCover = Prisma.validator<Prisma.PlaylistArgs>()({
 	include: {
@@ -99,6 +115,7 @@ const playlistWithGamesAndCover = Prisma.validator<Prisma.PlaylistArgs>()({
 type GameWithCover = Prisma.GameGetPayload<typeof gameWithCover>;
 type GameWithCoverAndGenres = Prisma.GameGetPayload<typeof gameWithCoverAndGenres>;
 type GameWithCoverGenresUsers = Prisma.GameGetPayload<typeof gameWithCoverGenresUsers>;
+type GameWithCoverGenresPlaylists = Prisma.GameGetPayload<typeof gameWithCoverGenresPlaylists>;
 
 type CollectionWithGamesAndGenres = Prisma.UserGameCollectionGetPayload<
 	typeof collectionWithGamesAndGenres
@@ -121,6 +138,7 @@ export type {
 	GameWithCover,
 	GameWithCoverAndGenres,
 	GameWithCoverGenresUsers,
+	GameWithCoverGenresPlaylists,
 	CollectionWithGamesAndGenres,
 	CollectionWithGamesGenresPlaylists,
 	PlaylistWithGames,
@@ -128,7 +146,12 @@ export type {
 	PlaylistWithGamesAndCover,
 };
 
-type SortOption = "nameAsc" | "nameDesc" | "releaseDateAsc" | "releaseDateDesc" | "rating";
+type SortOption =
+	| "nameAsc"
+	| "nameDesc"
+	| "releaseDateAsc"
+	| "releaseDateDesc"
+	| "rating";
 export type { SortOption };
 
 // zod validation, primarily for data returned from IGDB.

@@ -1,6 +1,6 @@
 "use client";
 
-import { CollectionWithGamesGenresPlaylists, SortOption } from "@/types";
+import { CollectionWithGamesGenresPlaylists, GameWithCoverGenresPlaylists, SortOption } from "@/types";
 
 import { CollectionViewMenubar } from "./CollectionViewMenubar";
 import { GameCardCover } from "@/components/games/GameCardCover";
@@ -21,25 +21,26 @@ export function ClientCollectionContainer({
   collection,
   genres,
 }: CollectionContainerProps) {
+  const collectionQuery = useCollectionQuery(userId, collection);
+  const games: GameWithCoverGenresPlaylists[] = []; 
 
-  const collectionQuery = useCollectionQuery(userId, collection)
+  // We need to extract the game types from the collection type
+  collectionQuery.data?.forEach(entry => games.push(entry.game))
 
   const {
-		searchTerm,
-		sortOption,
-		setSortOption,
-		checkedGames,
-		isPlayedFilterActive,
-		genreFilter,
-		sortedCollection,
-		handleSearchTermChanged,
-		handleCheckedToggled,
-		handleCheckAll,
-		handleUncheckAll,
-		handlePlayedFilterClicked,
-		handleGenreToggled,
-		handleToggleAllGenres
-  } = useSortAndFilter(DEFAULT_SORT_OPTION, genres, collectionQuery.data!);
+    searchTerm,
+    sortOption,
+    setSortOption,
+    checkedGames,
+    genreFilter,
+    sortedCollection,
+    handleSearchTermChanged,
+    handleCheckedToggled,
+    handleCheckAll,
+    handleUncheckAll,
+    handleGenreToggled,
+    handleToggleAllGenres,
+  } = useSortAndFilter(DEFAULT_SORT_OPTION, genres, games);
 
   return (
     <>
@@ -54,25 +55,19 @@ export function ClientCollectionContainer({
         handleCheckAll={handleCheckAll}
         handleUncheckAll={handleUncheckAll}
         setSortOption={setSortOption}
-        isPlayedFilterActive={isPlayedFilterActive}
-        handlePlayedFilterClicked={handlePlayedFilterClicked}
         handleGenreToggled={handleGenreToggled}
         handleToggleAllGenres={handleToggleAllGenres}
       />
       <div className="mx-auto grid w-4/5 grid-cols-1 gap-4 md:w-full md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-        {sortedCollection.map((entry, index) => (
-            <GameCardCover
-              key={index}
-              game={entry.game}
-              isCompleted={entry.completed}
-            >
-              <CollectionEntryControls
-                userId={userId}
-                entry={entry}
-                checkedGames={checkedGames}
-                handleCheckedToggled={handleCheckedToggled}
-              />
-            </GameCardCover>
+        {sortedCollection.map((game, index) => (
+          <GameCardCover key={index} game={game} >
+            <CollectionEntryControls
+              userId={userId}
+              game={game}
+              checkedGames={checkedGames}
+              handleCheckedToggled={handleCheckedToggled}
+            />
+          </GameCardCover>
         ))}
       </div>
     </>

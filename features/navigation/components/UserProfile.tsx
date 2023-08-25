@@ -10,7 +10,7 @@ export function UserProfile() {
     return (
       <div className="flex flex-row place-items-center justify-center space-x-4 align-middle">
         <p> signed in as {session.user?.name}</p>
-        <Button variant={"secondary"} size={"sm"} asChild>
+        <Button variant={"ghost"} size={"sm"} asChild>
           <Link href="/api/auth/signout">Sign out</Link>
         </Button>
       </div>

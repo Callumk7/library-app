@@ -1,4 +1,3 @@
-import { Playlist } from "@prisma/client";
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -19,7 +18,6 @@ import { Input } from "@/components/ui/form";
 import { AddPlaylistDialog } from "@/features/playlists/components/AddPlaylistDialog";
 import { useDeleteManyMutation } from "../queries/mutations";
 import { useBulkAddGameToPlaylist } from "@/features/playlists/queries/mutations";
-import { useQuery } from "@tanstack/react-query";
 import { usePlaylistQuery } from "@/lib/hooks/queries";
 
 interface CollectionViewMenubarProps {
@@ -28,13 +26,11 @@ interface CollectionViewMenubarProps {
   genres: string[];
   genreFilter: string[];
   searchTerm: string;
-  isPlayedFilterActive: boolean;
   sortOption: SortOption;
   handleCheckAll: () => void;
   handleUncheckAll: () => void;
   setSortOption: (option: SortOption) => void;
   handleSearchTermChanged: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handlePlayedFilterClicked: () => void;
   handleGenreToggled: (genre: string) => void;
   handleToggleAllGenres: () => void;
 }
@@ -50,8 +46,6 @@ export function CollectionViewMenubar({
   sortOption,
   setSortOption,
   handleSearchTermChanged,
-  isPlayedFilterActive,
-  handlePlayedFilterClicked,
   handleGenreToggled,
   handleToggleAllGenres,
 }: CollectionViewMenubarProps) {
@@ -102,12 +96,6 @@ export function CollectionViewMenubar({
         <MenubarMenu>
           <MenubarTrigger>Filter</MenubarTrigger>
           <MenubarContent>
-            <MenubarCheckboxItem
-              checked={isPlayedFilterActive}
-              onCheckedChange={handlePlayedFilterClicked}
-            >
-              Played
-            </MenubarCheckboxItem>
             <MenubarSub>
               <MenubarSubTrigger inset>Genres</MenubarSubTrigger>
               <MenubarSubContent>

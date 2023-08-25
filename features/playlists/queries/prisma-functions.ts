@@ -8,9 +8,9 @@ export async function getPlaylists(userId: string) {
 		},
 		include: {
 			_count: {
-				select: { games: true }
-			}
-		}
+				select: { games: true },
+			},
+		},
 	});
 
 	console.timeEnd("get playlists");
@@ -29,6 +29,20 @@ export async function getPlaylist(playlistId: number) {
 	});
 
 	return getPlaylist;
+}
+
+export async function getGamePlaylists(gameId: number) {
+	const getGamePlaylists = await prisma.playlist.findMany({
+		where: {
+			games: {
+				some: {
+					gameId: gameId,
+				},
+			},
+		},
+	});
+
+	return getGamePlaylists;
 }
 
 export async function getPlaylistWithGames(playlistId: number) {
