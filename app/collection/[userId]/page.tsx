@@ -1,12 +1,8 @@
-import { getPlaylists } from "@/features/playlists/queries/prisma-functions";
 import { ClientCollectionContainer } from "@/features/collection/components/ClientCollectionContainer";
 import {
   getFullCollection,
   getUserGenres,
 } from "@/features/collection/queries/prisma-functions";
-import { fetchFullCollection } from "@/features/collection/queries";
-
-export const revalidate = 300;
 
 export default async function CollectionPage({ params }: { params: { userId: string } }) {
   const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
@@ -17,7 +13,7 @@ export default async function CollectionPage({ params }: { params: { userId: str
 
   const [genres, collection] = await Promise.all([
     getUserGenres(userId),
-    fetchFullCollection(userId),
+    getFullCollection(userId),
   ]);
 
   return (

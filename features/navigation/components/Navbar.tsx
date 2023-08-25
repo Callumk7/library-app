@@ -4,16 +4,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Searchbar from "./Searchbar";
 import { UserProfile } from "./UserProfile";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
 
 export default function Navbar() {
+  const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
   return (
     <nav className="flex h-16 w-full justify-center border">
       <div className="flex w-full max-w-4xl items-center justify-between p-3 text-sm text-foreground">
@@ -22,7 +15,7 @@ export default function Navbar() {
             <Link href={`/`}>Home</Link>
           </Button>
           <Button asChild variant={"default"} size={"sm"}>
-            <Link href={`/collection`}>My Collection</Link>
+            <Link href={`/collection/${userId}`}>My Collection</Link>
           </Button>
           <Searchbar />
           <UserProfile />
