@@ -59,8 +59,8 @@ export function ClientCollectionContainer({
         handleToggleAllGenres={handleToggleAllGenres}
       />
       <div className="mx-auto grid w-4/5 grid-cols-1 gap-4 md:w-full md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-        {sortedCollection.map((game, index) => (
-          <GameCardCover key={index} game={game} >
+        {sortedCollection.map((game) => (
+          <GameCardCover key={game.id} game={game} >
             <CollectionEntryControls
               userId={userId}
               game={game}
