@@ -54,9 +54,9 @@ export async function POST(req: NextRequest) {
 	if (game.genres) {
 		if (game.genres.length > 0) {
 			console.log("we have genres..");
-			const processedGenres = [];
+			const promises = [];
 			for (const genre of game.genres) {
-				const upsertGenre = await prisma.genre.upsert({
+				const upsertGenre = prisma.genre.upsert({
 					where: {
 						externalId: genre.id,
 					},
@@ -71,15 +71,14 @@ export async function POST(req: NextRequest) {
 					},
 				});
 
-				processedGenres.push({
-					gameId: game.id,
-					id: upsertGenre.id,
-				});
+				promises.push(upsertGenre);
 			}
+			const results = await Promise.all(promises);
 
-			for (const genre of processedGenres) {
-				console.log(`${genre.gameId} game id, ${genre.id} genre id`);
-				const connectGenre = await prisma.genresOnGames.upsert({
+			for (const genre of results) {
+				console.log(`${game.id} game id, ${genre.id} genre id`);
+			const promises = [];
+				const connectGenre = prisma.genresOnGames.upsert({
 					where: {
 						gameId_genreId: {
 							gameId: game.id,
@@ -88,12 +87,22 @@ export async function POST(req: NextRequest) {
 					},
 					update: {},
 					create: {
-						gameId: genre.gameId,
+						gameId: game.id,
 						genreId: genre.id,
 					},
 				});
 
-				console.log(`genre connection made: ${connectGenre.genreId}`);
+				promises.push(connectGenre);
+				console.log(`genre connection promise made: ${genre.id}`);
+			}
+			const connectionResults = await Promise.all(promises);
+			if (connectionResults.length === results.length) {
+				console.log("Good news everyone! It looks like all connections are completed")
+			} else {
+				console.log("Something went wrong.. we have")
+				console.log(`${results.length} genres processed, but only`)
+				console.log(`${connectionResults.length} connections processed.. `)
+				console.log(`${game.name}, id: ${game.id}`)
 			}
 		}
 	}
@@ -101,8 +110,9 @@ export async function POST(req: NextRequest) {
 	// handle artwork
 	if (game.artworks) {
 		console.log(`${game.artworks.length} artworks to process`);
+		const promises = [];
 		for (const artwork of game.artworks) {
-			const upsertArtwork = await prisma.artwork.upsert({
+			const upsertArtwork = prisma.artwork.upsert({
 				where: {
 					imageId: artwork.image_id,
 				},
@@ -112,15 +122,19 @@ export async function POST(req: NextRequest) {
 					gameId: game.id,
 				},
 			});
-
-			console.log(`artwork posted to ${game.name}, id: ${upsertArtwork.id}`);
+			promises.push(upsertArtwork);
+			console.log(`artwork promise to ${game.name}, id: ${artwork.id}`);
 		}
+
+		const results = await Promise.all(promises);
+		console.log(`${results.length} promises completed: Artwork`);
 	}
 
 	if (game.screenshots) {
 		console.log(`${game.screenshots.length} screenshots to process`);
+		const promises = [];
 		for (const screenshot of game.screenshots) {
-			const upsertScreenshot = await prisma.screenshot.upsert({
+			const upsertScreenshot = prisma.screenshot.upsert({
 				where: {
 					imageId: screenshot.image_id,
 				},
@@ -131,10 +145,13 @@ export async function POST(req: NextRequest) {
 				},
 			});
 
-			console.log(`screenshot posted to ${game.name}, id: ${upsertScreenshot.id}`);
+			promises.push(upsertScreenshot);
+			console.log(`screenshot posted to ${game.name}, id: ${screenshot.id}`);
 		}
+		const results = await Promise.all(promises);
+		console.log(`${results.length} promises completed: Screenshots`);
 	}
 
-	const resBody = JSON.stringify(game)
-	return new NextResponse(resBody, {status: 200});
+	const resBody = JSON.stringify(game);
+	return new NextResponse(resBody, { status: 200 });
 }
