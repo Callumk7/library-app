@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/db/prisma";
-import { GameWithCoverAndGenres } from "@/types";
+import { GameWithCoverAndGenres, GameWithCoverGenresUsers } from "@/types";
 
-export async function getTopRatedGames(count: number): Promise<GameWithCoverAndGenres[]> {
+export async function getTopRatedGames(
+	count: number
+): Promise<GameWithCoverGenresUsers[]> {
 	const games = await prisma.game.findMany({
 		where: {
 			aggregatedRatingCount: {
@@ -17,9 +19,9 @@ export async function getTopRatedGames(count: number): Promise<GameWithCoverAndG
 			cover: true,
 			users: {
 				include: {
-					user: true
-				}
-			}
+					user: true,
+				},
+			},
 		},
 		orderBy: {
 			aggregatedRating: "desc",
