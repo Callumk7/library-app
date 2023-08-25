@@ -22,7 +22,7 @@ interface CollectionContainerProps {
 }
 
 export function ClientCollectionContainer({ userId, collection, genres }: CollectionContainerProps) {
-  const collectionQuery = useCollectionQuery(userId);
+  const collectionQuery = useCollectionQuery(userId, collection);
   const [games, setGames] = useState<GameWithCoverGenresPlaylists[]>([]);
 
   // We need to extract the game types from the collection type

@@ -6,6 +6,8 @@ import {
 	UserGameCollection,
 } from "@/types";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+
 
 const postGameToCollection = async (gameId: number, userId: string) => {
 	const res = await fetch(`/api/collection?gameId=${gameId}&userId=${userId}`, {
@@ -22,15 +24,20 @@ const postGameToCollection = async (gameId: number, userId: string) => {
 };
 
 export const useAddToCollectionMutation = (userId: string) => {
+	const router = useRouter();
 	const addMutation = useMutation({
 		mutationFn: (gameId: number) => {
 			console.log("adding to collection..");
 			return postGameToCollection(gameId, userId);
 		},
 
-		onSuccess: (collectionEntry) => {
+		onSuccess: async (collectionEntry) => {
 			console.log(`success ${collectionEntry.gameId}`);
 			queryClient.invalidateQueries(["collection", userId]);
+			router.refresh();
+			const res = await fetch("/api/revalidate?path=/collection/[userId]")
+			const body = await res.json();
+			console.log(body);
 		},
 	});
 
@@ -51,6 +58,7 @@ const deleteGameFromCollection = async (gameId: number, userId: string) => {
 };
 
 export const useDeleteMutation = (userId: string) => {
+	const router = useRouter();
 	const deleteMutation = useMutation({
 		mutationFn: (gameId: number) => {
 			console.log("deleting game from collection");
@@ -79,9 +87,13 @@ export const useDeleteMutation = (userId: string) => {
 			console.log("mutation successful");
 		},
 
-		onSettled: () => {
+		onSettled: async () => {
 			console.log("settled");
 			queryClient.invalidateQueries({ queryKey: ["collection", userId] });
+			router.refresh();
+			const res = await fetch("/api/revalidate?path=/collection/[userId]")
+			const body = await res.json();
+			console.log(body);
 		},
 	});
 
@@ -110,6 +122,7 @@ const deleteManyGamesFromCollection = async (gameIds: number[], userId: string) 
 };
 
 export const useDeleteManyMutation = (userId: string) => {
+	const router = useRouter()
 	const deleteManyMutation = useMutation({
 		mutationFn: (gameIds: number[]) => {
 			return deleteManyGamesFromCollection(gameIds, userId);
@@ -138,9 +151,13 @@ export const useDeleteManyMutation = (userId: string) => {
 			console.log("mutation successful");
 		},
 
-		onSettled: () => {
+		onSettled: async () => {
 			console.log("settled");
 			queryClient.invalidateQueries({ queryKey: ["collection", userId] });
+			router.refresh();
+			const res = await fetch("/api/revalidate?path=/collection/[userId]")
+			const body = await res.json();
+			console.log(body);
 		},
 	});
 

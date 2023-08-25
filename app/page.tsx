@@ -2,6 +2,8 @@ import { GameCardCover } from "@/components/games/GameCardCover";
 import { getTopRatedGames } from "@/features/dashboard/queries/prisma-functions";
 import { SearchResultEntryControls } from "@/features/search/components/SearchResultEntryControls";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
   const games = await getTopRatedGames(30);
