@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
 				aggregatedRating: game.aggregated_rating,
 				aggregatedRatingCount: game.aggregated_rating_count,
 				storyline: game.storyline ? game.storyline : null,
+				releaseDate: game.first_release_date ? game.first_release_date : null
 			},
 			create: {
 				gameId: game.id,
@@ -41,6 +42,7 @@ export async function POST(req: NextRequest) {
 				aggregatedRating: game.aggregated_rating,
 				aggregatedRatingCount: game.aggregated_rating_count,
 				storyline: game.storyline ? game.storyline : null,
+				releaseDate: game.first_release_date ? game.first_release_date : null
 			},
 		});
 
