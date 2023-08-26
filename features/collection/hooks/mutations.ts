@@ -1,4 +1,4 @@
-import { queryClient } from "@/lib/db/query";
+import { queryClient } from "@/lib/clients/react-query";
 import {
 	CollectionWithGamesAndGenres,
 	CollectionWithGamesGenresPlaylists,

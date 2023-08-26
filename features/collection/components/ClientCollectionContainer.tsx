@@ -9,9 +9,9 @@ import {
 import { CollectionViewMenubar } from "./CollectionViewMenubar";
 import { GameCardCover } from "@/components/games/GameCardCover";
 import { CollectionEntryControls } from "./CollectionEntryControls";
-import { useCollectionQuery } from "@/lib/hooks/queries";
-import { useSortAndFilter } from "../hooks";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import { useSortAndFilter } from "../hooks/filtering";
+import { useCollectionQuery } from "../hooks/queries";
 
 const DEFAULT_SORT_OPTION: SortOption = "rating";
 

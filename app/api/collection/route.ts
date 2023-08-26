@@ -1,7 +1,7 @@
 import { CollectionWithGamesGenresPlaylists } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 import { getFullCollection } from "@/features/collection/queries/prisma-functions";
-import { prisma } from "@/lib/db/prisma";
+import { prisma } from "@/lib/clients/prisma";
 
 // GET entire collection, and sub data (genres, artworks, screenshots)
 // in one go. This is the initial fetch of all data

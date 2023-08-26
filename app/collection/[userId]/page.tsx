@@ -1,8 +1,6 @@
 import { ClientCollectionContainer } from "@/features/collection/components/ClientCollectionContainer";
-import {
-  getFullCollection,
-  getUserGenres,
-} from "@/features/collection/queries/prisma-functions";
+import { getFullCollection } from "@/features/collection/hooks/queries";
+import { getUserGenres } from "@/features/collection/queries/prisma-functions";
 
 export default async function CollectionPage({ params }: { params: { userId: string } }) {
   const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";

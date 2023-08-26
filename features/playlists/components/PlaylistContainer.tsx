@@ -2,12 +2,10 @@
 
 import { GameCardCover } from "@/components/games/GameCardCover";
 import { GameWithCoverAndGenres } from "@/types";
-import { useQuery } from "@tanstack/react-query";
-import { fetchGamesFromPlaylist } from "../queries";
 import { PlaylistEntryControls } from "./PlaylistEntryControls";
 import { CollectionViewMenubar } from "@/features/collection/components/CollectionViewMenubar";
-import { useSortAndFilter } from "@/features/collection/hooks";
-import { usePlaylistGamesQuery } from "@/lib/hooks/queries";
+import { useSortAndFilter } from "@/features/collection/hooks/filtering";
+import { useGamesFromPlaylistQuery } from "../hooks/queries";
 
 const DEFAULT_SORT_OPTION = "rating";
 
@@ -24,7 +22,8 @@ export function PlaylistContainer({
   playlistId,
   games,
 }: PlaylistContainerProps) {
-  const playlistGamesQuery = usePlaylistGamesQuery(userId, playlistId, games);
+  const gamesFromPlaylistQuery = useGamesFromPlaylistQuery(userId, playlistId, games);
+  console.log(gamesFromPlaylistQuery.data)
 
   const {
     searchTerm,
@@ -39,7 +38,7 @@ export function PlaylistContainer({
     handleUncheckAll,
     handleGenreToggled,
     handleToggleAllGenres,
-  } = useSortAndFilter(DEFAULT_SORT_OPTION, genres, playlistGamesQuery.data!);
+  } = useSortAndFilter(DEFAULT_SORT_OPTION, genres, gamesFromPlaylistQuery.data!);
 
   return (
     <>

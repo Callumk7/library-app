@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db/prisma";
+import { prisma } from "@/lib/clients/prisma";
 import { GameWithCoverAndGenres, GameWithCoverGenresUsers } from "@/types";
 
 export async function getTopRatedGames(

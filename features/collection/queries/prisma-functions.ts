@@ -1,5 +1,5 @@
+import { prisma } from "@/lib/clients/prisma";
 import { CollectionWithGamesGenresPlaylists } from "@/types";
-import { prisma } from "@/lib/db/prisma";
 
 export async function getFullCollection(
 	userId: string

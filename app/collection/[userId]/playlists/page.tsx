@@ -1,5 +1,5 @@
 import { PlaylistCard } from "@/features/playlists/components/PlaylistCard";
-import { getPlaylistsWithGames } from "@/features/playlists/queries/prisma-functions";
+import { getPlaylistsWithGames } from "@/features/playlists/hooks/queries";
 import { PlaylistWithGamesAndCover } from "@/types";
 
 export default async function PlaylistsPage() {

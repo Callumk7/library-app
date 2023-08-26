@@ -3,12 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { Add } from "@/components/ui/icons/Add";
 import { DeleteIcon } from "@/components/ui/icons/DeleteIcon";
-import { usePlaylistQuery } from "@/lib/hooks/queries";
 import { PlaylistWithGames } from "@/types";
 import Link from "next/link";
 import { useState } from "react";
-import { useDeletePlaylist } from "../queries/mutations";
 import { AddPlaylistDialog } from "./AddPlaylistDialog";
+import { useDeletePlaylist } from "../hooks/mutations";
+import { usePlaylistQuery } from "../hooks/queries";
 
 interface PlaylistSidebarProps {
   userId: string;

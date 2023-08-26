@@ -1,4 +1,4 @@
-import { getGamePlaylists } from "@/features/playlists/queries/prisma-functions";
+import { getGamePlaylists } from "@/features/playlists/hooks/queries";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {

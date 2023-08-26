@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/db/prisma";
-import { IGDBGame, IGDBGameSchema } from "@/types";
+import { prisma } from "@/lib/clients/prisma";
+import { IGDBGameSchema } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {

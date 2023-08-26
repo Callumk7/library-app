@@ -16,9 +16,9 @@ import { SortOption } from "@/types";
 import { useState } from "react";
 import { Input } from "@/components/ui/form";
 import { AddPlaylistDialog } from "@/features/playlists/components/AddPlaylistDialog";
-import { useDeleteManyMutation } from "../queries/mutations";
-import { useBulkAddGameToPlaylist } from "@/features/playlists/queries/mutations";
-import { usePlaylistQuery } from "@/lib/hooks/queries";
+import { useBulkAddGameToPlaylist } from "@/features/playlists/hooks/mutations";
+import { usePlaylistQuery } from "@/features/playlists/hooks/queries";
+import { useDeleteManyMutation } from "../hooks/mutations";
 
 interface CollectionViewMenubarProps {
   userId: string;

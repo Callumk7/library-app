@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/form";
 import { useState } from "react";
-import { useAddPlaylist } from "../queries/mutations";
+import { useAddPlaylist } from "../hooks/mutations";
 
 export default function AddPlaylistForm({ userId }: { userId: string }) {
   const [playlistName, setPlaylistName] = useState("");
