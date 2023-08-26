@@ -33,6 +33,7 @@ export async function getFullCollection(
 	});
 
 	console.timeEnd("get collection");
+	console.log(userCollection)
 	return userCollection;
 }
 
@@ -67,6 +68,25 @@ export const useCollectionQuery = (
 ///
 /// FETCH COLLECTION IDS: PRISMA, FETCH REQUEST, REACT QUERY
 ///
+export async function getCollectionGameIds(userId: string): Promise<number[]> {
+	console.time("get collection game ids");
+	const findCollection = await prisma.userGameCollection.findMany({
+		where: {
+			userId,
+		},
+		select: {
+			gameId: true,
+		},
+	});
+
+	const results = [];
+	for (const result of findCollection) {
+		results.push(result.gameId);
+	}
+	console.timeEnd("get collection game ids");
+	return results;
+}
+
 async function fetchCollectionGameIds(userId: string): Promise<number[]> {
 	const res = await fetch(`/api/collection/ids?userId=${userId}`, {
 		method: "GET",

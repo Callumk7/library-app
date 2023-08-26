@@ -63,7 +63,7 @@ export function GameCardCover({ game, isCompleted, children }: GameCardCoverProp
       </div>
       <div className="m-2 flex flex-wrap gap-2">
         <InCollectionTag gameId={game.gameId} />
-        {game.genres.map((genre, index) => (
+        {game.genres.length > 0 && game.genres.map((genre, index) => (
           <Tag key={index}>{genre.genre.name}</Tag>
         ))}
       </div>
