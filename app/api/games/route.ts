@@ -1,5 +1,4 @@
-import { searchGames } from "@/features/search/queries/prisma-functions";
-import { prisma } from "@/lib/db/prisma";
+import { searchGames, searchGamesWithUsers } from "@/features/search/hooks/queries";
 import { Job } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,7 +12,7 @@ export async function GET(req: NextRequest) {
 
 	if (query) {
 		console.log(`search query: ${query}`);
-		const results = await searchGames(query);
+		const results = await searchGamesWithUsers(query);
 
 		if (results.length === 0) {
 			console.log("no results found");
