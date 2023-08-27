@@ -2,10 +2,9 @@ import { GameWithCoverAndGenres, IGDBImage } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
-import { Tag } from "../ui/tag";
 import { RatingLine } from "./Rating";
 import { UserRatingSlider } from "./UserRatingSlider";
-import { InCollectionTag } from "./InCollectionTag";
+import { GenreTags } from "./GenreTags";
 
 interface GameCardCoverProps {
   game: GameWithCoverAndGenres;
@@ -31,6 +30,7 @@ export function GameCardCover({ game, isCompleted, children }: GameCardCoverProp
   } else {
     releaseDateStr = new Date(game.releaseDate * 1000).toDateString();
   }
+
   return (
     <div
       className={clsx(
@@ -48,6 +48,7 @@ export function GameCardCover({ game, isCompleted, children }: GameCardCoverProp
           width={720}
           height={1280}
         />
+      </Link>
         <div className="flex flex-col gap-y-3">
           <RatingLine
             percent={game.aggregatedRating ? game.aggregatedRating : 0}
@@ -56,16 +57,10 @@ export function GameCardCover({ game, isCompleted, children }: GameCardCoverProp
             trailColor=""
           />
           <UserRatingSlider />
+          <GenreTags game={game} />
         </div>
-      </Link>
       <div className="w-full content-start px-2 py-2 text-xs font-light text-foreground/90">
         {releaseDateStr}
-      </div>
-      <div className="m-2 flex flex-wrap gap-2">
-        <InCollectionTag gameId={game.gameId} />
-        {game.genres.length > 0 && game.genres.map((genre, index) => (
-          <Tag key={index}>{genre.genre.name}</Tag>
-        ))}
       </div>
       {children}
     </div>
