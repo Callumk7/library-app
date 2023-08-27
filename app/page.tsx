@@ -1,5 +1,5 @@
 import { GameCardCover } from "@/components/games/GameCardCover";
-import { getTopRatedGames } from "@/features/dashboard/queries/prisma-functions";
+import { getTopRatedGames } from "@/features/dashboard/hooks/queries";
 import { SearchResultEntryControls } from "@/features/search/components/SearchResultEntryControls";
 
 export const dynamic = "force-dynamic";
