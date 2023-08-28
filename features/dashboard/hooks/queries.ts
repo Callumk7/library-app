@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/clients/prisma";
-import { GameWithCoverAndGenres, GameWithCoverGenresUsers } from "@/types";
+import { GameWithCoverGenresUsers } from "@/types";
 
 export async function getTopRatedGames(
 	count: number
@@ -25,6 +25,39 @@ export async function getTopRatedGames(
 		},
 		orderBy: {
 			aggregatedRating: "desc",
+		},
+		take: count,
+	});
+
+	return games;
+}
+
+export async function getTopRatedGamesFromGenre(genreId: number, count: number) {
+	const games = await prisma.genresOnGames.findMany({
+		where: {
+			genreId: genreId,
+		},
+		select: {
+			genre: {
+				select: {
+					name: true,
+				},
+			},
+			game: {
+				include: {
+					cover: true,
+					genres: {
+						include: {
+							genre: true,
+						},
+					},
+				},
+			},
+		},
+		orderBy: {
+			game: {
+				aggregatedRating: "asc",
+			},
 		},
 		take: count,
 	});
