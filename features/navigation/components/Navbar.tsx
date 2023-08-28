@@ -14,7 +14,7 @@ export default function Navbar() {
           <Button asChild variant={"ghost"} size={"sm"}>
             <Link href={`/`}>Home</Link>
           </Button>
-          <Button asChild variant={"default"} size={"sm"}>
+          <Button asChild variant={"secondary"} size={"sm"}>
             <Link href={`/collection/${userId}`}>My Collection</Link>
           </Button>
           <Searchbar />
