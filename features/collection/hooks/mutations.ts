@@ -225,3 +225,65 @@ export const useTogglePlayed = (userId: string) => {
 
 	return markAsPlayedMutation;
 };
+
+const patchToggleGameAsCompleted = async (
+	userId: string,
+	gameId: number,
+	completed: boolean
+) => {
+	const res = await fetch(`/api/collection/games/${gameId}?userId=${userId}`, {
+		method: "PATCH",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ completed: completed }),
+	});
+
+	if (!res.ok) {
+		throw new Error("network response was not ok");
+	}
+
+	const data = await res.json();
+	return data as Game;
+};
+
+export const useToggleCompleted = (userId: string) => {
+	const markAsPlayedMutation = useMutation({
+		mutationFn: (gameId: number) => {
+			console.log("toggling played");
+
+			const prevState = queryClient.getQueryData([
+				"collection",
+				userId,
+			]) as CollectionWithGamesAndGenres[];
+
+			const completed = prevState.find((game) => game.gameId === gameId)!.completed;
+			console.log(completed)
+			return patchToggleGameAsCompleted(userId, gameId, completed);
+		},
+
+		onMutate: (gameId) => {
+			queryClient.cancelQueries(["collection", userId]);
+			const prevState = queryClient.getQueryData([
+				"collection",
+				userId,
+			]) as CollectionWithGamesAndGenres[];
+
+			const newState = prevState.map((game) => {
+				if (game.gameId === gameId) {
+					return { ...game, played: !game.played };
+				}
+				return game;
+			});
+
+			queryClient.setQueryData(["collection", userId], newState);
+		},
+
+		onSuccess: () => {
+			console.log("completed toggled successfully");
+			queryClient.invalidateQueries(["collection", userId]);
+		},
+	});
+
+	return markAsPlayedMutation;
+};
