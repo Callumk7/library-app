@@ -11,8 +11,8 @@ export default function Navbar() {
   const pathName = usePathname();
   const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
   return (
-    <nav className="flex h-16 w-full justify-between border">
-      <div className="mx-auto flex w-4/5 items-center justify-between p-3 text-sm text-foreground">
+    <nav className="mx-auto flex w-4/5 justify-between rounded-md border">
+      <div className="mx-auto flex w-full items-center justify-between px-4 py-3 text-sm text-foreground">
         <div className="flex flex-row space-x-3 align-middle">
           <Button asChild variant={pathName === "/" ? "secondary" : "ghost"} size={"sm"}>
             <Link href={`/`}>
@@ -20,7 +20,11 @@ export default function Navbar() {
               <span>Home</span>
             </Link>
           </Button>
-          <Button asChild variant={pathName.startsWith("/collection") ? "secondary" : "ghost"} size={"sm"}>
+          <Button
+            asChild
+            variant={pathName.startsWith("/collection") ? "secondary" : "ghost"}
+            size={"sm"}
+          >
             <Link href={`/collection/${userId}`}>
               <Playlist className="mr-2" />
               <span>My Collection</span>
