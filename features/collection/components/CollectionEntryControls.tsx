@@ -1,11 +1,7 @@
 import {
-  CollectionWithGamesGenresPlaylists,
   GameWithCoverAndGenres,
-  GameWithCoverGenresPlaylists,
 } from "@/types";
 import { DeleteIcon } from "@/components/ui/icons/DeleteIcon";
-import { useDeleteMutation, useTogglePlayed } from "../queries/mutations";
-import { useAddGameToPlaylist } from "@/features/playlists/queries/mutations";
 import { useEffect, useState } from "react";
 import { MenuIcon } from "@/components/ui/icons/MenuIcon";
 import {
@@ -21,8 +17,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown";
 import { Button } from "@/components/ui/button";
-import { usePlaylistQuery, useGamePlaylistsQuery } from "@/lib/hooks/queries";
 import { Toast, ToastClose, ToastDescription, ToastTitle } from "@/components/ui/toast";
+import { useAddGameToPlaylist } from "@/features/playlists/hooks/mutations";
+import { useGamePlaylistsQuery, usePlaylistQuery } from "@/features/playlists/hooks/queries";
+import { useDeleteMutation, useTogglePlayed } from "../hooks/mutations";
 
 interface CollectionEntryControlsProps {
   userId: string;

@@ -1,4 +1,4 @@
-import { queryClient } from "@/lib/db/query";
+import { queryClient } from "@/lib/clients/react-query";
 import {
 	CollectionWithGamesAndGenres,
 	CollectionWithGamesGenresPlaylists,
@@ -6,6 +6,8 @@ import {
 	UserGameCollection,
 } from "@/types";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+
 
 const postGameToCollection = async (gameId: number, userId: string) => {
 	const res = await fetch(`/api/collection?gameId=${gameId}&userId=${userId}`, {
@@ -17,19 +19,25 @@ const postGameToCollection = async (gameId: number, userId: string) => {
 	}
 
 	const data = await res.json();
+	console.log(data)
 	return data as UserGameCollection;
 };
 
 export const useAddToCollectionMutation = (userId: string) => {
+	const router = useRouter();
 	const addMutation = useMutation({
 		mutationFn: (gameId: number) => {
 			console.log("adding to collection..");
 			return postGameToCollection(gameId, userId);
 		},
 
-		onSuccess: (collectionEntry) => {
+		onSuccess: async (collectionEntry) => {
 			console.log(`success ${collectionEntry.gameId}`);
 			queryClient.invalidateQueries(["collection", userId]);
+			router.refresh();
+			const res = await fetch("/api/revalidate?path=/collection/[userId]")
+			const body = await res.json();
+			console.log(body);
 		},
 	});
 
@@ -50,6 +58,7 @@ const deleteGameFromCollection = async (gameId: number, userId: string) => {
 };
 
 export const useDeleteMutation = (userId: string) => {
+	const router = useRouter();
 	const deleteMutation = useMutation({
 		mutationFn: (gameId: number) => {
 			console.log("deleting game from collection");
@@ -78,9 +87,13 @@ export const useDeleteMutation = (userId: string) => {
 			console.log("mutation successful");
 		},
 
-		onSettled: () => {
+		onSettled: async () => {
 			console.log("settled");
 			queryClient.invalidateQueries({ queryKey: ["collection", userId] });
+			router.refresh();
+			const res = await fetch("/api/revalidate?path=/collection/[userId]")
+			const body = await res.json();
+			console.log(body);
 		},
 	});
 
@@ -109,6 +122,7 @@ const deleteManyGamesFromCollection = async (gameIds: number[], userId: string) 
 };
 
 export const useDeleteManyMutation = (userId: string) => {
+	const router = useRouter()
 	const deleteManyMutation = useMutation({
 		mutationFn: (gameIds: number[]) => {
 			return deleteManyGamesFromCollection(gameIds, userId);
@@ -137,9 +151,13 @@ export const useDeleteManyMutation = (userId: string) => {
 			console.log("mutation successful");
 		},
 
-		onSettled: () => {
+		onSettled: async () => {
 			console.log("settled");
 			queryClient.invalidateQueries({ queryKey: ["collection", userId] });
+			router.refresh();
+			const res = await fetch("/api/revalidate?path=/collection/[userId]")
+			const body = await res.json();
+			console.log(body);
 		},
 	});
 
@@ -201,6 +219,68 @@ export const useTogglePlayed = (userId: string) => {
 
 		onSuccess: () => {
 			console.log("played toggled successfully");
+			queryClient.invalidateQueries(["collection", userId]);
+		},
+	});
+
+	return markAsPlayedMutation;
+};
+
+const patchToggleGameAsCompleted = async (
+	userId: string,
+	gameId: number,
+	completed: boolean
+) => {
+	const res = await fetch(`/api/collection/games/${gameId}?userId=${userId}`, {
+		method: "PATCH",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ completed: completed }),
+	});
+
+	if (!res.ok) {
+		throw new Error("network response was not ok");
+	}
+
+	const data = await res.json();
+	return data as Game;
+};
+
+export const useToggleCompleted = (userId: string) => {
+	const markAsPlayedMutation = useMutation({
+		mutationFn: (gameId: number) => {
+			console.log("toggling played");
+
+			const prevState = queryClient.getQueryData([
+				"collection",
+				userId,
+			]) as CollectionWithGamesAndGenres[];
+
+			const completed = prevState.find((game) => game.gameId === gameId)!.completed;
+			console.log(completed)
+			return patchToggleGameAsCompleted(userId, gameId, completed);
+		},
+
+		onMutate: (gameId) => {
+			queryClient.cancelQueries(["collection", userId]);
+			const prevState = queryClient.getQueryData([
+				"collection",
+				userId,
+			]) as CollectionWithGamesAndGenres[];
+
+			const newState = prevState.map((game) => {
+				if (game.gameId === gameId) {
+					return { ...game, played: !game.played };
+				}
+				return game;
+			});
+
+			queryClient.setQueryData(["collection", userId], newState);
+		},
+
+		onSuccess: () => {
+			console.log("completed toggled successfully");
 			queryClient.invalidateQueries(["collection", userId]);
 		},
 	});

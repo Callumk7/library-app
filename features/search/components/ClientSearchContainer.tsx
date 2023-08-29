@@ -2,30 +2,21 @@
 
 import { GameCardCover } from "@/components/games/GameCardCover";
 import {
-  CollectionWithGamesGenresPlaylists,
-  GameWithCoverAndGenres,
+    GameWithCoverAndGenres,
   GameWithCoverGenresUsers,
 } from "@/types";
-import { useQuery } from "@tanstack/react-query";
 import { SearchResultEntryControls } from "./SearchResultEntryControls";
-import { fetchFullCollection } from "@/features/collection/queries";
+import { useDbSearchQuery } from "../hooks/queries";
 
 interface ClientSearchContainerProps {
   userId: string;
-  results: GameWithCoverAndGenres[];
   resultsWithUsers: GameWithCoverGenresUsers[];
-  collection: CollectionWithGamesGenresPlaylists[];
-  collectionIds: number[];
 }
 
 export function ClientSearchContainer({
   userId,
-  results,
   resultsWithUsers,
-  collection,
-  collectionIds,
 }: ClientSearchContainerProps) {
-
 
   return (
     <div className="mx-auto w-4/5 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">

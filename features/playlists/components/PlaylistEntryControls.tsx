@@ -7,10 +7,11 @@ import {
 } from "@/components/ui/dropdown";
 import { DeleteIcon } from "@/components/ui/icons/DeleteIcon";
 import { MenuIcon } from "@/components/ui/icons/MenuIcon";
-import { useDeleteGameFromPlaylist } from "../queries/mutations";
 import { GameWithCoverAndGenres } from "@/types";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
+import { useDeleteGameFromPlaylist } from "../hooks/mutations";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 interface PlaylistEntryControlsProps {
   userId: string;
@@ -25,7 +26,7 @@ export function PlaylistEntryControls({
   game,
   handleCheckedToggled,
 }: PlaylistEntryControlsProps) {
-  const [isChecked, setIsChecked] = useState<boolean>()
+  const [isChecked, setIsChecked] = useState<boolean>();
   const deleteFromPlaylist = useDeleteGameFromPlaylist(userId);
 
   return (
@@ -48,10 +49,17 @@ export function PlaylistEntryControls({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <Checkbox checked={isChecked} onCheckedChange={() => {
-        handleCheckedToggled(game.gameId);
-        setIsChecked(!isChecked)
-      }} />
+      <div className="px-4 flex space-x-3 self-start py-4">
+        <Switch
+          id="played"
+          checked={isChecked}
+          onCheckedChange={() => {
+            handleCheckedToggled(game.gameId);
+            setIsChecked(!isChecked);
+          }}
+        />
+        <Label htmlFor="played">{isChecked ? "played" : "not played"}</Label>
+      </div>
     </>
   );
 }

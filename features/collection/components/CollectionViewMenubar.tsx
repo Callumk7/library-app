@@ -16,9 +16,11 @@ import { SortOption } from "@/types";
 import { useState } from "react";
 import { Input } from "@/components/ui/form";
 import { AddPlaylistDialog } from "@/features/playlists/components/AddPlaylistDialog";
-import { useDeleteManyMutation } from "../queries/mutations";
-import { useBulkAddGameToPlaylist } from "@/features/playlists/queries/mutations";
-import { usePlaylistQuery } from "@/lib/hooks/queries";
+import { useBulkAddGameToPlaylist } from "@/features/playlists/hooks/mutations";
+import { usePlaylistQuery } from "@/features/playlists/hooks/queries";
+import { useDeleteManyMutation } from "../hooks/mutations";
+import { Toggle } from "@/components/ui/toggle";
+import { MenuIcon } from "@/components/ui/icons/MenuIcon";
 
 interface CollectionViewMenubarProps {
   userId: string;
@@ -33,6 +35,8 @@ interface CollectionViewMenubarProps {
   handleSearchTermChanged: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleGenreToggled: (genre: string) => void;
   handleToggleAllGenres: () => void;
+  viewIsCard: boolean;
+  handleToggleView: () => void;
 }
 
 export function CollectionViewMenubar({
@@ -48,6 +52,8 @@ export function CollectionViewMenubar({
   handleSearchTermChanged,
   handleGenreToggled,
   handleToggleAllGenres,
+  viewIsCard,
+  handleToggleView
 }: CollectionViewMenubarProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
@@ -156,6 +162,9 @@ export function CollectionViewMenubar({
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
+      <Toggle pressed={viewIsCard} onPressedChange={handleToggleView} aria-label="view">
+        <MenuIcon />
+      </Toggle>
       <AddPlaylistDialog
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}

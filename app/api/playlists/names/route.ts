@@ -1,4 +1,4 @@
-import { getPlaylists } from "@/features/playlists/queries/prisma-functions";
+import { getPlaylists } from "@/features/playlists/hooks/queries";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -24,4 +24,3 @@ export async function GET(req: NextRequest) {
 		return new NextResponse("error getting playlists", { status: 500 });
 	}
 }
-

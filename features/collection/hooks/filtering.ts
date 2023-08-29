@@ -21,6 +21,9 @@ export const useSortAndFilter = (
 		}
 
 		output = output.filter((game) => {
+			if (game.genres.length === 0) {
+				return true;
+			}
 			for (const genre of game.genres) {
 				if (genreFilter.includes(genre.genre.name)) {
 					return true;

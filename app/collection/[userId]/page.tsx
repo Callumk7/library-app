@@ -1,11 +1,6 @@
-import { getPlaylists } from "@/features/playlists/queries/prisma-functions";
 import { ClientCollectionContainer } from "@/features/collection/components/ClientCollectionContainer";
-import {
-  getFullCollection,
-  getUserGenres,
-} from "@/features/collection/queries/prisma-functions";
-
-export const revalidate = 300;
+import { getFullCollection } from "@/features/collection/hooks/queries";
+import { getUserGenres } from "@/lib/hooks/genres/queries";
 
 export default async function CollectionPage({ params }: { params: { userId: string } }) {
   const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
@@ -20,7 +15,7 @@ export default async function CollectionPage({ params }: { params: { userId: str
   ]);
 
   return (
-    <main className="mx-auto flex min-h-screen flex-col items-center space-y-10 animate-in">
+    <main className="flex min-h-screen w-full flex-col items-center space-y-10 animate-in">
       <ClientCollectionContainer
         userId={userId}
         collection={collection}

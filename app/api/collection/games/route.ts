@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db/prisma";
+import { prisma } from "@/lib/clients/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 // post a collection entry to the database.

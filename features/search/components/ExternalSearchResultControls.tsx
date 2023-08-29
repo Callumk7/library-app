@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Add } from "@/components/ui/icons/Add";
 import { IGDBGame } from "@/types";
 
 interface ExternalSearchResultControlsProps {
@@ -23,10 +24,8 @@ export function ExternalSearchResultControls({
   };
 
   return (
-    <div>
-      <Button onClick={handleSave} variant={"destructive"}>
-        Save to database
+      <Button onClick={handleSave} variant={"secondary"} size={"xs"}>
+        <Add />
       </Button>
-    </div>
   );
 }
