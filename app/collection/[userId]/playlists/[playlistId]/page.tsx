@@ -1,5 +1,5 @@
 import { PlaylistContainer } from "@/features/playlists/components/PlaylistContainer";
-import { getGamesFromPlaylist, getPlaylistWithGames } from "@/features/playlists/hooks/queries";
+import { getGamesFromPlaylist } from "@/features/playlists/hooks/queries";
 import { getUserGenres } from "@/lib/hooks/genres/queries";
 
 export default async function PlaylistPage({
