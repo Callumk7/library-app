@@ -1,4 +1,5 @@
 import { searchGames, searchGamesWithUsers } from "@/features/search/hooks/queries";
+import { prisma } from "@/lib/clients/prisma";
 import { Job } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 

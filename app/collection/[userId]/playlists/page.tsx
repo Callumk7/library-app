@@ -1,5 +1,5 @@
 import { PlaylistCard } from "@/features/playlists/components/PlaylistCard";
-import { getPlaylistsWithGames } from "@/features/playlists/hooks/queries";
+import { getAllPlaylistsWithGames } from "@/features/playlists/hooks/queries";
 import { PlaylistWithGamesAndCover } from "@/types";
 
 export default async function PlaylistsPage() {
@@ -9,7 +9,7 @@ export default async function PlaylistsPage() {
     return <div>Get the hell out of this place</div>;
   }
 
-  const playlistsWithGames: PlaylistWithGamesAndCover[] = await getPlaylistsWithGames(
+  const playlistsWithGames: PlaylistWithGamesAndCover[] = await getAllPlaylistsWithGames(
     userId
   );
 

@@ -1,7 +1,7 @@
-import { GameWithCoverGenresPlaylists } from "@/types";
+import { GameWithCoverAndGenres, GameWithCoverGenresPlaylists } from "@/types";
 
 interface GameListEntryProps {
-  game: GameWithCoverGenresPlaylists;
+  game: GameWithCoverAndGenres;
   children: React.ReactNode;
 }
 export function GameListEntry({ game, children }: GameListEntryProps) {

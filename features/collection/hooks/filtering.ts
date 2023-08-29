@@ -1,4 +1,4 @@
-import { GameWithCoverAndGenres, SortOption } from "@/types";
+import { GameWithCoverAndGenres, GameWithCoverGenresPlaylists, SortOption } from "@/types";
 import { applySorting } from "@/util/sorting";
 import { useMemo, useState } from "react";
 
