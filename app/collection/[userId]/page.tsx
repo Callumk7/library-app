@@ -15,7 +15,7 @@ export default async function CollectionPage({ params }: { params: { userId: str
   ]);
 
   return (
-    <main className="mx-auto flex min-h-screen flex-col items-center space-y-10 animate-in">
+    <main className="flex min-h-screen w-full flex-col items-center space-y-10 animate-in">
       <ClientCollectionContainer
         userId={userId}
         collection={collection}

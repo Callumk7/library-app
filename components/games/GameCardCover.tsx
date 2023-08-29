@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { RatingLine } from "./Rating";
 import { UserRatingSlider } from "./UserRatingSlider";
 import { GenreTags } from "./GenreTags";
+import { InCollectionTag } from "./InCollectionTag";
 
 interface GameCardCoverProps {
   game: GameWithCoverAndGenres;
@@ -49,16 +50,17 @@ export function GameCardCover({ game, isCompleted, children }: GameCardCoverProp
           height={1280}
         />
       </Link>
-        <div className="flex flex-col gap-y-3">
-          <RatingLine
-            percent={game.aggregatedRating ? game.aggregatedRating : 0}
-            strokeWidth={2}
-            strokeColor="#F0F757"
-            trailColor=""
-          />
-          <UserRatingSlider />
-          <GenreTags game={game} />
-        </div>
+      <div className="flex flex-col gap-y-3">
+        <RatingLine
+          percent={game.aggregatedRating ? game.aggregatedRating : 0}
+          strokeWidth={2}
+          strokeColor="#F0F757"
+          trailColor=""
+        />
+        <UserRatingSlider />
+        <InCollectionTag gameId={game.gameId} />
+        <GenreTags game={game} />
+      </div>
       <div className="w-full content-start px-2 py-2 text-xs font-light text-foreground/90">
         {releaseDateStr}
       </div>
