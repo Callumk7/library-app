@@ -1,8 +1,6 @@
+import { CollectionNavbar } from "@/features/collection/components/CollectionNavbar";
 import { PlaylistSidebar } from "@/features/playlists/components/PlaylistSidebar";
 import { getAllPlaylistsWithGames } from "@/features/playlists/hooks/queries";
-import { DBSearchResultsWrapper } from "@/features/search/components/DBSearchResultsWrapper";
-import { ExternalResultsWrapper } from "@/features/search/components/ExternalResultsWrapper";
-import { getSearchResults } from "@/util/igdb";
 
 export default async function CollectionLayout({
   children,
@@ -12,13 +10,14 @@ export default async function CollectionLayout({
   const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
   const playlists = await getAllPlaylistsWithGames(userId);
   return (
-    <div className="mt-10 flex w-4/5 flex-row justify-between gap-4 px-4 md:w-full">
-      <div className="hidden place-self-start justify-self-start md:block">
+    <div className="mt-5 flex w-4/5 flex-row justify-start gap-4 px-4 md:w-full">
+      <div className="hidden md:block">
         <PlaylistSidebar playlists={playlists} userId={userId} />
-        <DBSearchResultsWrapper userId={userId} />
-        <ExternalResultsWrapper />
       </div>
-      {children}
+      <div className="self-stretch mb-5">
+        <CollectionNavbar userId={userId} />
+        {children}
+      </div>
     </div>
   );
 }
