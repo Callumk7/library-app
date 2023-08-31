@@ -1,4 +1,7 @@
-import { GameWithCoverAndGenres, GameWithCoverGenresPlaylists } from "@/types";
+import { GameWithCoverAndGenres } from "@/types";
+import { Separator } from "../ui/separator";
+import { GameHoverCard } from "./GameHoverCard";
+import { DragHandle } from "../ui/icons/DragHandle";
 
 interface GameListEntryProps {
   game: GameWithCoverAndGenres;
@@ -6,19 +9,17 @@ interface GameListEntryProps {
 }
 export function GameListEntry({ game, children }: GameListEntryProps) {
   return (
-    <div className="relative flex w-full flex-row justify-between border p-3">
-      <div className="flex flex-col space-y-1">
-        <p className="text-xs font-bold">{game.title}</p>
-        <p className="text-xs font-bold">
-          <span className="text-red-300">rating: </span>
-          {game.aggregatedRating}
-        </p>
-        <p className="text-xs font-bold">
-          <span className="text-red-300">release date: </span>
-          {game.releaseDate}
-        </p>
+    <div>
+      <div className="relative flex w-full flex-row items-center justify-between rounded-md p-3 hover:bg-accent/60">
+        <div className="flex flex-row space-x-2">
+          <DragHandle className="h-6 w-6" />
+          <GameHoverCard game={game}>
+            <p className="cursor-pointer font-bold text-foreground">{game.title}</p>
+          </GameHoverCard>
+        </div>
+        <div className="w-64">{children}</div>
       </div>
-      {children}
+      <Separator />
     </div>
   );
 }

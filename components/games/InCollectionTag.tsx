@@ -9,15 +9,11 @@ export function InCollectionTag({ gameId }: { gameId: number }) {
 
   return (
     <>
-      {collectionIds.data && collectionIds.data.includes(gameId) ? 
-        (
-          <Tag variant={"primary"} className="animate-in">
-            In collection
-          </Tag>
-        ) : (
-          <Tag variant={"default"}>Save</Tag>
-        )
-      }
+      {collectionIds.data && collectionIds.data.includes(gameId) ? (
+        <Tag variant={"primary"}>In collection</Tag>
+      ) : (
+        <Tag variant={"default"}>Save..</Tag>
+      )}
     </>
   );
 }

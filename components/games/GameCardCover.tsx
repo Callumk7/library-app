@@ -3,9 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
 import { RatingLine } from "./Rating";
-import { UserRatingSlider } from "./UserRatingSlider";
-import { GenreTags } from "./GenreTags";
-import { InCollectionTag } from "./InCollectionTag";
+import { GameHoverCard } from "./GameHoverCard";
 
 interface GameCardCoverProps {
   game: GameWithCoverAndGenres;
@@ -33,38 +31,33 @@ export function GameCardCover({ game, isCompleted, children }: GameCardCoverProp
   }
 
   return (
-    <div
-      className={clsx(
-        borderStyle,
-        "relative flex max-w-sm flex-col items-center justify-between overflow-hidden rounded-lg text-foreground hover:bg-midnight-5"
-      )}
-    >
-      <Link
-        className="group relative z-0 transition ease-in-out"
-        href={`/games/${game.gameId}`}
+    <div>
+      <div
+        className={clsx(
+          borderStyle,
+          "relative flex max-w-sm flex-col items-center justify-between overflow-hidden rounded-lg text-foreground"
+        )}
       >
-        <Image
-          src={`https://images.igdb.com/igdb/image/upload/t_${size}/${game.cover?.imageId}.jpg`}
-          alt="cover image"
-          width={720}
-          height={1280}
-        />
-      </Link>
-      <div className="flex flex-col gap-y-3">
-        <RatingLine
-          percent={game.aggregatedRating ? game.aggregatedRating : 0}
-          strokeWidth={2}
-          strokeColor="#F0F757"
-          trailColor=""
-        />
-        <UserRatingSlider />
-        <InCollectionTag gameId={game.gameId} />
-        <GenreTags game={game} />
+        <GameHoverCard game={game}>
+          <Link href={`/games/${game.gameId}`}>
+            <Image
+              src={`https://images.igdb.com/igdb/image/upload/t_${size}/${game.cover?.imageId}.jpg`}
+              alt="cover image"
+              width={720}
+              height={1280}
+            />
+          </Link>
+        </GameHoverCard>
+        <div className="flex flex-col gap-y-3">
+          <RatingLine
+            percent={game.aggregatedRating ? game.aggregatedRating : 0}
+            strokeWidth={2}
+            strokeColor="#F0F757"
+            trailColor=""
+          />
+        </div>
       </div>
-      <div className="w-full content-start px-2 py-2 text-xs font-light text-foreground/90">
-        {releaseDateStr}
-      </div>
-      {children}
+      <div className="z-10 pt-3">{children}</div>
     </div>
   );
 }
