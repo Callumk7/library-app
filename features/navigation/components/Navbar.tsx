@@ -6,12 +6,13 @@ import { UserProfile } from "./UserProfile";
 import { Playlist } from "@/components/ui/icons/Playlist";
 import { Home } from "@/components/ui/icons/Home";
 import { usePathname } from "next/navigation";
+import { FriendsIcon } from "@/components/ui/icons/Friends";
 
 export default function Navbar() {
   const pathName = usePathname();
   const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
   return (
-    <nav className="mx-auto flex w-4/5 justify-between rounded-md border">
+    <nav className="flex w-full justify-between rounded-md border px-6">
       <div className="mx-auto flex w-full items-center justify-between px-4 py-3 text-sm text-foreground">
         <div className="flex flex-row space-x-3 align-middle">
           <Button asChild variant={pathName === "/" ? "secondary" : "ghost"} size={"sm"}>
@@ -28,6 +29,16 @@ export default function Navbar() {
             <Link href={`/collection/${userId}`}>
               <Playlist className="mr-2" />
               <span>My Collection</span>
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant={pathName.startsWith("/friends") ? "secondary" : "ghost"}
+            size={"sm"}
+          >
+            <Link href={`/friends/${userId}`}>
+              <FriendsIcon className="mr-2" />
+              <span>Friends</span>
             </Link>
           </Button>
         </div>

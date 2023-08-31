@@ -21,6 +21,8 @@ import { Toast, ToastClose, ToastDescription, ToastTitle } from "@/components/ui
 import { useAddGameToPlaylist } from "@/features/playlists/hooks/mutations";
 import { useGamePlaylistsQuery, usePlaylistQuery } from "@/features/playlists/hooks/queries";
 import { useDeleteMutation, useTogglePlayed } from "../hooks/mutations";
+import { HeartOutline } from "@/components/ui/icons/HeartOutline";
+import { Add } from "@/components/ui/icons/Add";
 
 interface CollectionEntryControlsProps {
   userId: string;
@@ -69,10 +71,19 @@ export function CollectionEntryControls({
   const playedToggled = useTogglePlayed(userId);
 
   return (
-    <>
+    <div className="flex flex-row w-full justify-between">
+      <Button variant={"outline"} size={"icon"}>
+        <Add />
+      </Button>
+      <Button variant={"outline"} size={"icon"}>
+        <HeartOutline />
+      </Button>
+      <Button variant={"outline"} size={"icon"}>
+        <Add />
+      </Button>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild className="absolute right-2 top-2">
-          <Button variant={"muted"} size={"icon"}>
+        <DropdownMenuTrigger asChild>
+          <Button variant={"outline"} size={"icon"}>
             <MenuIcon />
           </Button>
         </DropdownMenuTrigger>
@@ -145,6 +156,6 @@ export function CollectionEntryControls({
         <ToastDescription>Bold move sucker</ToastDescription>
         <ToastClose />
       </Toast>
-    </>
+    </div>
   );
 }

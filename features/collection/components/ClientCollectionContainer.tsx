@@ -12,8 +12,8 @@ import { CollectionEntryControls } from "./CollectionEntryControls";
 import { useEffect, useState } from "react";
 import { useSortAndFilter } from "../hooks/filtering";
 import { useCollectionQuery } from "../hooks/queries";
-import { GameInlineCard } from "@/components/games/GameInlineCard";
 import { GameListEntry } from "@/components/games/GameListEntry";
+import { GameHoverCard } from "@/components/games/GameHoverCard";
 
 const DEFAULT_SORT_OPTION: SortOption = "rating";
 
@@ -93,7 +93,7 @@ export function ClientCollectionContainer({
         </div>
       )}
       {collectionQuery.isSuccess && viewIsCard === false && (
-        <div className="mx-auto flex flex-col w-full gap-4 md:w-full">
+        <div className="mx-auto flex w-full flex-col">
           {sortedCollection.map((game) => (
             <GameListEntry key={game.id} game={game}>
               <CollectionEntryControls
