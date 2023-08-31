@@ -6,6 +6,7 @@ const tagVariants = cva("inline rounded-lg", {
     variant: {
       default: "bg-accent text-accent-foreground/80",
       primary: "bg-primary text-primary-foreground",
+      secondary: "bg-foreground text-background",
     },
     size: {
       default: "text-[10px] px-2 py-1",
@@ -20,13 +21,11 @@ const tagVariants = cva("inline rounded-lg", {
 
 interface TagProps extends VariantProps<typeof tagVariants> {
   children?: React.ReactNode;
-  className?: string
+  className?: string;
 }
 
 export function Tag({ children, className, variant, size }: TagProps) {
   return (
-    <div className={clsx(tagVariants({ variant, size, className }))}>
-      {children}
-    </div>
+    <div className={clsx(tagVariants({ variant, size, className }))}>{children}</div>
   );
 }
