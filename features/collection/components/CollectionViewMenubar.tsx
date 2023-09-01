@@ -21,16 +21,17 @@ import { usePlaylistQuery } from "@/features/playlists/hooks/queries";
 import { useDeleteManyMutation } from "../hooks/mutations";
 import { Toggle } from "@/components/ui/toggle";
 import { MenuIcon } from "@/components/ui/icons/MenuIcon";
+import { ChevronDown } from "@/components/ui/icons/ChevronDown";
 
 interface CollectionViewMenubarProps {
   userId: string;
-  checkedGames: number[];
+  selectedGames: number[];
   genres: string[];
   genreFilter: string[];
   searchTerm: string;
   sortOption: SortOption;
-  handleCheckAll: () => void;
-  handleUncheckAll: () => void;
+  handleSelectAll: () => void;
+  handleUnselectAll: () => void;
   setSortOption: (option: SortOption) => void;
   handleSearchTermChanged: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleGenreToggled: (genre: string) => void;
@@ -41,19 +42,19 @@ interface CollectionViewMenubarProps {
 
 export function CollectionViewMenubar({
   userId,
-  checkedGames,
+  selectedGames,
   genres,
   genreFilter,
   searchTerm,
-  handleCheckAll,
-  handleUncheckAll,
+  handleSelectAll,
+  handleUnselectAll,
   sortOption,
   setSortOption,
   handleSearchTermChanged,
   handleGenreToggled,
   handleToggleAllGenres,
   viewIsCard,
-  handleToggleView
+  handleToggleView,
 }: CollectionViewMenubarProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
@@ -72,7 +73,10 @@ export function CollectionViewMenubar({
       />
       <Menubar>
         <MenubarMenu>
-          <MenubarTrigger>Sort</MenubarTrigger>
+          <MenubarTrigger>
+            <span className="mr-2">Sort by</span>
+            <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
+          </MenubarTrigger>
           <MenubarContent>
             <MenubarRadioGroup value={sortOption}>
               <MenubarRadioItem
@@ -90,10 +94,16 @@ export function CollectionViewMenubar({
               <MenubarRadioItem onSelect={() => setSortOption("rating")} value={"rating"}>
                 Rating
               </MenubarRadioItem>
-              <MenubarRadioItem onSelect={() => setSortOption("releaseDateAsc")} value={"releaseDateAsc"}>
+              <MenubarRadioItem
+                onSelect={() => setSortOption("releaseDateAsc")}
+                value={"releaseDateAsc"}
+              >
                 Release Date (asc)
               </MenubarRadioItem>
-              <MenubarRadioItem onSelect={() => setSortOption("releaseDateDesc")} value={"releaseDateDesc"}>
+              <MenubarRadioItem
+                onSelect={() => setSortOption("releaseDateDesc")}
+                value={"releaseDateDesc"}
+              >
                 Release Date (desc)
               </MenubarRadioItem>
             </MenubarRadioGroup>
@@ -126,33 +136,34 @@ export function CollectionViewMenubar({
           <MenubarTrigger>Actions</MenubarTrigger>
           <MenubarContent>
             <MenubarItem
-              onClick={() => deleteMany.mutate(checkedGames)}
+              onClick={() => deleteMany.mutate(selectedGames)}
               className="focus-visible:bg-destructive/80"
             >
               Delete selected
             </MenubarItem>
             <MenubarItem
-              onClick={checkedGames.length > 0 ? handleUncheckAll : handleCheckAll}
+              onClick={selectedGames.length > 0 ? handleUnselectAll : handleSelectAll}
             >
-              {checkedGames.length > 0 ? "Deselect all" : "Select all"}
+              {selectedGames.length > 0 ? "Deselect all" : "Select all"}
             </MenubarItem>
             <MenubarSub>
               <MenubarSubTrigger>Add to Playlist</MenubarSubTrigger>
               <MenubarSubContent>
-                {playlistQuery.data && playlistQuery.data.map((playlist, index) => (
-                  <MenubarItem
-                    id={String(playlist.id)}
-                    key={index}
-                    onClick={() =>
-                      addManyToPlaylist.mutate({
-                        playlistId: playlist.id,
-                        gameIds: checkedGames,
-                      })
-                    }
-                  >
-                    {playlist.name}
-                  </MenubarItem>
-                ))}
+                {playlistQuery.data &&
+                  playlistQuery.data.map((playlist, index) => (
+                    <MenubarItem
+                      id={String(playlist.id)}
+                      key={index}
+                      onClick={() =>
+                        addManyToPlaylist.mutate({
+                          playlistId: playlist.id,
+                          gameIds: selectedGames,
+                        })
+                      }
+                    >
+                      {playlist.name}
+                    </MenubarItem>
+                  ))}
                 <MenubarSeparator />
                 <MenubarItem onClick={() => setDialogOpen(true)}>
                   Create Playlist..

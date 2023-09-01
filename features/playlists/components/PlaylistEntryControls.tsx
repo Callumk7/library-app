@@ -12,25 +12,28 @@ import { useState } from "react";
 import { useDeleteGameFromPlaylist } from "../hooks/mutations";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { useCollectionEntryQuery } from "@/features/collection/hooks/queries";
 
 interface PlaylistEntryControlsProps {
   userId: string;
   playlistId: number;
   game: GameWithCoverAndGenres;
-  handleCheckedToggled: (gameId: number) => void;
+  handleSelectedToggled: (gameId: number) => void;
 }
 
 export function PlaylistEntryControls({
   userId,
   playlistId,
   game,
-  handleCheckedToggled,
+  handleSelectedToggled
 }: PlaylistEntryControlsProps) {
   const [isChecked, setIsChecked] = useState<boolean>();
+
   const deleteFromPlaylist = useDeleteGameFromPlaylist(userId);
+  const collectionEntryQuery = useCollectionEntryQuery(userId, game.gameId);
 
   return (
-    <>
+    <div className="relative border inset-1 rounded-md">
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="absolute right-2 top-2">
           <Button variant={"muted"} size={"icon"}>
@@ -54,12 +57,12 @@ export function PlaylistEntryControls({
           id="played"
           checked={isChecked}
           onCheckedChange={() => {
-            handleCheckedToggled(game.gameId);
+            handleSelectedToggled(game.gameId);
             setIsChecked(!isChecked);
           }}
         />
         <Label htmlFor="played">{isChecked ? "played" : "not played"}</Label>
       </div>
-    </>
+    </div>
   );
 }

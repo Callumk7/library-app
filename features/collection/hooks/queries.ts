@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/clients/prisma";
-import { CollectionWithGamesGenresPlaylists } from "@/types";
+import { CollectionWithGamesGenresPlaylists, GameWithCoverAndGenres, UserGameCollection } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 
 ///
@@ -33,7 +33,6 @@ export async function getFullCollection(
 	});
 
 	console.timeEnd("get collection");
-	console.log(userCollection)
 	return userCollection;
 }
 
@@ -112,3 +111,32 @@ export const useCollectionGameIdsQuery = (userId: string, initialData?: number[]
 
 	return collectionIdsQuery;
 };
+
+export async function getCollectionEntry(userId: string, gameId: number) {
+	const getCollectionEntry = await prisma.userGameCollection.findFirst({
+		where: {
+			userId,
+			gameId
+		}
+	})
+
+	return getCollectionEntry;
+}
+
+const fetchCollectionEntry = async (userId: string, gameId: number) => {
+	const res = await fetch(`/api/collection?userId=${userId}&gameId=${gameId}`, {
+		method: "GET"
+	});
+
+	const data = await res.json();
+	return data as UserGameCollection;
+}
+
+export const useCollectionEntryQuery = (userId: string, gameId: number) => {
+	const collectionEntryQuery = useQuery({
+		queryKey: ["collection", userId, gameId],
+		queryFn: () => fetchCollectionEntry(userId, gameId)
+	})
+
+	return collectionEntryQuery;
+}

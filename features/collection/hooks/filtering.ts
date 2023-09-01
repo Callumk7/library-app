@@ -10,7 +10,6 @@ export const useSortAndFilter = (
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [sortOption, setSortOption] = useState<SortOption>(DEFAULT_SORT_OPTION);
 	const [genreFilter, setGenreFilter] = useState<string[]>(genres);
-	const [checkedGames, setCheckedGames] = useState<number[]>([]);
 
 	const filteredCollection = useMemo(() => {
 		let output = [...games];
@@ -42,23 +41,6 @@ export const useSortAndFilter = (
 		setSearchTerm(e.target.value);
 	};
 
-	const handleCheckedToggled = (gameId: number) => {
-		if (checkedGames.includes(gameId)) {
-			setCheckedGames(checkedGames.filter((game) => game !== gameId));
-		} else {
-			setCheckedGames([...checkedGames, gameId]);
-		}
-	};
-
-	const handleCheckAll = () => {
-		const collectionIds = filteredCollection.map((entry) => entry.gameId);
-		console.log(collectionIds);
-		setCheckedGames(collectionIds);
-	};
-
-	const handleUncheckAll = () => {
-		setCheckedGames([]);
-	};
 
   const handleGenreToggled = (genre: string) => {
     // handle genre toggled
@@ -83,15 +65,11 @@ export const useSortAndFilter = (
 		setSearchTerm,
 		sortOption,
 		setSortOption,
-		checkedGames,
 		genreFilter,
 		setGenreFilter,
 		sortedCollection,
 		filteredCollection,
 		handleSearchTermChanged,
-		handleCheckedToggled,
-		handleCheckAll,
-		handleUncheckAll,
 		handleGenreToggled,
 		handleToggleAllGenres
 	};

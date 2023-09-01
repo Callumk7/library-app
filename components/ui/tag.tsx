@@ -4,7 +4,7 @@ import clsx from "clsx";
 const tagVariants = cva("inline rounded-lg", {
   variants: {
     variant: {
-      default: "bg-accent text-accent-foreground/80",
+      default: "bg-background border text-accent-foreground",
       primary: "bg-primary text-primary-foreground",
       secondary: "bg-foreground text-background",
     },

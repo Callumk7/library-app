@@ -13,11 +13,11 @@ import { useEffect, useState } from "react";
 import { useSortAndFilter } from "../hooks/filtering";
 import { useCollectionQuery } from "../hooks/queries";
 import { GameListEntry } from "@/components/games/GameListEntry";
-import { GameHoverCard } from "@/components/games/GameHoverCard";
+import { SearchPopover } from "@/components/SearchPopover";
+import { useSelectGames } from "../hooks/select";
+import { GenreFilter } from "./GenreFilter";
 
 const DEFAULT_SORT_OPTION: SortOption = "rating";
-
-type View = "card" | "list";
 
 interface CollectionContainerProps {
   userId: string;
@@ -45,16 +45,15 @@ export function ClientCollectionContainer({
     searchTerm,
     sortOption,
     setSortOption,
-    checkedGames,
     genreFilter,
     sortedCollection,
     handleSearchTermChanged,
-    handleCheckedToggled,
-    handleCheckAll,
-    handleUncheckAll,
     handleGenreToggled,
     handleToggleAllGenres,
   } = useSortAndFilter(DEFAULT_SORT_OPTION, genres, games);
+
+  const { selectedGames, handleSelectedToggled, handleSelectAll, handleUnselectAll } =
+    useSelectGames(sortedCollection);
 
   const handleToggleView = () => {
     setViewIsCard(!viewIsCard);
@@ -62,36 +61,38 @@ export function ClientCollectionContainer({
 
   return (
     <>
+      <GenreFilter genres={genres} genreFilter={genreFilter} handleToggleAllGenres={handleToggleAllGenres} handleGenreToggled={handleGenreToggled}/>
       <CollectionViewMenubar
         userId={userId}
-        checkedGames={checkedGames}
+        selectedGames={selectedGames}
         genreFilter={genreFilter}
         genres={genres}
         handleSearchTermChanged={handleSearchTermChanged}
         searchTerm={searchTerm}
         sortOption={sortOption}
-        handleCheckAll={handleCheckAll}
-        handleUncheckAll={handleUncheckAll}
+        handleSelectAll={handleSelectAll}
+        handleUnselectAll={handleUnselectAll}
         setSortOption={setSortOption}
         handleGenreToggled={handleGenreToggled}
         handleToggleAllGenres={handleToggleAllGenres}
         viewIsCard={viewIsCard}
         handleToggleView={handleToggleView}
       />
-      {collectionQuery.isSuccess && viewIsCard === true && (
-        <div className="mx-auto grid w-4/5 grid-cols-1 gap-4 md:w-full md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-          {sortedCollection.map((game) => (
-            <GameCardCover key={game.id} game={game}>
-              <CollectionEntryControls
-                userId={userId}
-                game={game}
-                checkedGames={checkedGames}
-                handleCheckedToggled={handleCheckedToggled}
-              />
-            </GameCardCover>
-          ))}
-        </div>
-      )}
+      <SearchPopover userId={userId} />
+        {collectionQuery.isSuccess && viewIsCard === true && (
+          <div className="mx-auto grid w-4/5 grid-cols-1 gap-4 md:w-full md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+            {sortedCollection.map((game) => (
+              <GameCardCover key={game.id} game={game} isSelected={selectedGames.includes(game.id)}>
+                <CollectionEntryControls
+                  userId={userId}
+                  game={game}
+                  selectedGames={selectedGames}
+                  handleSelectedToggled={handleSelectedToggled}
+                />
+              </GameCardCover>
+            ))}
+          </div>
+        )}
       {collectionQuery.isSuccess && viewIsCard === false && (
         <div className="mx-auto flex w-full flex-col">
           {sortedCollection.map((game) => (
@@ -99,8 +100,8 @@ export function ClientCollectionContainer({
               <CollectionEntryControls
                 userId={userId}
                 game={game}
-                checkedGames={checkedGames}
-                handleCheckedToggled={handleCheckedToggled}
+                selectedGames={selectedGames}
+                handleSelectedToggled={handleSelectedToggled}
               />
             </GameListEntry>
           ))}

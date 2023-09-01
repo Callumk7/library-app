@@ -9,6 +9,7 @@ import {
   useDeleteMutation,
 } from "@/features/collection/hooks/mutations";
 import { useCollectionGameIdsQuery } from "@/features/collection/hooks/queries";
+import { Cross } from "@/components/ui/icons/Cross";
 
 interface SearchResultEntryControlsProps {
   userId: string;
@@ -31,9 +32,10 @@ export function SearchResultEntryControls({
         {collectionIds.data?.includes(game.gameId) ? (
           <Button
             variant={deleteEntry.isLoading ? "ghost" : "destructive"}
+            size={"sm"}
             onClick={() => deleteEntry.mutate(game.gameId)}
           >
-            {deleteEntry.isLoading ? "removing.." : "remove from collection"}
+            {deleteEntry.isLoading ? "removing.." : <Cross />}
           </Button>
         ) : (
           <Button

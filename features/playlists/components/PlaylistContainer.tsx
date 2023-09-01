@@ -8,6 +8,7 @@ import { useSortAndFilter } from "@/features/collection/hooks/filtering";
 import { useGamesFromPlaylistQuery } from "../hooks/queries";
 import { useState } from "react";
 import { SearchPopover } from "@/components/SearchPopover";
+import { useSelectGames } from "@/features/collection/hooks/select";
 
 const DEFAULT_SORT_OPTION = "rating";
 
@@ -26,22 +27,20 @@ export function PlaylistContainer({
 }: PlaylistContainerProps) {
   const [viewIsCard, setViewIsCard] = useState<boolean>(true);
   const gamesFromPlaylistQuery = useGamesFromPlaylistQuery(userId, playlistId, games);
-  console.log(gamesFromPlaylistQuery.data)
 
   const {
     searchTerm,
     sortOption,
     setSortOption,
-    checkedGames,
     genreFilter,
     sortedCollection,
     handleSearchTermChanged,
-    handleCheckedToggled,
-    handleCheckAll,
-    handleUncheckAll,
     handleGenreToggled,
     handleToggleAllGenres,
   } = useSortAndFilter(DEFAULT_SORT_OPTION, genres, gamesFromPlaylistQuery.data!);
+
+  const { selectedGames, handleSelectedToggled, handleSelectAll, handleUnselectAll } =
+    useSelectGames(sortedCollection);
 
   const handleToggleView = () => {
     setViewIsCard(!viewIsCard);
@@ -52,14 +51,14 @@ export function PlaylistContainer({
       <div className="flex flex-row align-middle gap-x-4">
         <CollectionViewMenubar
           userId={userId}
-          checkedGames={checkedGames}
+          selectedGames={selectedGames}
           genreFilter={genreFilter}
           genres={genres}
           handleSearchTermChanged={handleSearchTermChanged}
           searchTerm={searchTerm}
           sortOption={sortOption}
-          handleCheckAll={handleCheckAll}
-          handleUncheckAll={handleUncheckAll}
+          handleSelectAll={handleSelectAll}
+          handleUnselectAll={handleUnselectAll}
           setSortOption={setSortOption}
           handleGenreToggled={handleGenreToggled}
           handleToggleAllGenres={handleToggleAllGenres}
@@ -75,7 +74,7 @@ export function PlaylistContainer({
               playlistId={playlistId}
               game={game}
               userId={userId}
-              handleCheckedToggled={handleCheckedToggled}
+              handleSelectedToggled={handleSelectedToggled}
             />
           </GameCardCover>
         ))}

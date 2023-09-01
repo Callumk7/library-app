@@ -75,7 +75,7 @@ export const useDeletePlaylist = (userId: string) => {
 			return deletePlaylistRequest(playlistId);
 		},
 		onMutate: async (playlistId) => {
-			await queryClient.cancelQueries(["playlists", userId])
+			await queryClient.cancelQueries(["playlists", userId]);
 			const oldState = queryClient.getQueryData([
 				"playlists",
 				userId,
@@ -160,6 +160,10 @@ export const useBulkAddGameToPlaylist = (userId: string) => {
 			queryClient.invalidateQueries(["playlists", playlistId, userId]);
 			return postBulkAddGamesToPlaylist(playlistId, gameIds);
 		},
+		onMutate: (variables) => {
+			console.log(`GAME IDS: ${variables.gameIds}`);
+			console.log(`PLAYLIST ID: ${variables.playlistId}`);
+		},
 
 		onSuccess: (data) => {
 			console.log(data);
@@ -218,4 +222,3 @@ export const useDeleteGameFromPlaylist = (userId: string) => {
 
 	return deleteGameMutation;
 };
-

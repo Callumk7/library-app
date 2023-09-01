@@ -41,11 +41,18 @@ export function CollectionNavbar({ userId, genres }: CollectionNavbarProps) {
             <span>Playlists</span>
           </Link>
         </Button>
-      </div>
-      <div className="flex flex-wrap gap-1">
-        {genres.map((genre, index) => (
-          <Tag key={index}>{genre}</Tag>
-        ))}
+        <Button
+          asChild
+          variant={
+            pathName.startsWith(`/collection/library/`) ? "secondary" : "ghost"
+          }
+          size={"sm"}
+        >
+          <Link href={`/collection/${userId}/playlists`}>
+            <PlayOutline className="mr-2" />
+            <span>All Games</span>
+          </Link>
+        </Button>
       </div>
     </div>
   );
