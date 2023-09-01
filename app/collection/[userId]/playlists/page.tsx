@@ -14,7 +14,7 @@ export default async function PlaylistsPage() {
   );
 
   return (
-    <main className="mx-auto flex flex-wrap items-center gap-10 p-24 animate-in">
+    <main className="mx-auto grid grid-cols-3 items-center gap-16 p-24 animate-in">
       {playlistsWithGames.map((playlist, index) => (
         <PlaylistCard key={index} playlist={playlist} />
       ))}

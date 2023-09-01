@@ -16,7 +16,7 @@ export default async function PlaylistPage({
   ]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center space-y-10">
+    <main className="flex min-h-screen flex-col items-center space-y-10 animate-in">
       <PlaylistContainer
         userId={userId}
         playlistId={playlistId}

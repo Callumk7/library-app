@@ -1,4 +1,5 @@
 import { ClientCollectionContainer } from "@/features/collection/components/ClientCollectionContainer";
+import { GenreFilter } from "@/features/collection/components/GenreFilter";
 import { getFullCollection } from "@/features/collection/hooks/queries";
 import { getUserGenres } from "@/lib/hooks/genres/queries";
 
