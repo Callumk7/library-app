@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  id        Int                  @id @default(autoincrement())
-  userId    String               @unique
-  username  String               @unique
-  email     String               @unique
-  createdAt DateTime             @default(now())
-  updatedAt DateTime             @default(now()) @updatedAt
-  games     UserGameCollection[]
-  playlists Playlist[]
+  id              Int                    @id @default(autoincrement())
+  userId          String                 @unique
+  username        String                 @unique
+  email           String                 @unique
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @default(now()) @updatedAt
+  games           UserGameCollection[]
+  playlists       Playlist[]
+  playlistFollows FollowersOnPlaylists[]
 }
 
 model Game {
@@ -52,12 +53,13 @@ model UserGameCollection {
 }
 
 model Playlist {
-  id        Int                @id @default(autoincrement())
+  id        Int                    @id @default(autoincrement())
   name      String
-  createdAt DateTime           @default(now())
-  user      User               @relation(fields: [userId], references: [userId])
+  createdAt DateTime               @default(now())
+  user      User                   @relation(fields: [userId], references: [userId])
   userId    String
   games     PlaylistsOnGames[]
+  followers FollowersOnPlaylists[]
 }
 
 model PlaylistsOnGames {
@@ -68,6 +70,16 @@ model PlaylistsOnGames {
   playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
 
   @@id([gameId, playlistId])
+}
+
+model FollowersOnPlaylists {
+  userId     String
+  playlistId Int
+  createdAt  DateTime @default(now())
+  follower   User     @relation(fields: [userId], references: [userId])
+  playlist   Playlist @relation(fields: [playlistId], references: [id])
+
+  @@id([userId, playlistId])
 }
 
 model Genre {
