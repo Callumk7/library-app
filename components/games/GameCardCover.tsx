@@ -1,6 +1,5 @@
 import { GameWithCoverAndGenres, IGDBImage } from "@/types";
 import Image from "next/image";
-import Link from "next/link";
 import clsx from "clsx";
 import { RatingLine } from "./Rating";
 import { GameHoverCard } from "./GameHoverCard";
@@ -8,14 +7,20 @@ import { GameHoverCard } from "./GameHoverCard";
 interface GameCardCoverProps {
   game: GameWithCoverAndGenres;
   isCompleted?: boolean;
+  isSelected: boolean;
   children: React.ReactNode;
 }
 
-export function GameCardCover({ game, isCompleted, children }: GameCardCoverProps) {
+export function GameCardCover({
+  game,
+  isCompleted,
+  isSelected,
+  children,
+}: GameCardCoverProps) {
   const size: IGDBImage = "720p";
 
   let borderStyle = "border hover:border-foreground";
-  if (isCompleted) {
+  if (isSelected) {
     borderStyle =
       "border border-lime-500/40 hover:border-lime-500 shadow-lg shadow-lime-500/20 hover:shadow-lime-500/40";
   } else if (game.aggregatedRating !== null && game.aggregatedRating > 95) {
@@ -39,14 +44,12 @@ export function GameCardCover({ game, isCompleted, children }: GameCardCoverProp
         )}
       >
         <GameHoverCard game={game}>
-          <Link href={`/games/${game.gameId}`}>
-            <Image
-              src={`https://images.igdb.com/igdb/image/upload/t_${size}/${game.cover?.imageId}.jpg`}
-              alt="cover image"
-              width={720}
-              height={1280}
-            />
-          </Link>
+          <Image
+            src={`https://images.igdb.com/igdb/image/upload/t_${size}/${game.cover?.imageId}.jpg`}
+            alt="cover image"
+            width={720}
+            height={1280}
+          />
         </GameHoverCard>
         <div className="flex flex-col gap-y-3">
           <RatingLine
