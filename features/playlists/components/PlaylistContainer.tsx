@@ -9,6 +9,7 @@ import { useGamesFromPlaylistQuery } from "../hooks/queries";
 import { useState } from "react";
 import { SearchPopover } from "@/components/SearchPopover";
 import { useSelectGames } from "@/features/collection/hooks/select";
+import { CoverView } from "@/components/games/CoverView";
 
 const DEFAULT_SORT_OPTION = "rating";
 
@@ -48,7 +49,7 @@ export function PlaylistContainer({
 
   return (
     <>
-      <div className="flex flex-row align-middle gap-x-4">
+      <div className="flex flex-row gap-x-4 align-middle">
         <CollectionViewMenubar
           userId={userId}
           selectedGames={selectedGames}
@@ -67,18 +68,12 @@ export function PlaylistContainer({
         />
         <SearchPopover userId={userId} />
       </div>
-      <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        {sortedCollection.map((game, index) => (
-          <GameCardCover key={index} game={game} isSelected={false}>
-            <PlaylistEntryControls
-              playlistId={playlistId}
-              game={game}
-              userId={userId}
-              handleSelectedToggled={handleSelectedToggled}
-            />
-          </GameCardCover>
-        ))}
-      </div>
+      <CoverView
+        games={sortedCollection}
+        selectedGames={selectedGames}
+        ControlComponent={PlaylistEntryControls}
+        controlProps={{ playlistId, userId, handleSelectedToggled }}
+      />
     </>
   );
 }

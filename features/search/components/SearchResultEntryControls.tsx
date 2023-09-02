@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { GameWithCoverGenresUsers } from "@/types";
+import { GameWithCoverAndGenres, GameWithCoverGenresUsers } from "@/types";
 import { Toast, ToastClose, ToastDescription, ToastTitle } from "@/components/ui/toast";
 import { useState } from "react";
 import {
@@ -13,7 +13,7 @@ import { Cross } from "@/components/ui/icons/Cross";
 
 interface SearchResultEntryControlsProps {
   userId: string;
-  game: GameWithCoverGenresUsers;
+  game: GameWithCoverAndGenres;
 }
 
 export function SearchResultEntryControls({
