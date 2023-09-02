@@ -3,28 +3,30 @@
 import { Button } from "@/components/ui/button";
 import { Add } from "@/components/ui/icons/Add";
 import { DeleteIcon } from "@/components/ui/icons/DeleteIcon";
-import { PlaylistWithGames } from "@/types";
+import { FollowedPlaylistsWithGames, PlaylistWithGames } from "@/types";
 import Link from "next/link";
 import { useState } from "react";
 import { AddPlaylistDialog } from "./AddPlaylistDialog";
 import { useDeletePlaylist } from "../hooks/mutations";
 import { usePlaylistQuery } from "../hooks/queries";
 import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronRight } from "@/components/ui/icons/ChevronRight";
 
 interface PlaylistSidebarProps {
   userId: string;
   playlists: PlaylistWithGames[];
+  followedPlaylists: FollowedPlaylistsWithGames[];
 }
 
-export function PlaylistSidebar({ userId, playlists }: PlaylistSidebarProps) {
+export function PlaylistSidebar({ userId, playlists, followedPlaylists }: PlaylistSidebarProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   const playlistQuery = usePlaylistQuery(userId, playlists);
 
   return (
     <>
-      <div className="mb-5 flex h-full justify-self-start min-h-[80vh] w-1/4 min-w-[256px] flex-col gap-2 rounded-lg border animate-in">
-        <SidebarMenu />
+      <div className="mb-5 px-3 flex h-full justify-self-start min-h-[80vh] w-1/4 min-w-[256px] flex-col gap-2 rounded-lg border animate-in">
         <Button
           onClick={() => setDialogOpen(true)}
           className="mx-4 my-6"
@@ -32,10 +34,34 @@ export function PlaylistSidebar({ userId, playlists }: PlaylistSidebarProps) {
         >
           <span className="mr-1">Add Playlist</span> <Add />
         </Button>
-        {playlistQuery.data &&
-          playlistQuery.data.map((playlist, index) => (
-            <PlaylistEntry key={index} playlist={playlist} userId={userId} />
-          ))}
+        <Collapsible>
+          <CollapsibleTrigger>
+            <div className="flex space-x-2">
+              <h1 className="font-poppins text-primary font-semibold">My Playlists</h1>
+              <ChevronRight className="text-primary" />
+            </div>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            {playlistQuery.data &&
+              playlistQuery.data.map((playlist, index) => (
+                <PlaylistEntry key={index} playlist={playlist} userId={userId} />
+              ))}
+          </CollapsibleContent>
+        </Collapsible>
+        <Collapsible>
+          <CollapsibleTrigger>
+            <div className="flex space-x-2">
+              <h1 className="font-poppins text-primary font-semibold">Following</h1>
+              <ChevronRight className="text-primary" />
+            </div>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            {followedPlaylists &&
+              followedPlaylists.map((playlist, index) => (
+                <PlaylistEntry key={index} playlist={playlist.playlist} userId={userId} />
+              ))}
+          </CollapsibleContent>
+        </Collapsible>
       </div>
       <AddPlaylistDialog
         userId={userId}
@@ -78,18 +104,3 @@ function PlaylistEntry({ playlist, userId }: PlaylistEntryProps) {
   );
 }
 
-function SidebarMenu() {
-  return (
-    <Menubar>
-      <MenubarMenu>
-        <MenubarTrigger>Sort</MenubarTrigger>
-      </MenubarMenu>
-      <MenubarMenu>
-        <MenubarTrigger>Filter</MenubarTrigger>
-      </MenubarMenu>
-      <MenubarMenu>
-        <MenubarTrigger>New</MenubarTrigger>
-      </MenubarMenu>
-    </Menubar>
-  );
-}
