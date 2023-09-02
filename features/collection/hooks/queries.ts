@@ -53,12 +53,10 @@ async function fetchFullCollection(
 
 export const useCollectionQuery = (
 	userId: string,
-	initialData?: CollectionWithGamesGenresPlaylists[]
 ) => {
 	const collectionQuery = useQuery({
 		queryKey: ["collection", userId],
 		queryFn: () => fetchFullCollection(userId),
-		initialData: initialData,
 	});
 
 	return collectionQuery;
