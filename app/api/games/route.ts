@@ -24,6 +24,8 @@ export async function GET(req: NextRequest) {
 		}
 	}
 
+	return new NextResponse("no search provided", {status: 401})
+
 	// get all games..
 
 	// other..

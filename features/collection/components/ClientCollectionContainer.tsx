@@ -60,7 +60,7 @@ export function ClientCollectionContainer({
   };
 
   return (
-    <>
+    <div className="w-full items-center flex flex-col space-y-10 justify-center">
       <GenreFilter genres={genres} genreFilter={genreFilter} handleToggleAllGenres={handleToggleAllGenres} handleGenreToggled={handleGenreToggled}/>
       <CollectionViewMenubar
         userId={userId}
@@ -78,7 +78,6 @@ export function ClientCollectionContainer({
         viewIsCard={viewIsCard}
         handleToggleView={handleToggleView}
       />
-      <SearchPopover userId={userId} />
         {collectionQuery.isSuccess && viewIsCard === true && (
           <div className="mx-auto grid w-4/5 grid-cols-1 gap-4 md:w-full md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
             {sortedCollection.map((game) => (
@@ -107,6 +106,6 @@ export function ClientCollectionContainer({
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 }

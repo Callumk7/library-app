@@ -11,7 +11,7 @@ export function ExternalResultsContainer({ results }: ExternalResultsContainerPr
     <div className="flex flex-col gap-2">
       {results.map((game, index) => (
         <GameInlineCard key={index} game={game}>
-          <ExternalSearchResultControls gameId={game.id} game={game} />
+          <ExternalSearchResultControls game={game} />
         </GameInlineCard>
       ))}
     </div>

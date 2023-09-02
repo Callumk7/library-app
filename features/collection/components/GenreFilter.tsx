@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Tag } from "@/components/ui/tag";
 interface GenreFilterProps {
   genres: string[];
@@ -13,7 +12,7 @@ export function GenreFilter({
   handleToggleAllGenres,
 }: GenreFilterProps) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="self-start flex flex-wrap gap-2">
       <button onClick={handleToggleAllGenres}>
         <Tag variant={genreFilter.length === genres.length ? "primary" : "secondary"}>All</Tag>
       </button>

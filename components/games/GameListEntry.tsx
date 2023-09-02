@@ -17,7 +17,7 @@ export function GameListEntry({ game, children }: GameListEntryProps) {
             <p className="cursor-pointer font-bold text-foreground">{game.title}</p>
           </GameHoverCard>
         </div>
-        <div className="w-64">{children}</div>
+        <div className="w-fit">{children}</div>
       </div>
       <Separator />
     </div>

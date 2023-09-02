@@ -69,7 +69,7 @@ export function PlaylistContainer({
       </div>
       <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {sortedCollection.map((game, index) => (
-          <GameCardCover key={index} game={game}>
+          <GameCardCover key={index} game={game} isSelected={false}>
             <PlaylistEntryControls
               playlistId={playlistId}
               game={game}

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Home } from "@/components/ui/icons/Home";
 import { PlayOutline } from "@/components/ui/icons/PlayOutline";
-import { Tag } from "@/components/ui/tag";
+import { SearchIcon } from "@/components/ui/icons/Search";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -12,7 +12,7 @@ interface CollectionNavbarProps {
   genres: string[];
 }
 
-export function CollectionNavbar({ userId, genres }: CollectionNavbarProps) {
+export function CollectionNavbar({ userId }: CollectionNavbarProps) {
   const pathName = usePathname();
   console.log(pathName);
 
@@ -44,13 +44,13 @@ export function CollectionNavbar({ userId, genres }: CollectionNavbarProps) {
         <Button
           asChild
           variant={
-            pathName.startsWith(`/collection/library/`) ? "secondary" : "ghost"
+            pathName.startsWith(`/collection/search`) ? "secondary" : "ghost"
           }
           size={"sm"}
         >
-          <Link href={`/collection/${userId}/playlists`}>
-            <PlayOutline className="mr-2" />
-            <span>All Games</span>
+          <Link href={`/collection/search`}>
+            <SearchIcon className="mr-2" />
+            <span>Find Games</span>
           </Link>
         </Button>
       </div>

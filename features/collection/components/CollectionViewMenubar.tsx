@@ -64,7 +64,7 @@ export function CollectionViewMenubar({
   const addManyToPlaylist = useBulkAddGameToPlaylist(userId);
 
   return (
-    <div className="flex flex-row space-x-6">
+    <div className="self-start flex flex-row space-x-6">
       <Input
         value={searchTerm}
         name="search"
@@ -75,7 +75,7 @@ export function CollectionViewMenubar({
         <MenubarMenu>
           <MenubarTrigger>
             <span className="mr-2">Sort by</span>
-            <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
+            <ChevronDown  />
           </MenubarTrigger>
           <MenubarContent>
             <MenubarRadioGroup value={sortOption}>
@@ -110,27 +110,6 @@ export function CollectionViewMenubar({
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
-          <MenubarTrigger>Filter</MenubarTrigger>
-          <MenubarContent>
-            <MenubarSub>
-              <MenubarSubTrigger inset>Genres</MenubarSubTrigger>
-              <MenubarSubContent>
-                {genres.map((genre, index) => (
-                  <MenubarCheckboxItem
-                    key={index}
-                    checked={genreFilter.includes(genre)}
-                    onCheckedChange={() => handleGenreToggled(genre)}
-                  >
-                    {genre}
-                  </MenubarCheckboxItem>
-                ))}
-                <MenubarSeparator />
-                <MenubarItem inset onClick={handleToggleAllGenres}>
-                  Toggle all
-                </MenubarItem>
-              </MenubarSubContent>
-            </MenubarSub>
-          </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
           <MenubarTrigger>Actions</MenubarTrigger>
@@ -173,7 +152,7 @@ export function CollectionViewMenubar({
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
-      <Toggle pressed={viewIsCard} onPressedChange={handleToggleView} aria-label="view">
+      <Toggle pressed={viewIsCard} variant={"outline"} onPressedChange={handleToggleView} aria-label="view">
         <MenuIcon />
       </Toggle>
       <AddPlaylistDialog

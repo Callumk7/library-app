@@ -5,12 +5,10 @@ import { Add } from "@/components/ui/icons/Add";
 import { IGDBGame } from "@/types";
 
 interface ExternalSearchResultControlsProps {
-  gameId: number;
   game: IGDBGame;
 }
 
 export function ExternalSearchResultControls({
-  gameId,
   game,
 }: ExternalSearchResultControlsProps) {
   const handleSave = async () => {
@@ -24,8 +22,8 @@ export function ExternalSearchResultControls({
   };
 
   return (
-      <Button onClick={handleSave} variant={"secondary"} size={"xs"}>
-        <Add />
-      </Button>
+    <Button onClick={handleSave} variant={"secondary"} size={"xs"}>
+      <Add />
+    </Button>
   );
 }

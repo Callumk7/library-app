@@ -23,7 +23,7 @@ export function PlaylistSidebar({ userId, playlists }: PlaylistSidebarProps) {
 
   return (
     <>
-      <div className="mb-5 flex h-full min-h-[80vh] w-1/4 min-w-[256px] flex-col gap-2 rounded-lg border animate-in">
+      <div className="mb-5 flex h-full justify-self-start min-h-[80vh] w-1/4 min-w-[256px] flex-col gap-2 rounded-lg border animate-in">
         <SidebarMenu />
         <Button
           onClick={() => setDialogOpen(true)}

@@ -36,10 +36,11 @@ export async function GET(req: NextRequest) {
 	try {
 		console.log("fetching from api route..");
 		collection = await getFullCollection(userId);
+		return NextResponse.json(collection);
 	} catch (err) {
 		console.error("something went wrong", err);
+		return new NextResponse("Something went wrong", {status: 500})
 	}
-	return NextResponse.json(collection);
 }
 
 export async function POST(req: NextRequest) {
