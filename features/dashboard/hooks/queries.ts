@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/clients/prisma";
-import { GameWithCoverGenresUsers } from "@/types";
+import { GameWithCoverAndGenres, GameWithCoverGenresUsers } from "@/types";
 
 export async function getTopRatedGames(
 	count: number
@@ -61,6 +61,31 @@ export async function getTopRatedGamesFromGenre(genreId: number, count: number) 
 		},
 		take: count,
 	});
+
+	return games;
+}
+
+export async function getMostRecentGames(): Promise<GameWithCoverAndGenres[]> {
+	const oneWeekAgo = new Date();
+	oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+	const games = await prisma.game.findMany({
+		where: {
+			createdAt: {
+				gt: oneWeekAgo
+			}
+		},
+		include: {
+			cover: true,
+			genres: {
+				include: {
+					genre: true
+				}
+			}
+		},
+		orderBy: {
+			createdAt: "desc"
+		}
+	})
 
 	return games;
 }
