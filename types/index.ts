@@ -131,6 +131,24 @@ const playlistWithGamesCoverGenres = Prisma.validator<Prisma.PlaylistArgs>()({
 	},
 });
 
+const followedPlaylistsWithGames = Prisma.validator<Prisma.FollowersOnPlaylistsArgs>()({
+	include: {
+		playlist: {
+			include: {
+				games: {
+					include: {
+						game: {
+							include: {
+								cover: true,
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+});
+
 type GameWithCover = Prisma.GameGetPayload<typeof gameWithCover>;
 type GameWithCoverAndGenres = Prisma.GameGetPayload<typeof gameWithCoverAndGenres>;
 type GameWithCoverGenresUsers = Prisma.GameGetPayload<typeof gameWithCoverGenresUsers>;
@@ -150,7 +168,11 @@ type PlaylistWithGameCount = Prisma.PlaylistGetPayload<typeof playlistWithGameCo
 type PlaylistWithGamesAndCover = Prisma.PlaylistGetPayload<
 	typeof playlistWithGamesAndCover
 >;
-type PlaylistWithGamesCoverGenres = Prisma.PlaylistGetPayload<typeof playlistWithGamesCoverGenres>;
+type PlaylistWithGamesCoverGenres = Prisma.PlaylistGetPayload<
+	typeof playlistWithGamesCoverGenres
+>;
+
+type FollowedPlaylistsWithGames = Prisma.FollowersOnPlaylistsGetPayload<typeof followedPlaylistsWithGames>;
 
 type GameUpload = Prisma.GameCreateInput;
 
@@ -167,6 +189,7 @@ export type {
 	PlaylistWithGameCount,
 	PlaylistWithGamesAndCover,
 	PlaylistWithGamesCoverGenres,
+	FollowedPlaylistsWithGames,
 };
 
 type SortOption =
