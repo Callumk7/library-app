@@ -6,6 +6,7 @@ import {
 } from "@/types";
 import { Playlist } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
+import { PlaylistEntryControls } from "../components/PlaylistEntryControls";
 
 ///
 /// GET A USER'S PLAYLISTS WITH GAMES AND GENRES
@@ -58,6 +59,33 @@ export const usePlaylistQuery = (userId: string, initialData?: PlaylistWithGames
 
 	return playlistQuery;
 };
+
+///
+/// GET A USER'S FOLLOWED PLAYLISTS
+///
+export async function getFollowedPlaylistsWithGames(userId: string) {
+	const playlists = await prisma.followersOnPlaylists.findMany({
+		where: {
+			userId
+		},
+		include: {
+			playlist: {
+				include: {
+					games: {
+						include: {
+							game: {
+								include: {
+									cover: true
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	})
+	return playlists;
+}
 
 ///
 /// GET A GAME'S COMPLETE LIST OF PLAYLISTS
