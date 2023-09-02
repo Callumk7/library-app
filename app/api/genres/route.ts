@@ -1,5 +1,5 @@
-import { getUserGenres } from "@/features/collection/queries/prisma-functions";
-import { prisma } from "@/lib/db/prisma";
+import { prisma } from "@/lib/clients/prisma";
+import { getUserGenres } from "@/lib/hooks/genres/queries";
 import { Job } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 

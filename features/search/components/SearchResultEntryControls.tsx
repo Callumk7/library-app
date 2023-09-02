@@ -3,9 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { GameWithCoverGenresUsers } from "@/types";
 import { Toast, ToastClose, ToastDescription, ToastTitle } from "@/components/ui/toast";
-import { useEffect, useState } from "react";
-import { useAddToCollectionMutation, useDeleteMutation } from "@/features/collection/queries/mutations";
-import { useCollectionGameIdsQuery } from "@/lib/hooks/queries";
+import { useState } from "react";
+import {
+  useAddToCollectionMutation,
+  useDeleteMutation,
+} from "@/features/collection/hooks/mutations";
+import { useCollectionGameIdsQuery } from "@/features/collection/hooks/queries";
+import { Cross } from "@/components/ui/icons/Cross";
 
 interface SearchResultEntryControlsProps {
   userId: string;
@@ -28,11 +32,10 @@ export function SearchResultEntryControls({
         {collectionIds.data?.includes(game.gameId) ? (
           <Button
             variant={deleteEntry.isLoading ? "ghost" : "destructive"}
-            onClick={() =>
-              deleteEntry.mutate(game.gameId)
-            }
+            size={"sm"}
+            onClick={() => deleteEntry.mutate(game.gameId)}
           >
-            {deleteEntry.isLoading ? "removing.." : "remove from collection"}
+            {deleteEntry.isLoading ? "removing.." : <Cross />}
           </Button>
         ) : (
           <Button
@@ -49,11 +52,7 @@ export function SearchResultEntryControls({
           </Button>
         )}
       </div>
-      <Toast
-        open={saveToastOpen}
-        onOpenChange={setSaveToastOpen}
-        variant={"default"}
-      >
+      <Toast open={saveToastOpen} onOpenChange={setSaveToastOpen} variant={"default"}>
         <ToastTitle>{game.title} added to collection</ToastTitle>
         <ToastDescription>Well done lad</ToastDescription>
         <ToastClose />

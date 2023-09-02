@@ -8,6 +8,10 @@ module.exports = {
 	],
 	theme: {
 		extend: {
+			fontFamily: {
+				poppins: ["var(--font-poppins)"],
+				inter: ["var(--font-inter)"]
+			},
 			colors: {
 				background: {
 					DEFAULT: "hsl(var(--background))",

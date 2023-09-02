@@ -1,11 +1,5 @@
-import {
-  CollectionWithGamesGenresPlaylists,
-  GameWithCoverAndGenres,
-  GameWithCoverGenresPlaylists,
-} from "@/types";
+import { GameWithCoverAndGenres } from "@/types";
 import { DeleteIcon } from "@/components/ui/icons/DeleteIcon";
-import { useDeleteMutation, useTogglePlayed } from "../queries/mutations";
-import { useAddGameToPlaylist } from "@/features/playlists/queries/mutations";
 import { useEffect, useState } from "react";
 import { MenuIcon } from "@/components/ui/icons/MenuIcon";
 import {
@@ -21,31 +15,43 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown";
 import { Button } from "@/components/ui/button";
-import { usePlaylistQuery, useGamePlaylistsQuery } from "@/lib/hooks/queries";
 import { Toast, ToastClose, ToastDescription, ToastTitle } from "@/components/ui/toast";
+import { useAddGameToPlaylist } from "@/features/playlists/hooks/mutations";
+import {
+  useGamePlaylistsQuery,
+  usePlaylistQuery,
+} from "@/features/playlists/hooks/queries";
+import { useDeleteMutation, useTogglePlayed } from "../hooks/mutations";
+import { HeartOutline } from "@/components/ui/icons/HeartOutline";
+import { Add } from "@/components/ui/icons/Add";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useCollectionEntryQuery } from "../hooks/queries";
+import { Spinner } from "@/components/ui/icons/Spinner";
+import { HeartFull } from "@/components/ui/icons/HeartFull";
 
 interface CollectionEntryControlsProps {
   userId: string;
   game: GameWithCoverAndGenres;
-  checkedGames: number[];
-  handleCheckedToggled: (gameId: number) => void;
+  selectedGames: number[];
+  handleSelectedToggled: (gameId: number) => void;
 }
 
 export function CollectionEntryControls({
   userId,
   game,
-  checkedGames,
-  handleCheckedToggled,
+  selectedGames,
+  handleSelectedToggled,
 }: CollectionEntryControlsProps) {
   const [playlistArray, setPlaylistArray] = useState<number[]>([]);
   const [saveToastOpen, setSaveToastOpen] = useState<boolean>(false);
   const [deleteGameToastOpen, setDeleteGameToastOpen] = useState<boolean>(false);
-  const [isChecked, setIsChecked] = useState<boolean>(() =>
-    checkedGames.some((gameId) => gameId !== game.gameId)
+  const [isSelected, setIsSelected] = useState<boolean>(() =>
+    selectedGames.some((gameId) => gameId !== game.gameId)
   );
 
   const gamePlaylistsQuery = useGamePlaylistsQuery(userId, game.gameId);
   const userPlaylistsQuery = usePlaylistQuery(userId);
+  const collectionEntryQuery = useCollectionEntryQuery(userId, game.gameId);
 
   useEffect(() => {
     const initCheckedArray = [];
@@ -63,18 +69,40 @@ export function CollectionEntryControls({
   // Effect for ensuring that the controls instantly reflect that games are selected
   // when a user does a mass toggle
   useEffect(() => {
-    setIsChecked(checkedGames.some((gameId) => gameId === game.gameId));
-  }, [checkedGames, game]);
+    setIsSelected(selectedGames.some((gameId) => gameId === game.gameId));
+  }, [selectedGames, game]);
 
   const deleteEntry = useDeleteMutation(userId);
   const addToPlaylist = useAddGameToPlaylist(userId);
   const playedToggled = useTogglePlayed(userId);
 
   return (
-    <>
+    <div className="flex w-fit flex-row items-center justify-end gap-2 border p-1 rounded-md">
+      <Button variant={"ghost"} size={"icon"}>
+        <Checkbox
+          checked={isSelected}
+          onCheckedChange={() => {
+            setIsSelected(!isSelected);
+            handleSelectedToggled(game.gameId);
+          }}
+        />
+      </Button>
+      <Button
+        variant={"ghost"}
+        size={"icon"}
+        onClick={() => playedToggled.mutate(game.gameId)}
+      >
+        {collectionEntryQuery.isLoading ? (
+          <Spinner className="animate-spin" />
+        ) : collectionEntryQuery.data?.played ? <HeartFull className="text-primary" /> : <HeartOutline />
+        }
+      </Button>
+      <Button variant={"ghost"} size={"icon"}>
+        <Add />
+      </Button>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild className="absolute right-2 top-2">
-          <Button variant={"muted"} size={"icon"}>
+        <DropdownMenuTrigger asChild>
+          <Button variant={"ghost"} size={"icon"}>
             <MenuIcon />
           </Button>
         </DropdownMenuTrigger>
@@ -93,10 +121,10 @@ export function CollectionEntryControls({
             <span>Delete from collection</span>
           </DropdownMenuItem>
           <DropdownMenuCheckboxItem
-            checked={isChecked}
+            checked={isSelected}
             onCheckedChange={() => {
-              handleCheckedToggled(game.gameId);
-              setIsChecked(!isChecked);
+              handleSelectedToggled(game.gameId);
+              setIsSelected(!isSelected);
             }}
           >
             Select game..
@@ -147,6 +175,6 @@ export function CollectionEntryControls({
         <ToastDescription>Bold move sucker</ToastDescription>
         <ToastClose />
       </Toast>
-    </>
+    </div>
   );
 }

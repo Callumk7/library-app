@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { IGDBGame, IGDBGameSchema, IGDBImage } from "@/types";
 import { getGameDetails } from "@/util/igdb";
-import { prisma } from "@/lib/db/prisma";
+import { prisma } from "@/lib/clients/prisma";
 
 export default async function GamePage({ params }: { params: { gameId: string } }) {
   const gameId = Number(params.gameId);

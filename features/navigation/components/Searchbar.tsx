@@ -12,22 +12,11 @@ export default function Searchbar() {
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // const splitSearchTerm = searchTerm.split(" ");
-    // let parsedTerm = "";
-    // for (let i = 0; i < splitSearchTerm.length; i++) {
-    //   const term = splitSearchTerm[i];
-    //   if (i === 0) {
-    //     parsedTerm += term;
-    //   } else if (i < splitSearchTerm.length) {
-    //     parsedTerm += "+";
-    //     parsedTerm += term;
-    //   }
-    // }
-    router.push(`/search?q=${searchTerm}`);
+    router.push(`/collection/search?q=${searchTerm}`);
   };
 
   return (
-    <form onSubmit={handleSearch} className="flex flex-row items-center gap-3">
+    <form onSubmit={handleSearch} className="mb-2 flex flex-row items-center gap-3">
       <Input
         value={searchTerm}
         name="q"

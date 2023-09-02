@@ -1,23 +1,26 @@
 import { GameWithCoverAndGenres, IGDBImage } from "@/types";
 import Image from "next/image";
-import Link from "next/link";
 import clsx from "clsx";
-import { Tag } from "../ui/tag";
 import { RatingLine } from "./Rating";
-import { UserRatingSlider } from "./UserRatingSlider";
-import { InCollectionTag } from "./InCollectionTag";
+import { GameHoverCard } from "./GameHoverCard";
 
 interface GameCardCoverProps {
   game: GameWithCoverAndGenres;
   isCompleted?: boolean;
+  isSelected: boolean;
   children: React.ReactNode;
 }
 
-export function GameCardCover({ game, isCompleted, children }: GameCardCoverProps) {
+export function GameCardCover({
+  game,
+  isCompleted,
+  isSelected,
+  children,
+}: GameCardCoverProps) {
   const size: IGDBImage = "720p";
 
   let borderStyle = "border hover:border-foreground";
-  if (isCompleted) {
+  if (isSelected) {
     borderStyle =
       "border border-lime-500/40 hover:border-lime-500 shadow-lg shadow-lime-500/20 hover:shadow-lime-500/40";
   } else if (game.aggregatedRating !== null && game.aggregatedRating > 95) {
@@ -31,23 +34,23 @@ export function GameCardCover({ game, isCompleted, children }: GameCardCoverProp
   } else {
     releaseDateStr = new Date(game.releaseDate * 1000).toDateString();
   }
+
   return (
-    <div
-      className={clsx(
-        borderStyle,
-        "relative flex max-w-sm flex-col items-center justify-between overflow-hidden rounded-lg text-foreground hover:bg-midnight-5"
-      )}
-    >
-      <Link
-        className="group relative z-0 transition ease-in-out"
-        href={`/games/${game.gameId}`}
+    <div>
+      <div
+        className={clsx(
+          borderStyle,
+          "relative flex max-w-sm flex-col items-center justify-between overflow-hidden rounded-lg text-foreground"
+        )}
       >
-        <Image
-          src={`https://images.igdb.com/igdb/image/upload/t_${size}/${game.cover?.imageId}.jpg`}
-          alt="cover image"
-          width={720}
-          height={1280}
-        />
+        <GameHoverCard game={game}>
+          <Image
+            src={`https://images.igdb.com/igdb/image/upload/t_${size}/${game.cover?.imageId}.jpg`}
+            alt="cover image"
+            width={720}
+            height={1280}
+          />
+        </GameHoverCard>
         <div className="flex flex-col gap-y-3">
           <RatingLine
             percent={game.aggregatedRating ? game.aggregatedRating : 0}
@@ -55,19 +58,9 @@ export function GameCardCover({ game, isCompleted, children }: GameCardCoverProp
             strokeColor="#F0F757"
             trailColor=""
           />
-          <UserRatingSlider />
         </div>
-      </Link>
-      <div className="w-full content-start px-2 py-2 text-xs font-light text-foreground/90">
-        {releaseDateStr}
       </div>
-      <div className="m-2 flex flex-wrap gap-2">
-        <InCollectionTag gameId={game.gameId} />
-        {game.genres.map((genre, index) => (
-          <Tag key={index}>{genre.genre.name}</Tag>
-        ))}
-      </div>
-      {children}
+      <div className="z-10 pt-3">{children}</div>
     </div>
   );
 }

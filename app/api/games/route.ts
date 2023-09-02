@@ -1,5 +1,5 @@
-import { searchGames } from "@/features/search/queries/prisma-functions";
-import { prisma } from "@/lib/db/prisma";
+import { searchGames, searchGamesWithUsers } from "@/features/search/hooks/queries";
+import { prisma } from "@/lib/clients/prisma";
 import { Job } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
 
 	if (query) {
 		console.log(`search query: ${query}`);
-		const results = await searchGames(query);
+		const results = await searchGamesWithUsers(query);
 
 		if (results.length === 0) {
 			console.log("no results found");
@@ -23,6 +23,8 @@ export async function GET(req: NextRequest) {
 			return new NextResponse(body, { status: 200 });
 		}
 	}
+
+	return new NextResponse("no search provided", {status: 401})
 
 	// get all games..
 

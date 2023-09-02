@@ -1,7 +1,10 @@
 import { CollectionWithGamesGenresPlaylists } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
-import { getFullCollection } from "@/features/collection/queries/prisma-functions";
-import { prisma } from "@/lib/db/prisma";
+import { prisma } from "@/lib/clients/prisma";
+import {
+	getCollectionEntry,
+	getFullCollection,
+} from "@/features/collection/hooks/queries";
 
 // GET entire collection, and sub data (genres, artworks, screenshots)
 // in one go. This is the initial fetch of all data
@@ -14,14 +17,30 @@ export async function GET(req: NextRequest) {
 		return new NextResponse("No user id provided", { status: 401 });
 	}
 
+	// if there is a game id present, then return just that game
+	const gameId = Number(params.get("gameId"));
+	if (gameId) {
+		try {
+			const entry = await getCollectionEntry(userId, gameId);
+			const resBody = JSON.stringify(entry);
+			return new NextResponse(resBody, { status: 200 });
+		} catch (err) {
+			console.log("error fetching single collection entry");
+			return new NextResponse("Error fetching single collection entry", {
+				status: 401,
+			});
+		}
+	}
+
 	let collection: CollectionWithGamesGenresPlaylists[] = [];
 	try {
 		console.log("fetching from api route..");
 		collection = await getFullCollection(userId);
+		return NextResponse.json(collection);
 	} catch (err) {
 		console.error("something went wrong", err);
+		return new NextResponse("Something went wrong", {status: 500})
 	}
-	return NextResponse.json(collection);
 }
 
 export async function POST(req: NextRequest) {

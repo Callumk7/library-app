@@ -1,23 +1,30 @@
+import { options } from "@/app/api/auth/[...nextauth]/options";
 import { PlaylistCard } from "@/features/playlists/components/PlaylistCard";
-import { getPlaylistsWithGames } from "@/features/playlists/queries/prisma-functions";
+import { getAllPlaylistsWithGames } from "@/features/playlists/hooks/queries";
 import { PlaylistWithGamesAndCover } from "@/types";
+import { getServerSession } from "next-auth";
 
 export default async function PlaylistsPage() {
-  const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
+  const session = await getServerSession(options);
 
-  if (!userId) {
-    return <div>Get the hell out of this place</div>;
+  if (!session) {
+    return (
+      <div>
+        <p>Time to login</p>
+      </div>
+    );
   }
+  if (session) {
+    const userId = session.user.id;
+    const playlistsWithGames: PlaylistWithGamesAndCover[] =
+      await getAllPlaylistsWithGames(userId);
 
-  const playlistsWithGames: PlaylistWithGamesAndCover[] = await getPlaylistsWithGames(
-    userId
-  );
-
-  return (
-    <main className="mx-auto flex flex-wrap items-center gap-10 p-24 animate-in">
-      {playlistsWithGames.map((playlist, index) => (
-        <PlaylistCard key={index} playlist={playlist} />
-      ))}
-    </main>
-  );
+    return (
+      <main className="mx-auto grid grid-cols-3 items-center gap-16 p-24 animate-in">
+        {playlistsWithGames.map((playlist, index) => (
+          <PlaylistCard key={index} playlist={playlist} />
+        ))}
+      </main>
+    );
+  }
 }

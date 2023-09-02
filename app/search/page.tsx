@@ -1,14 +1,6 @@
-import {
-  getCollectionGameIds,
-  getFullCollection,
-} from "@/features/collection/queries/prisma-functions";
 import { ClientSearchContainer } from "@/features/search/components/ClientSearchContainer";
 import { ExternalResultsContainer } from "@/features/search/components/ExternalResultsContainer";
-import {
-  searchGames,
-  searchGamesWithUsers,
-} from "@/features/search/queries/prisma-functions";
-import { IGDBGame, IGDBGameSchema } from "@/types";
+import { searchGamesWithUsers } from "@/features/search/hooks/queries";
 import { getSearchResults } from "@/util/igdb";
 
 export default async function SearchPage({
@@ -20,33 +12,17 @@ export default async function SearchPage({
   const query = searchParams.q;
   console.log(query);
 
-  const [results, igdbResults, resultsWithUsers, collection, collectionIds] =
-    await Promise.all([
-      searchGames(query),
-      getSearchResults(query),
-      searchGamesWithUsers(query),
-      getFullCollection(userId),
-      getCollectionGameIds(userId),
-    ]);
-
-  const externalResults: IGDBGame[] = [];
-  for (const result of igdbResults) {
-    const validResult = IGDBGameSchema.parse(result);
-    externalResults.push(validResult);
-  }
+  const [igdbResults, resultsWithUsers] = await Promise.all([
+    getSearchResults(query),
+    searchGamesWithUsers(query),
+  ]);
 
   return (
-    <div className="mt-10 grid grid-cols-3 gap-4">
+    <div className="mx-4 mt-10 grid grid-cols-3 gap-4">
       <div className="col-span-2">
-        <ClientSearchContainer
-          results={results}
-          resultsWithUsers={resultsWithUsers}
-          userId={userId}
-          collection={collection}
-          collectionIds={collectionIds}
-        />
+        <ClientSearchContainer userId={userId} resultsWithUsers={resultsWithUsers} />
       </div>
-      <ExternalResultsContainer results={externalResults} />
+      <ExternalResultsContainer results={igdbResults} />
     </div>
   );
 }

@@ -1,9 +1,6 @@
-import {
-	deletePlaylist,
-	getGamesInPlaylist,
-    getPlaylistsWithGames,
-} from "@/features/playlists/queries/prisma-functions";
-import { prisma } from "@/lib/db/prisma";
+import { deletePlaylist } from "@/features/playlists/hooks/mutations";
+import { getPlaylistWithGames, getAllPlaylistsWithGames, getGamesFromPlaylist } from "@/features/playlists/hooks/queries";
+import { prisma } from "@/lib/clients/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -21,7 +18,7 @@ export async function GET(req: NextRequest) {
 
 	if (!playlistIdParam) {
 		try {
-			const playlists = await getPlaylistsWithGames(userId);
+			const playlists = await getAllPlaylistsWithGames(userId);
 			const body = JSON.stringify(playlists);
 			return new NextResponse(body, {
 				headers: {
@@ -34,9 +31,11 @@ export async function GET(req: NextRequest) {
 		}
 	}
 
+	// if the request has a playlist id searchParam, then we will only return
+	// that playlist to the in the response
 	try {
 		const playlistId = Number(playlistIdParam);
-		const games = await getGamesInPlaylist(playlistId);
+		const games = await getGamesFromPlaylist(playlistId);
 		const body = JSON.stringify(games);
 		return new NextResponse(body, {
 			headers: {
