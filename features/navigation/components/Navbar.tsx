@@ -7,10 +7,12 @@ import { Playlist } from "@/components/ui/icons/Playlist";
 import { Home } from "@/components/ui/icons/Home";
 import { usePathname } from "next/navigation";
 import { FriendsIcon } from "@/components/ui/icons/Friends";
+import { useSession } from "next-auth/react";
 
 export default function Navbar() {
   const pathName = usePathname();
-  const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
+  const { data, status } = useSession();
+  const userId = data?.user.id;
   return (
     <nav className="flex w-full justify-between rounded-md border px-6">
       <div className="mx-auto flex w-full items-center justify-between px-4 py-3 text-sm text-foreground">

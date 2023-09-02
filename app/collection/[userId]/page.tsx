@@ -1,10 +1,17 @@
+import { options } from "@/app/api/auth/[...nextauth]/options";
 import { ClientCollectionContainer } from "@/features/collection/components/ClientCollectionContainer";
-import { GenreFilter } from "@/features/collection/components/GenreFilter";
 import { getFullCollection } from "@/features/collection/hooks/queries";
 import { getUserGenres } from "@/lib/hooks/genres/queries";
+import { getServerSession } from "next-auth";
 
 export default async function CollectionPage({ params }: { params: { userId: string } }) {
-  const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
+  const session = await getServerSession(options);
+  if (!session) {
+    return <div>time to login..</div>;
+  }
+
+  const userId = session.user.id;
+
   if (userId !== params.userId) {
     // TODO: handle seeing other peoples collections if they are not private
     return <h1>NOT YOU, GET OUT</h1>;
@@ -16,12 +23,12 @@ export default async function CollectionPage({ params }: { params: { userId: str
   ]);
 
   return (
-    <main className="flex min-h-screen w-full flex-col items-center space-y-10 animate-in">
+    <div className="min-h-screen justify-self-center w-full">
       <ClientCollectionContainer
         userId={userId}
         collection={collection}
         genres={genres}
       />
-    </main>
+    </div>
   );
 }

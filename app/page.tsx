@@ -2,35 +2,40 @@ import { GameCardCover } from "@/components/games/GameCardCover";
 import { getTopRatedGames } from "@/features/dashboard/hooks/queries";
 import { SearchResultEntryControls } from "@/features/search/components/SearchResultEntryControls";
 import { getServerSession } from "next-auth";
-import { options } from "@/app/api/auth/[...nextauth]/options"
+import { options } from "@/app/api/auth/[...nextauth]/options";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const session = await getServerSession(options);
-  const userId = "user_2Tmlvj4Ju83ZYElhXRg9pNjvakf";
   const games = await getTopRatedGames(6);
-  if (session) {
+  if (!session) {
     return (
       <div>
-        <div>{session.user?.name}</div>
-        <div>{session.user?.email}</div>
-        <div>{session.user?.image}</div>
+        <p>Time to login</p>
       </div>
-    )
+    );
   }
-  return (
-    <main className="flex flex-col space-y-10">
-      <div className="flex flex-col space-y-3">
-        <h2>Top rated games</h2>
-        <div className="mx-auto my-10 grid w-4/5 grid-cols-2 gap-5 md:grid-cols-3">
-          {games.map((game, index) => (
-            <GameCardCover key={index} game={game} isCompleted={false} isSelected={false}>
-              <SearchResultEntryControls userId={userId} game={game} />
-            </GameCardCover>
-          ))}
+  if (session) {
+    const userId = session.user.id;
+    return (
+      <main className="flex flex-col space-y-10">
+        <div className="flex flex-col space-y-3">
+          <h2>Top rated games</h2>
+          <div className="mx-auto my-10 grid w-4/5 grid-cols-2 gap-5 md:grid-cols-3">
+            {games.map((game, index) => (
+              <GameCardCover
+                key={index}
+                game={game}
+                isCompleted={false}
+                isSelected={false}
+              >
+                <SearchResultEntryControls userId={userId} game={game} />
+              </GameCardCover>
+            ))}
+          </div>
         </div>
-      </div>
-    </main>
-  );
+      </main>
+    );
+  }
 }
