@@ -14,6 +14,7 @@ export default async function PlaylistsPage() {
       </div>
     );
   }
+
   if (session) {
     const userId = session.user.id;
     const playlistsWithGames: PlaylistWithGamesAndCover[] =

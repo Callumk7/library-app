@@ -19,14 +19,13 @@ export default async function CollectionPage({ params }: { params: { userId: str
 
   const [genres, collection] = await Promise.all([
     getUserGenres(userId),
-    getFullCollection(userId),
+    // getFullCollection(userId),
   ]);
 
   return (
     <div className="min-h-screen justify-self-center w-full">
       <ClientCollectionContainer
         userId={userId}
-        collection={collection}
         genres={genres}
       />
     </div>

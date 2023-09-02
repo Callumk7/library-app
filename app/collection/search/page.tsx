@@ -12,24 +12,22 @@ export default async function SearchPage({
 }) {
   let query = searchParams.q;
   if (!searchParams.q) {
-    query = "hollow"
+    query = "hollow";
   }
   const session = await getServerSession(options);
   if (!session) {
     return <div>time to login</div>;
   }
   if (session) {
-    const userId = session.user.id
+    const userId = session.user.id;
     const [igdbResults, resultsWithUsers] = await Promise.all([
       getSearchResults(query),
       searchGamesWithUsers(query),
     ]);
 
     return (
-      <div className="mx-4 mt-10">
-        <div className="col-span-2">
-          <ClientSearchContainer userId={userId} resultsWithUsers={resultsWithUsers} />
-        </div>
+      <div className="mx-4 mt-10 flex flex-col space-y-5">
+        <ClientSearchContainer userId={userId} resultsWithUsers={resultsWithUsers} />
         <ExternalResultsContainer results={igdbResults} />
       </div>
     );
