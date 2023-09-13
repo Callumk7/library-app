@@ -1,6 +1,10 @@
 import { options } from "@/app/api/auth/[...nextauth]/options";
 import { ClientCollectionContainer } from "@/features/collection/components/ClientCollectionContainer";
 import { getFullCollection } from "@/features/collection/hooks/queries";
+import {
+  getAllPlaylistsWithGames,
+  getPlaylists,
+} from "@/features/playlists/hooks/queries";
 import { getUserGenres } from "@/lib/hooks/genres/queries";
 import { getServerSession } from "next-auth";
 
@@ -17,16 +21,19 @@ export default async function CollectionPage({ params }: { params: { userId: str
     return <h1>NOT YOU, GET OUT</h1>;
   }
 
-  const [genres, collection] = await Promise.all([
+  const [genres, fullCollection, playlists] = await Promise.all([
     getUserGenres(userId),
-    // getFullCollection(userId),
+    getFullCollection(userId), // collection -> games -> playlists
+    getAllPlaylistsWithGames(userId),
   ]);
 
   return (
-    <div className="min-h-screen justify-self-center w-full">
+    <div className="min-h-screen w-full justify-self-center">
       <ClientCollectionContainer
         userId={userId}
         genres={genres}
+        fullCollection={fullCollection}
+        playlists={playlists}
       />
     </div>
   );

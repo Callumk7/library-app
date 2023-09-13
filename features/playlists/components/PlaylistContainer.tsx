@@ -1,15 +1,14 @@
 "use client";
 
-import { GameCardCover } from "@/components/games/GameCardCover";
 import { GameWithCoverAndGenres } from "@/types";
 import { PlaylistEntryControls } from "./PlaylistEntryControls";
-import { CollectionViewMenubar } from "@/features/collection/components/CollectionViewMenubar";
-import { useSortAndFilter } from "@/features/collection/hooks/filtering";
 import { useGamesFromPlaylistQuery } from "../hooks/queries";
 import { useState } from "react";
 import { SearchPopover } from "@/components/SearchPopover";
 import { useSelectGames } from "@/features/collection/hooks/select";
 import { CoverView } from "@/components/games/CoverView";
+import { GameViewMenubar } from "@/features/collection/components/GameViewMenubar";
+import { useFilter, useSort } from "@/features/collection/hooks/filtering";
 
 const DEFAULT_SORT_OPTION = "rating";
 
@@ -24,24 +23,33 @@ export function PlaylistContainer({
   userId,
   genres,
   playlistId,
-  games,
 }: PlaylistContainerProps) {
   const [viewIsCard, setViewIsCard] = useState<boolean>(true);
-  const gamesFromPlaylistQuery = useGamesFromPlaylistQuery(userId, playlistId, games);
+  const gamesFromPlaylistQuery = useGamesFromPlaylistQuery(userId, playlistId);
+
+  let games = [];
+  if (gamesFromPlaylistQuery.isLoading) {
+    games = [];
+  } else if (gamesFromPlaylistQuery.isSuccess) {
+    games = gamesFromPlaylistQuery.data;
+  }
 
   const {
     searchTerm,
-    sortOption,
-    setSortOption,
     genreFilter,
-    sortedCollection,
+    filteredGames,
     handleSearchTermChanged,
     handleGenreToggled,
     handleToggleAllGenres,
-  } = useSortAndFilter(DEFAULT_SORT_OPTION, genres, gamesFromPlaylistQuery.data!);
+  } = useFilter(games, genres);
+
+  const { sortOption, setSortOption, sortedGames } = useSort(
+    DEFAULT_SORT_OPTION,
+    filteredGames
+  );
 
   const { selectedGames, handleSelectedToggled, handleSelectAll, handleUnselectAll } =
-    useSelectGames(sortedCollection);
+    useSelectGames(sortedGames);
 
   const handleToggleView = () => {
     setViewIsCard(!viewIsCard);
@@ -50,26 +58,20 @@ export function PlaylistContainer({
   return (
     <>
       <div className="flex flex-row gap-x-4 align-middle">
-        <CollectionViewMenubar
+        <GameViewMenubar
           userId={userId}
           selectedGames={selectedGames}
-          genreFilter={genreFilter}
-          genres={genres}
           handleSearchTermChanged={handleSearchTermChanged}
           searchTerm={searchTerm}
-          sortOption={sortOption}
           handleSelectAll={handleSelectAll}
           handleUnselectAll={handleUnselectAll}
-          setSortOption={setSortOption}
-          handleGenreToggled={handleGenreToggled}
-          handleToggleAllGenres={handleToggleAllGenres}
           viewIsCard={viewIsCard}
           handleToggleView={handleToggleView}
         />
-        <SearchPopover userId={userId} />
+        <SearchPopover userId={userId} playlistId={playlistId} />
       </div>
       <CoverView
-        games={sortedCollection}
+        games={sortedGames}
         selectedGames={selectedGames}
         ControlComponent={PlaylistEntryControls}
         controlProps={{ playlistId, userId, handleSelectedToggled }}

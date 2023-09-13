@@ -3,8 +3,8 @@ import { SearchResultEntryControls } from "@/features/search/components/SearchRe
 import { getServerSession } from "next-auth";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 import { CoverView } from "@/components/games/CoverView";
-
-export const dynamic = "force-dynamic";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default async function HomePage() {
   const session = await getServerSession(options);
@@ -13,6 +13,9 @@ export default async function HomePage() {
     return (
       <div>
         <p>Time to login</p>
+        <Button asChild>
+          <Link href="/api/auth/signIn">Sign in</Link>
+        </Button>
       </div>
     );
   }

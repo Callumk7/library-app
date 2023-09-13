@@ -1,4 +1,4 @@
-import { GameWithCoverAndGenres, GameWithCoverGenresPlaylists, SortOption } from "@/types";
+import { GameWithCoverAndGenres, SortOption } from "@/types";
 
 export const applySorting = (
 	games: GameWithCoverAndGenres[],

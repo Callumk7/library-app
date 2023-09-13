@@ -1,19 +1,18 @@
 import { IGDBGame } from "@/types";
 import { ExternalSearchResultControls } from "./ExternalSearchResultControls";
-import { GameInlineCard } from "@/components/games/GameInlineCard";
+import { ExternalCoverView } from "@/components/games/igdb/ExternalCoverView";
+import { getSearchResults } from "@/util/igdb";
 
-interface ExternalResultsContainerProps {
-  results: IGDBGame[];
-}
-
-export function ExternalResultsContainer({ results }: ExternalResultsContainerProps) {
+export async function ExternalResultsContainer(){
+  const igdbResults = await getSearchResults("hollow");
   return (
     <div className="flex flex-col gap-2">
-      {results.map((game, index) => (
-        <GameInlineCard key={index} game={game}>
-          <ExternalSearchResultControls game={game} />
-        </GameInlineCard>
-      ))}
+      <ExternalCoverView
+        games={igdbResults}
+        selectedGames={[]}
+        ControlComponent={ExternalSearchResultControls}
+        controlProps={{}}
+      />
     </div>
   );
 }

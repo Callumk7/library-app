@@ -2,6 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Add } from "@/components/ui/icons/Add";
+import { SearchIcon } from "@/components/ui/icons/Search";
+import { useSaveGame } from "@/features/collection/hooks/mutations";
 import { IGDBGame } from "@/types";
 
 interface ExternalSearchResultControlsProps {
@@ -11,19 +13,16 @@ interface ExternalSearchResultControlsProps {
 export function ExternalSearchResultControls({
   game,
 }: ExternalSearchResultControlsProps) {
-  const handleSave = async () => {
-    const res = await fetch("/api/search/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(game),
-    });
-  };
+  const saveGame = useSaveGame(game);
 
   return (
-    <Button onClick={handleSave} variant={"secondary"} size={"xs"}>
-      <Add />
+    <Button onClick={() => saveGame.mutate()} variant={"secondary"} size={"xs"}>
+      {saveGame.isLoading ? (
+      <SearchIcon />
+        ) : (
+        <Add />
+        )
+      }
     </Button>
   );
 }

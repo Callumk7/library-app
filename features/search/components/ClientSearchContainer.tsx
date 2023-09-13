@@ -1,41 +1,73 @@
 "use client";
 
-import { GameCardCover } from "@/components/games/GameCardCover";
-import { GameWithCoverAndGenres, GameWithCoverGenresUsers } from "@/types";
+import { GameWithCoverAndGenres, IGDBGame } from "@/types";
 import { SearchResultEntryControls } from "./SearchResultEntryControls";
-import { useDbSearchQuery } from "../hooks/queries";
-import Searchbar from "@/features/navigation/components/Searchbar";
 import { CoverView } from "@/components/games/CoverView";
+import { ExternalCoverView } from "@/components/games/igdb/ExternalCoverView";
+import { ExternalSearchResultControls } from "./ExternalSearchResultControls";
+import { useFilter } from "@/features/collection/hooks/filtering";
+import { GameViewMenubar } from "@/features/collection/components/GameViewMenubar";
+import { useSelectGames } from "@/features/collection/hooks/select";
+import { useIgdbSearchQuery } from "../hooks/queries";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 interface ClientSearchContainerProps {
   userId: string;
-  resultsWithUsers: GameWithCoverGenresUsers[];
+  games: GameWithCoverAndGenres[];
+  genres: string[];
 }
 
 export function ClientSearchContainer({
   userId,
-  resultsWithUsers,
+  games,
+  genres,
 }: ClientSearchContainerProps) {
+  const { filteredGames, searchTerm, handleSearchTermChanged } = useFilter(games, genres);
+
+  const { selectedGames, handleSelectAll, handleUnselectAll } =
+    useSelectGames(filteredGames);
+
+  const [query, setQuery] = useState<string>("");
+  const handleSubmitSearch = () => {
+    setQuery(searchTerm);
+  };
+
+  const externalSearchQuery = useIgdbSearchQuery(query);
+
   return (
     <>
-      <div className="container flex max-w-md flex-col gap-1 rounded-md border p-1">
-        <h1 className="pb-2 font-poppins font-semibold">
-          Find games to add to your collection
-        </h1>
-        <p className="">
-          If you can&apos;t find what you are looking for below, have a look at the sidebar
-          where you can save games from somewhere else to our database
-        </p>
+      <GameViewMenubar
+        userId={userId}
+        selectedGames={selectedGames}
+        searchTerm={searchTerm}
+        handleSelectAll={handleSelectAll}
+        handleUnselectAll={handleUnselectAll}
+        handleSearchTermChanged={handleSearchTermChanged}
+        viewIsCard={true}
+        handleToggleView={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
+      <div className="place-self-center">
+        <h1>Find games to add to your collection</h1>
       </div>
-      <Searchbar />
-      <CoverView games={resultsWithUsers} selectedGames={[]} ControlComponent={SearchResultEntryControls} controlProps={{userId}} />
-      <div className="mx-auto grid w-4/5 grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        {resultsWithUsers.map((game, index) => (
-          <GameCardCover key={index} game={game} isSelected={false} isCompleted={false}>
-            <SearchResultEntryControls userId={userId} game={game} />
-          </GameCardCover>
-        ))}
+      <CoverView
+        games={filteredGames}
+        selectedGames={selectedGames}
+        ControlComponent={SearchResultEntryControls}
+        controlProps={{ userId }}
+      />
+      <div className="place-self-center">
+        <h1>Search IGDB to add games to our collection!</h1>
       </div>
+      <Button onClick={handleSubmitSearch}>Search</Button>
+      <ExternalCoverView
+        games={externalSearchQuery.data ? externalSearchQuery.data : []}
+        selectedGames={[]}
+        ControlComponent={ExternalSearchResultControls}
+        controlProps={{}}
+      />
     </>
   );
 }

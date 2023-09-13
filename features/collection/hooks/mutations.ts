@@ -3,11 +3,11 @@ import {
 	CollectionWithGamesAndGenres,
 	CollectionWithGamesGenresPlaylists,
 	Game,
+	IGDBGame,
 	UserGameCollection,
 } from "@/types";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-
 
 const postGameToCollection = async (gameId: number, userId: string) => {
 	const res = await fetch(`/api/collection?gameId=${gameId}&userId=${userId}`, {
@@ -193,33 +193,31 @@ export const useTogglePlayed = (userId: string) => {
 			const prevState = queryClient.getQueryData([
 				"collection",
 				userId,
-			]) as CollectionWithGamesAndGenres[];
+				gameId,
+			]) as CollectionWithGamesAndGenres;
 
-			const played = prevState.find((game) => game.gameId === gameId)!.played;
+			const played = prevState.played;
 			console.log(played)
 			return patchToggleGameAsPlayed(userId, gameId, played);
 		},
 
 		onMutate: (gameId) => {
-			queryClient.cancelQueries(["collection", userId]);
 			const prevState = queryClient.getQueryData([
 				"collection",
 				userId,
-			]) as CollectionWithGamesAndGenres[];
+				gameId,
+			]) as CollectionWithGamesAndGenres;
 
-			const newState = prevState.map((game) => {
-				if (game.gameId === gameId) {
-					return { ...game, played: !game.played };
-				}
-				return game;
-			});
+			const played = !prevState.played;
+			const newState = prevState;
+			newState.played = played;
 
-			queryClient.setQueryData(["collection", userId], newState);
+			queryClient.setQueryData(["collection", userId, gameId], newState);
 		},
 
-		onSuccess: () => {
+		onSuccess: ({gameId}) => {
 			console.log("played toggled successfully");
-			queryClient.invalidateQueries(["collection", userId]);
+			queryClient.invalidateQueries(["collection", userId, gameId]);
 		},
 	});
 
@@ -287,3 +285,32 @@ export const useToggleCompleted = (userId: string) => {
 
 	return markAsPlayedMutation;
 };
+
+// Add a game to the database (from an external source)
+const saveGameToDatabase = async (game: IGDBGame) => {
+    const res = await fetch("/api/search/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(game),
+    });
+
+	if (!res.ok) {
+		throw new Error("network response was not ok");
+	}
+
+	const data = await res.json();
+	return data as IGDBGame;
+}
+
+export const useSaveGame = (game: IGDBGame) => {
+	const saveGameMutation = useMutation({
+		mutationFn: () => saveGameToDatabase(game),
+		onSuccess: () => {
+			console.log("successfully saved")
+		}
+	})
+
+	return saveGameMutation;
+}

@@ -1,18 +1,14 @@
 import {
   Menubar,
-  MenubarCheckboxItem,
   MenubarContent,
   MenubarItem,
   MenubarMenu,
-  MenubarRadioGroup,
-  MenubarRadioItem,
   MenubarSeparator,
   MenubarSub,
   MenubarSubContent,
   MenubarSubTrigger,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { SortOption } from "@/types";
 import { useState } from "react";
 import { Input } from "@/components/ui/form";
 import { AddPlaylistDialog } from "@/features/playlists/components/AddPlaylistDialog";
@@ -21,40 +17,30 @@ import { usePlaylistQuery } from "@/features/playlists/hooks/queries";
 import { useDeleteManyMutation } from "../hooks/mutations";
 import { Toggle } from "@/components/ui/toggle";
 import { MenuIcon } from "@/components/ui/icons/MenuIcon";
-import { ChevronDown } from "@/components/ui/icons/ChevronDown";
+import { PlaylistWithGames } from "@/types";
 
 interface CollectionViewMenubarProps {
   userId: string;
   selectedGames: number[];
-  genres: string[];
-  genreFilter: string[];
   searchTerm: string;
-  sortOption: SortOption;
   handleSelectAll: () => void;
   handleUnselectAll: () => void;
-  setSortOption: (option: SortOption) => void;
   handleSearchTermChanged: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleGenreToggled: (genre: string) => void;
-  handleToggleAllGenres: () => void;
   viewIsCard: boolean;
   handleToggleView: () => void;
+  playlists: PlaylistWithGames[];
 }
 
-export function CollectionViewMenubar({
+export function GameViewMenubar({
   userId,
   selectedGames,
-  genres,
-  genreFilter,
   searchTerm,
   handleSelectAll,
   handleUnselectAll,
-  sortOption,
-  setSortOption,
   handleSearchTermChanged,
-  handleGenreToggled,
-  handleToggleAllGenres,
   viewIsCard,
   handleToggleView,
+  playlists
 }: CollectionViewMenubarProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
@@ -64,7 +50,7 @@ export function CollectionViewMenubar({
   const addManyToPlaylist = useBulkAddGameToPlaylist(userId);
 
   return (
-    <div className="self-start flex flex-row space-x-6">
+    <div className="flex flex-row space-x-6 self-start">
       <Input
         value={searchTerm}
         name="search"
@@ -72,45 +58,6 @@ export function CollectionViewMenubar({
         placeholder="Search for a game"
       />
       <Menubar>
-        <MenubarMenu>
-          <MenubarTrigger>
-            <span className="mr-2">Sort by</span>
-            <ChevronDown  />
-          </MenubarTrigger>
-          <MenubarContent>
-            <MenubarRadioGroup value={sortOption}>
-              <MenubarRadioItem
-                onSelect={() => setSortOption("nameAsc")}
-                value={"nameAsc"}
-              >
-                Name ascending
-              </MenubarRadioItem>
-              <MenubarRadioItem
-                onSelect={() => setSortOption("nameDesc")}
-                value={"nameDesc"}
-              >
-                Name descending
-              </MenubarRadioItem>
-              <MenubarRadioItem onSelect={() => setSortOption("rating")} value={"rating"}>
-                Rating
-              </MenubarRadioItem>
-              <MenubarRadioItem
-                onSelect={() => setSortOption("releaseDateAsc")}
-                value={"releaseDateAsc"}
-              >
-                Release Date (asc)
-              </MenubarRadioItem>
-              <MenubarRadioItem
-                onSelect={() => setSortOption("releaseDateDesc")}
-                value={"releaseDateDesc"}
-              >
-                Release Date (desc)
-              </MenubarRadioItem>
-            </MenubarRadioGroup>
-          </MenubarContent>
-        </MenubarMenu>
-        <MenubarMenu>
-        </MenubarMenu>
         <MenubarMenu>
           <MenubarTrigger>Actions</MenubarTrigger>
           <MenubarContent>
@@ -152,7 +99,12 @@ export function CollectionViewMenubar({
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
-      <Toggle pressed={viewIsCard} variant={"outline"} onPressedChange={handleToggleView} aria-label="view">
+      <Toggle
+        pressed={!viewIsCard}
+        variant={"outline"}
+        onPressedChange={handleToggleView}
+        aria-label="view"
+      >
         <MenuIcon />
       </Toggle>
       <AddPlaylistDialog

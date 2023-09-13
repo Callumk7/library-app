@@ -2,16 +2,20 @@
 
 import { Button } from "@/components/ui/button";
 import { Add } from "@/components/ui/icons/Add";
-import { DeleteIcon } from "@/components/ui/icons/DeleteIcon";
 import { FollowedPlaylistsWithGames, PlaylistWithGames } from "@/types";
 import Link from "next/link";
 import { useState } from "react";
 import { AddPlaylistDialog } from "./AddPlaylistDialog";
 import { useDeletePlaylist } from "../hooks/mutations";
-import { usePlaylistQuery } from "../hooks/queries";
-import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { ChevronRight } from "@/components/ui/icons/ChevronRight";
+import { usePlaylistQuery } from "../hooks/queries";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown";
+import { MenuIcon } from "@/components/ui/icons/MenuIcon";
 
 interface PlaylistSidebarProps {
   userId: string;
@@ -19,14 +23,18 @@ interface PlaylistSidebarProps {
   followedPlaylists: FollowedPlaylistsWithGames[];
 }
 
-export function PlaylistSidebar({ userId, playlists, followedPlaylists }: PlaylistSidebarProps) {
+export function PlaylistSidebar({
+  userId,
+  playlists,
+  followedPlaylists,
+}: PlaylistSidebarProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   const playlistQuery = usePlaylistQuery(userId, playlists);
 
   return (
     <>
-      <div className="mb-5 px-3 flex h-full justify-self-start min-h-[80vh] w-1/4 min-w-[256px] flex-col gap-2 rounded-lg border animate-in">
+      <div className="mb-5 flex h-full min-h-[80vh] w-1/4 min-w-[256px] flex-col gap-2 justify-self-start rounded-lg border px-3 animate-in">
         <Button
           onClick={() => setDialogOpen(true)}
           className="mx-4 my-6"
@@ -34,10 +42,10 @@ export function PlaylistSidebar({ userId, playlists, followedPlaylists }: Playli
         >
           <span className="mr-1">Add Playlist</span> <Add />
         </Button>
-        <Collapsible>
+        <Collapsible defaultOpen>
           <CollapsibleTrigger>
             <div className="flex space-x-2">
-              <h1 className="font-poppins text-primary font-semibold">My Playlists</h1>
+              <h1 className="font-poppins font-semibold text-primary">My Playlists</h1>
               <ChevronRight className="text-primary" />
             </div>
           </CollapsibleTrigger>
@@ -48,10 +56,10 @@ export function PlaylistSidebar({ userId, playlists, followedPlaylists }: Playli
               ))}
           </CollapsibleContent>
         </Collapsible>
-        <Collapsible>
+        <Collapsible defaultOpen>
           <CollapsibleTrigger>
             <div className="flex space-x-2">
-              <h1 className="font-poppins text-primary font-semibold">Following</h1>
+              <h1 className="font-poppins font-semibold text-primary">Following</h1>
               <ChevronRight className="text-primary" />
             </div>
           </CollapsibleTrigger>
@@ -79,7 +87,6 @@ interface PlaylistEntryProps {
 
 function PlaylistEntry({ playlist, userId }: PlaylistEntryProps) {
   const deletePlaylist = useDeletePlaylist(userId);
-  // sidebar entry
   return (
     <Link
       href={`/collection/${userId}/playlists/${playlist.id}`}
@@ -92,15 +99,22 @@ function PlaylistEntry({ playlist, userId }: PlaylistEntryProps) {
           {playlist.games ? playlist.games.length : 0}
         </p>
       </div>
-      <Button
-        onClick={() => deletePlaylist.mutate(playlist.id)}
-        className="absolute right-2 top-2"
-        size={"icon"}
-        variant={"outline"}
-      >
-        <DeleteIcon />
-      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            className="absolute right-2 top-2"
+            size={"icon"}
+            variant={"outline"}
+          >
+            <MenuIcon />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="right">
+          <DropdownMenuItem onClick={() => deletePlaylist.mutate(playlist.id)}>Delete Playlist</DropdownMenuItem>
+          <DropdownMenuItem>Rename...</DropdownMenuItem>
+          <DropdownMenuItem>Share...</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </Link>
   );
 }
-

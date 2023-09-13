@@ -6,7 +6,6 @@ import {
 } from "@/types";
 import { Playlist } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
-import { PlaylistEntryControls } from "../components/PlaylistEntryControls";
 
 ///
 /// GET A USER'S PLAYLISTS WITH GAMES AND GENRES
@@ -238,9 +237,9 @@ const fetchGamesFromPlaylist = async (userId: string, playlistId: number)  => {
 
 export const useGamesFromPlaylistQuery = (userId: string, playlistId: number, initialData?: GameWithCoverAndGenres[]) => {
 	const gamesFromPlaylistQuery = useQuery({
-		queryKey: ["playlists", playlistId, userId],
+		queryKey: ["playlists", userId, playlistId],
 		queryFn: () => fetchGamesFromPlaylist(userId, playlistId),
-		initialData: initialData
+		initialData: initialData,
 	});
 
 	return gamesFromPlaylistQuery;

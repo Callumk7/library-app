@@ -15,29 +15,6 @@ export async function getGameDetails(gameId: number): Promise<unknown> {
 	return resBody[0];
 }
 
-export async function getSearchResultsFromRoute(q: string): Promise<IGDBGame[]> {
-	const res = await fetch(`/api/search?q=${q}`, {
-		method: "GET",
-	});
-
-	if (!res.ok) {
-		throw new Error("igdb fetch failed");
-	}
-
-	console.log("IGDB fetch completed");
-
-	const data = await res.json();
-	console.log(`${data.length} results found`);
-
-	// validate results
-	const results: IGDBGame[] = [];
-	for (const result of data) {
-		const validResult = IGDBGameSchema.parse(result);
-		results.push(validResult);
-	}
-	console.log(`${results.length} valid results`);
-	return results;
-}
 
 export async function getSearchResults(q: string): Promise<IGDBGame[]> {
 	const res = await fetch(process.env.IGDB_URL!, {

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/clients/prisma";
-import { IGDBGameSchema } from "@/types";
+import { DisplayedGame, GameWithCoverAndGenres, IGDBGameSchema } from "@/types";
 import { getSearchResults } from "@/util/igdb";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -14,6 +14,8 @@ export async function GET(req: NextRequest) {
 	}
 
 	const results = await getSearchResults(query);
+
+
 	const body = JSON.stringify(results);
 	return new NextResponse(body, { status: 200, statusText: "all done mate" });
 }
@@ -175,6 +177,8 @@ export async function POST(req: NextRequest) {
 		const results = await Promise.all(promises);
 		console.log(`${results.length} promises completed: Screenshots`);
 	}
+
+	// finally, add game to collection if a user is signed in
 
 	const resBody = JSON.stringify(game);
 	return new NextResponse(resBody, { status: 200 });

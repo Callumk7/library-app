@@ -13,7 +13,7 @@ export function PlaylistCard({ playlist }: PlaylistCardProps) {
       href={`/collection/${playlist.userId}/playlists/${playlist.id}`}
       className="w-full rounded-md bg-midnight-5"
     >
-      <div className="relative bottom-10 left-5 grid w-[136px] grid-cols-2 overflow-hidden shadow-md rounded-md">
+      <div className="relative bottom-10 left-5 grid w-[136px] grid-cols-2 overflow-hidden rounded-md shadow-md">
         {playlist.games.slice(0, 4).map((game, index) => (
           <Link
             key={index}

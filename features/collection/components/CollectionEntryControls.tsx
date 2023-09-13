@@ -143,7 +143,7 @@ export function CollectionEntryControls({
                     )}
                     onCheckedChange={() =>
                       addToPlaylist.mutate(
-                        { playlistId: playlist.id, gameId: game.gameId },
+                        { playlistId: playlist.id, gameId: game.gameId, userId: userId },
                         {
                           onSuccess: (data, variables) => {
                             setPlaylistArray([...playlistArray, variables.playlistId]);

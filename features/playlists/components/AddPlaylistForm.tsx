@@ -21,6 +21,7 @@ export default function AddPlaylistForm({ userId }: { userId: string }) {
         onChange={(e) => setPlaylistName(e.target.value)}
         name="name"
         placeholder="Best RPGs ever.."
+        disabled={addPlaylist.isLoading}
       />
       <Button variant={"outline"} size={"sm"} disabled={addPlaylist.isLoading}>
         {addPlaylist.isLoading ? "adding" : "add"}

@@ -46,9 +46,6 @@ export async function POST(req: NextRequest) {
 		console.error("error posting game to playlist", err);
 		return new NextResponse("Error posting game to playlist", { status: 500 });
 	}
-
-	console.log("insufficient parameters provided");
-	return new NextResponse("insufficient parameters provided", { status: 500 });
 }
 
 export async function DELETE(req: NextRequest) {

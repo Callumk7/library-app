@@ -23,9 +23,13 @@ export default async function CollectionLayout({
   }
   if (session) {
     const userId = session.user.id;
-    const playlists = await getAllPlaylistsWithGames(userId);
-    const followedPlaylists = await getFollowedPlaylistsWithGames(userId);
-    const genres = await getUserGenres(userId);
+
+    const [playlists, followedPlaylists, genres] = await Promise.all([
+      getAllPlaylistsWithGames(userId),
+      getFollowedPlaylistsWithGames(userId),
+      getUserGenres(userId)
+    ])
+
     return (
       <div className="mx-auto mt-5 flex w-4/5 flex-row justify-start gap-4 px-4 md:w-full">
         <div className="hidden md:block">

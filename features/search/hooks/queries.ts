@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/clients/prisma";
-import { GameWithCoverAndGenres, GameWithCoverGenresUsers } from "@/types";
+import { GameWithCoverAndGenres, GameWithCoverGenresUsers, IGDBGame, IGDBGameSchema } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 
 export async function searchGames(searchTerm: string): Promise<GameWithCoverAndGenres[]> {
@@ -68,3 +68,57 @@ export const useDbSearchQuery = (searchTerm: string) => {
 
 	return dbSearchQuery;
 };
+
+// Get all games from collection
+export async function getAllGames() {
+	const games = await prisma.game.findMany({
+		include: {
+			cover: true,
+			genres: {
+			include: {
+				genre: true,
+			}
+		}
+		},
+		orderBy: {
+			aggregatedRating: "desc",
+		},
+		take: 100,
+	});
+
+	return games;
+}
+
+// External Search Query
+async function getSearchResultsFromRoute(q: string): Promise<IGDBGame[]> {
+	const res = await fetch(`/api/search?q=${q}`, {
+		method: "GET",
+	});
+
+	if (!res.ok) {
+		throw new Error("igdb fetch failed");
+	}
+
+	console.log("IGDB fetch completed");
+
+	const data = await res.json();
+	console.log(`${data.length} results found`);
+
+	// validate results
+	const results: IGDBGame[] = [];
+	for (const result of data) {
+		const validResult = IGDBGameSchema.parse(result);
+		results.push(validResult);
+	}
+	console.log(`${results.length} valid results`);
+	return results;
+}
+
+export const useIgdbSearchQuery = (searchTerm: string) => {
+	const searchQuery = useQuery({
+		queryKey: ["igdb", searchTerm],
+		queryFn: async () => getSearchResultsFromRoute(searchTerm)
+	})
+
+	return searchQuery;
+}

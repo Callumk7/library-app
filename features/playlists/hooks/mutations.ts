@@ -94,7 +94,7 @@ export const useDeletePlaylist = (userId: string) => {
 
 /// ADD A GAME TO A SPECIFIC PLAYLIST
 const postGameToPlaylist = async (playlistId: number, gameId: number) => {
-	const body = [gameId];
+	const body = [gameId]
 	const res = await fetch(`/api/playlists/games?playlistId=${playlistId}`, {
 		method: "POST",
 		headers: {
@@ -113,8 +113,14 @@ const postGameToPlaylist = async (playlistId: number, gameId: number) => {
 
 export const useAddGameToPlaylist = (userId: string) => {
 	const addGameMutation = useMutation({
-		mutationFn: ({ playlistId, gameId }: { playlistId: number; gameId: number }) => {
-			queryClient.invalidateQueries(["playlists", playlistId, userId]);
+		mutationFn: ({
+			playlistId,
+			gameId,
+		}: {
+			playlistId: number;
+			gameId: number;
+		}) => {
+			queryClient.invalidateQueries(["playlists", userId, playlistId]);
 			return postGameToPlaylist(playlistId, gameId);
 		},
 
@@ -161,7 +167,7 @@ export const useBulkAddGameToPlaylist = (userId: string) => {
 			return postBulkAddGamesToPlaylist(playlistId, gameIds);
 		},
 		onMutate: (variables) => {
-			console.log(`GAME IDS: ${variables.gameIds}`);
+			console.log(`GAME IDS: SORTED`);
 			console.log(`PLAYLIST ID: ${variables.playlistId}`);
 		},
 

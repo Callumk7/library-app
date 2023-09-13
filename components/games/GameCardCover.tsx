@@ -36,7 +36,7 @@ export function GameCardCover({
   }
 
   return (
-    <div>
+    <div className="max-w-max">
       <div
         className={clsx(
           borderStyle,
@@ -45,22 +45,15 @@ export function GameCardCover({
       >
         <GameHoverCard game={game}>
           <Image
+            className="animate-in"
             src={`https://images.igdb.com/igdb/image/upload/t_${size}/${game.cover?.imageId}.jpg`}
             alt="cover image"
             width={720}
             height={1280}
           />
         </GameHoverCard>
-        <div className="flex flex-col gap-y-3">
-          <RatingLine
-            percent={game.aggregatedRating ? game.aggregatedRating : 0}
-            strokeWidth={2}
-            strokeColor="#F0F757"
-            trailColor=""
-          />
-        </div>
       </div>
-      <div className="z-10 pt-3">{children}</div>
+      <div className="max-w-[720px] pt-3 animate-in">{children}</div>
     </div>
   );
 }

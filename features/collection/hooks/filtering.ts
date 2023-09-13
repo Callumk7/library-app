@@ -2,16 +2,11 @@ import { GameWithCoverAndGenres, SortOption } from "@/types";
 import { applySorting } from "@/util/sorting";
 import { useMemo, useState } from "react";
 
-export const useSortAndFilter = (
-	DEFAULT_SORT_OPTION: SortOption,
-	genres: string[],
-	games: GameWithCoverAndGenres[]
-) => {
+export const useFilter = (games: GameWithCoverAndGenres[], genres: string[]) => {
 	const [searchTerm, setSearchTerm] = useState<string>("");
-	const [sortOption, setSortOption] = useState<SortOption>(DEFAULT_SORT_OPTION);
 	const [genreFilter, setGenreFilter] = useState<string[]>(genres);
 
-	const filteredCollection = useMemo(() => {
+	const filteredGames = useMemo(() => {
 		let output = [...games];
 		if (searchTerm !== "") {
 			output = output.filter((game) =>
@@ -31,46 +26,56 @@ export const useSortAndFilter = (
 			return false;
 		});
 		return output;
-	}, [searchTerm,  genreFilter, games]);
-
-	const sortedCollection = useMemo(() => {
-		return applySorting(filteredCollection, sortOption);
-	}, [filteredCollection, sortOption]);
+	}, [searchTerm, genreFilter, games]);
 
 	const handleSearchTermChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchTerm(e.target.value);
 	};
 
+	const handleGenreToggled = (genre: string) => {
+		// handle genre toggled
+		setGenreFilter((prevGenreFilter) =>
+			prevGenreFilter.includes(genre)
+				? prevGenreFilter.filter((g) => g !== genre)
+				: [...prevGenreFilter, genre]
+		);
+	};
 
-  const handleGenreToggled = (genre: string) => {
-    // handle genre toggled
-    setGenreFilter((prevGenreFilter) =>
-      prevGenreFilter.includes(genre)
-        ? prevGenreFilter.filter((g) => g !== genre)
-        : [...prevGenreFilter, genre]
-    );
-  };
-
-  const handleToggleAllGenres = () => {
-    // handle toggle all genres
-    if (genres.length > genreFilter.length) {
-      setGenreFilter(genres);
-    } else {
-      setGenreFilter([]);
-    }
-  };
+	const handleToggleAllGenres = () => {
+		if (genres.length > genreFilter.length) {
+			setGenreFilter(genres);
+		} else {
+			setGenreFilter([]);
+		}
+	};
 
 	return {
 		searchTerm,
 		setSearchTerm,
-		sortOption,
-		setSortOption,
 		genreFilter,
 		setGenreFilter,
-		sortedCollection,
-		filteredCollection,
+		filteredGames,
 		handleSearchTermChanged,
 		handleGenreToggled,
-		handleToggleAllGenres
+		handleToggleAllGenres,
+	};
+};
+
+export const useSort = (
+	DEFAULT_SORT_OPTION: SortOption,
+	games: GameWithCoverAndGenres[]
+) => {
+	const [sortOption, setSortOption] = useState<SortOption>(DEFAULT_SORT_OPTION);
+
+
+	const sortedGames = useMemo(() => {
+		return applySorting(games, sortOption);
+	}, [games, sortOption]);
+
+
+	return {
+		sortOption,
+		setSortOption,
+		sortedGames,
 	};
 };
